@@ -1,0 +1,149 @@
+export interface Innovation {
+  id: string
+  emoji: string
+  title: string
+  oneLiner: string
+  problem: string
+  solution: string
+  howItWorks: string[]
+  exists: string // where does something similar exist?
+  impact: 'transformativ' | 'hoch' | 'mittel'
+  feasibility: 'sofort' | '1-2 Jahre' | 'GG-Änderung'
+  techNeeded: string
+}
+
+export const innovations: Innovation[] = [
+  {
+    id: "gitlaw",
+    emoji: "📝",
+    title: "GitLaw — Gesetze wie Code",
+    oneLiner: "Jede Gesetzesänderung getrackt, jeder Einfluss sichtbar, jeder Bürger kann die Geschichte lesen.",
+    problem: "Gesetze werden hinter verschlossenen Türen geändert. Niemand weiß, wer welche Klausel eingefügt hat oder welcher Lobbyist dahintersteckt.",
+    solution: "Versionskontrolle für Gesetze — wie GitHub für Software. Jede Änderung hat einen Autor, einen Zeitstempel und eine Begründung.",
+    howItWorks: [
+      "Jeder Gesetzentwurf als Textdatei in einem öffentlichen Repository",
+      "Jede Änderung (Amendment) als 'Pull Request' mit Autor und Begründung",
+      "Öffentliche Kommentar-Funktion: Bürger diskutieren einzelne Absätze",
+      "Automatischer Diff: Was hat sich zwischen Version 1 und 47 geändert?",
+      "Lobbying-Register verlinkt: Wenn ein Treffen am 3. März stattfand und am 7. März ein Amendment kam — automatisches Flagging",
+    ],
+    exists: "Frankreich: lafabriquedelaloi.fr trackt Amendments. Taiwan g0v: Prototyp. Aber: KEIN Land hat vollständige Gesetzes-Versionskontrolle.",
+    impact: "transformativ",
+    feasibility: "sofort",
+    techNeeded: "Git + Markdown + Web-Interface. Alles existiert. Kostet fast nichts.",
+  },
+  {
+    id: "constituency",
+    emoji: "📊",
+    title: "Wähler-Dashboard für Abgeordnete",
+    oneLiner: "Jeder Abgeordnete sieht LIVE: Was denken meine Wähler? Und wie habe ich abgestimmt?",
+    problem: "Abgeordnete wissen nicht, was ihre 200.000+ Wähler wirklich denken. Sie verlassen sich auf Lobbyisten, Medien und ihre Filterblase.",
+    solution: "Ein Dashboard das zeigt: Wähler-Meinung zu jedem Thema, eigenes Abstimmungsverhalten, und den Gap dazwischen.",
+    howItWorks: [
+      "Permanentes Bürger-Panel pro Wahlkreis (500-1.000 verifizierte Wähler, repräsentativ ausgewählt)",
+      "Wöchentlich 2-3 Fragen zu aktuellen Themen (Pol.is-Format: zustimmen/ablehnen/überspringen)",
+      "Dashboard für den Abgeordneten: 'Ihre Wähler sagen 72% Ja zu X. Sie haben Nein gestimmt.'",
+      "Öffentlich einsehbar: Transparenz-Score pro Abgeordneter",
+      "Keine Bindung — aber sichtbar. Wähler sehen, ob ihr Vertreter sie vertritt.",
+    ],
+    exists: "Nichts Vergleichbares existiert. Pol.is (Taiwan) + StemWijzer (NL) sind Teile davon. Aber kein permanentes System.",
+    impact: "transformativ",
+    feasibility: "1-2 Jahre",
+    techNeeded: "Pol.is (open source) + Verifizierungssystem + Dashboard. Machbar.",
+  },
+  {
+    id: "generations",
+    emoji: "👶→👴",
+    title: "Generationen-Score für jedes Gesetz",
+    oneLiner: "Jedes Gesetz bekommt einen öffentlichen Fairness-Score: Wer profitiert? Kinder, Junge, Mittelalte, Ältere, Ungeborene?",
+    problem: "Politiker bevorzugen Wähler die JETZT wählen. Kinder und Ungeborene haben keine Stimme. Schulden und Klimakosten werden verschoben.",
+    solution: "Pflicht-Score für jedes Gesetz, erstellt von einem unabhängigen Büro. Ähnlich wie der Haushaltsausschuss den Preis berechnet.",
+    howItWorks: [
+      "5 Altersgruppen: Kinder (0-18), Junge (19-35), Mittlere (36-55), Ältere (56-75), Ungeborene",
+      "Für jedes Gesetz: Modellierung der Auswirkung auf jede Gruppe (+/- Score)",
+      "Veröffentlichung VOR der Abstimmung — Pflicht, nicht optional",
+      "Beispiel: 'Rentenerhöhung +4,24%' → Ältere: +8, Ungeborene: -6 (mehr Schulden)",
+      "Kein Veto — nur Transparenz. Aber die Öffentlichkeit sieht die Rechnung.",
+    ],
+    exists: "Wales: Well-being of Future Generations Act (2015) — Framework aber kein Score. Finnland: Committee for the Future. Kein Land hat numerischen Score.",
+    impact: "hoch",
+    feasibility: "1-2 Jahre",
+    techNeeded: "Demografisches Modell + Schulden-Projektion + Klima-Impact. Methodisch anspruchsvoll aber machbar.",
+  },
+  {
+    id: "ai-deliberation",
+    emoji: "🤖",
+    title: "AI Deliberation Facilitator",
+    oneLiner: "KI die Debatten VERBESSERT statt sie zu ersetzen — Missverständnisse aufdecken, Konsens finden, Brücken bauen.",
+    problem: "In politischen Debatten reden Menschen aneinander vorbei. Gleiche Worte, verschiedene Bedeutungen. Emotionen statt Argumente.",
+    solution: "Ein LLM das in Echtzeit: definitionale Missverständnisse aufdeckt, jede Position fair zusammenfasst, und Kompromiss-Formulierungen vorschlägt.",
+    howItWorks: [
+      "Sitzt auf jeder Deliberationsplattform (Decidim, Pol.is, Bürgerrat)",
+      "Erkennt: 'Ihr meint verschiedene Dinge mit Freiheit — Person A meint X, Person B meint Y'",
+      "Steel-Man jede Position: 'Hier ist die stärkste Version von Argument A — stimmen Sie zu?'",
+      "Findet Brücken: 'Statement Z wird von 78% beider Gruppen akzeptiert'",
+      "KEIN Entscheider — ein Kommunikations-Werkzeug. Transparenz über seine Arbeitsweise.",
+    ],
+    exists: "Pol.is findet Konsens-Cluster automatisch (Taiwan). Aber: kein LLM-basiertes Facilitation-Tool existiert in der Governance. Wir wären die Ersten.",
+    impact: "hoch",
+    feasibility: "sofort",
+    techNeeded: "Claude/GPT API + Deliberationsplattform-Integration. Die Technologie ist da.",
+  },
+  {
+    id: "lobbying-trace",
+    emoji: "🔍",
+    title: "Lobbying mit Einfluss-Tracing",
+    oneLiner: "Jeder Kontakt zwischen Lobbyist und Abgeordnetem geloggt. Verdächtige Timelines automatisch geflaggt.",
+    problem: "EU Transparenz-Register und Bundeslobbyregister existieren — aber sie zeigen nicht, welche Klausel durch welches Meeting beeinflusst wurde.",
+    solution: "Strukturierte Datenbank: Meeting am Montag + Amendment am Freitag das dem Positionspapier ähnelt = automatisches Flag.",
+    howItWorks: [
+      "Jedes Meeting, jede E-Mail, jeder Anruf zwischen Lobbyist und Abgeordnetem wird geloggt",
+      "NLP-Analyse: Vergleiche Lobbying-Positionspapiere mit eingereichten Amendments",
+      "Automatisches Flagging bei hoher Textähnlichkeit + kurzer Timeline",
+      "Dashboard: 'Dieser Absatz in §14 ist zu 87% identisch mit dem BDI-Positionspapier vom 3. März'",
+      "Öffentlich einsehbar. Kein Verbot — nur Transparenz.",
+    ],
+    exists: "Nichts Vergleichbares. EU Transparenz-Register + US FARA sind Kontakt-Listen ohne Inhalts-Analyse. Taiwan kommt am nächsten (Audrey Tang's Radikal-Transparenz).",
+    impact: "transformativ",
+    feasibility: "1-2 Jahre",
+    techNeeded: "NLP für Textvergleich + Lobby-Register-API + Timeline-Analyse. Technisch machbar, politisch schwer.",
+  },
+  {
+    id: "policy-engine",
+    emoji: "🧮",
+    title: "PolicyEngine + AI = Bürger-Simulator",
+    oneLiner: "'Was passiert wenn wir den Mindestlohn auf €15 erhöhen?' — sofort simuliert, für jeden verständlich.",
+    problem: "Niemand versteht die Auswirkungen von Gesetzen. Nicht Bürger, nicht Journalisten, oft nicht mal Abgeordnete.",
+    solution: "PolicyEngine (UK/US existiert bereits) + deutsches Steuer/Sozial-Modell + LLM-Interface für natürliche Sprache.",
+    howItWorks: [
+      "Frag in normaler Sprache: 'Was kostet kostenloses Schulessen?'",
+      "System berechnet: Kosten (€4,1 Mrd.), Verteilungswirkung (wer profitiert?), langfristige Effekte",
+      "Visualisierung: 24 Personas zeigen ihre Reaktion",
+      "Vergleich mit anderen Ländern: 'Finnland macht das seit 1948, hier sind die Ergebnisse'",
+      "Jeder kann es nutzen: Bürger, Journalisten, Abgeordnete, Schüler",
+    ],
+    exists: "PolicyEngine.org (UK/US) existiert — ohne AI-Interface und ohne deutsche Daten. Wir bauen die deutsche Version mit AI.",
+    impact: "hoch",
+    feasibility: "1-2 Jahre",
+    techNeeded: "Deutsches Mikrosimulationsmodell + Claude API + Frontend. Das aufwändigste der 7 Projekte.",
+  },
+  {
+    id: "sortition",
+    emoji: "🎲",
+    title: "Permanente Bürger-Kammer",
+    oneLiner: "200 zufällig ausgewählte Bürger. Bezahlt. 2 Jahre. Echtes Veto-Recht bei Gesetzen die zukünftige Generationen belasten.",
+    problem: "Bürgerräte sind einmalig und unverbindlich. Die Ergebnisse versanden. Bürger investieren Zeit und sehen keinen Impact — das zerstört Vertrauen.",
+    solution: "Permanente zweite Kammer (neben Bundesrat), besetzt durch Los. Kein Ersatz für den Bundestag — eine Ergänzung.",
+    howItWorks: [
+      "200 Bürger, losbasiert aus dem Melderegister (stratifiziert nach Alter, Geschlecht, Region, Milieu)",
+      "Bezahlt: €4.000/Monat + Kinderbetreuung + Arbeitgeber-Freistellung (wie Geschworene)",
+      "Amtszeit: 2 Jahre, gestaffelt (jedes Jahr 100 neue)",
+      "Recht: Veto bei Gesetzen die im Generationen-Score negativ für Kinder/Ungeborene sind",
+      "Kein Initiativrecht — nur Prüfung. Kann durch 2/3-Mehrheit im Bundestag überstimmt werden.",
+    ],
+    exists: "Ostbelgien: permanenter Bürgerrat (24 Personen), seit 2019. Aber: kein Veto-Recht, nur beratend. Wir gehen weiter.",
+    impact: "transformativ",
+    feasibility: "GG-Änderung",
+    techNeeded: "Keine Tech — nur politischer Wille. Das billigste und wirkungsvollste aller 7 Projekte.",
+  },
+]

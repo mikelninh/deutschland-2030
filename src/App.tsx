@@ -3,6 +3,8 @@ import { reforms, principles } from './data/manifesto'
 import { timeline, costs, partyReactions, generationImpact } from './data/roadmap'
 import { voters, satisfactionSummary } from './data/voters'
 import { deepNeeds, trustPillars, partyPathTo80, internationalCeiling, truthBomb } from './data/path-to-80'
+import { personas, policyScenarios, simulatePolicy } from './data/personas'
+import { innovations } from './data/innovations'
 import { ChevronDown, ChevronUp, Heart, ArrowRight, CheckCircle, X } from 'lucide-react'
 import './index.css'
 
@@ -49,6 +51,8 @@ function ProgressBar({ value, max = 100, color = 'bg-sage' }: { value: number; m
 export default function App() {
   const [openReform, setOpenReform] = useState<string | null>(null)
   const [openVoter, setOpenVoter] = useState<string | null>(null)
+  const [activeScenario, setActiveScenario] = useState(policyScenarios[0].id)
+  const [openInnovation, setOpenInnovation] = useState<string | null>(null)
 
   return (
     <div className="min-h-screen bg-bg text-ink text-[15px] leading-relaxed">
@@ -60,7 +64,7 @@ export default function App() {
             Deutschland <span className="text-gradient">2030</span>
           </a>
           <div className="hidden md:flex gap-1">
-            {[['vision','Vision'],['roadmap','Fahrplan'],['reformen','Reformen'],['rechnung','Zahlen'],['waehler','Menschen'],['weg-zu-80','Weg zu 80%'],['parteien','Parteien'],['fuer-dich','Für dich']].map(([id, label]) => (
+            {[['vision','Vision'],['roadmap','Fahrplan'],['reformen','Reformen'],['simulator','Simulator'],['innovationen','7 Ideen'],['waehler','Menschen'],['weg-zu-80','→ 80%'],['parteien','Parteien']].map(([id, label]) => (
               <a key={id} href={`#${id}`}
                 className="px-3 py-1.5 rounded-lg text-[12px] text-ink-muted hover:text-ink hover:bg-bg-warm transition-all">
                 {label}
@@ -275,6 +279,141 @@ export default function App() {
                       <span className="text-sage font-medium shrink-0">€{s.amount}</span>
                     </div>
                   ))}
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Policy Simulator ── */}
+      <section id="simulator" className="py-20 sm:py-28 px-6 bg-bg">
+        <div className="max-w-4xl mx-auto">
+          <Label>Policy-Simulator</Label>
+          <Title sub="Wähle eine Reform — sieh sofort wie 24 Personas (84 Mio. Deutsche) reagieren.">
+            Was denkt Deutschland?
+          </Title>
+
+          {/* Scenario tabs */}
+          <div className="flex flex-wrap gap-2 justify-center mb-8">
+            {policyScenarios.map(s => (
+              <button key={s.id} onClick={() => setActiveScenario(s.id)}
+                className={`px-4 py-2 rounded-full text-[12px] font-medium transition-all cursor-pointer ${activeScenario === s.id ? 'bg-gold text-white shadow-sm' : 'bg-bg-warm text-ink-muted hover:text-ink hover:bg-bg-card border border-border'}`}>
+                {s.emoji} {s.title}
+              </button>
+            ))}
+          </div>
+
+          {/* Active scenario */}
+          {policyScenarios.filter(s => s.id === activeScenario).map(scenario => {
+            const result = simulatePolicy(scenario.id)
+            return (
+              <div key={scenario.id}>
+                <div className="bg-bg-card rounded-2xl p-6 border border-border mb-6">
+                  <p className="text-ink-muted text-[13px] mb-4">{scenario.description}</p>
+                  <div className="grid grid-cols-3 gap-4 mb-4">
+                    <div className="bg-coral-bg rounded-xl p-3 text-center">
+                      <p className="text-xl font-display text-coral">€{scenario.annualCost} Mrd.</p>
+                      <p className="text-[10px] text-ink-muted">Kosten/Jahr</p>
+                    </div>
+                    <div className="bg-sage-bg rounded-xl p-3 text-center">
+                      <p className="text-xl font-display text-sage">€{scenario.annualSaving} Mrd.</p>
+                      <p className="text-[10px] text-ink-muted">Ersparnis/Jahr</p>
+                    </div>
+                    <div className="bg-gold-bg rounded-xl p-3 text-center">
+                      <p className="text-xl font-display text-gradient">{result.approval}%</p>
+                      <p className="text-[10px] text-ink-muted">{result.label}</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Persona reactions */}
+                <div className="grid sm:grid-cols-2 gap-2">
+                  {scenario.reactions.map(r => {
+                    const persona = personas.find(p => p.id === r.personaId)
+                    if (!persona) return null
+                    return (
+                      <div key={r.personaId} className="bg-bg-card rounded-xl p-4 border border-border card-hover">
+                        <div className="flex items-center gap-3 mb-2">
+                          <span className="text-lg">{persona.emoji}</span>
+                          <div className="flex-1">
+                            <span className="text-[13px] font-medium">{persona.name}, {persona.age}</span>
+                            <span className="text-[11px] text-ink-muted ml-1">({persona.party})</span>
+                          </div>
+                          <span className={`text-[13px] font-display ${r.approval >= 70 ? 'text-sage' : r.approval >= 40 ? 'text-gold' : 'text-coral'}`}>
+                            {r.approval}%
+                          </span>
+                        </div>
+                        <ProgressBar value={r.approval} color={r.approval >= 70 ? 'bg-sage' : r.approval >= 40 ? 'bg-gold' : 'bg-coral'} />
+                        <p className="text-[11px] text-ink-muted mt-2 italic">„{r.reason}"</p>
+                      </div>
+                    )
+                  })}
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      </section>
+
+      {/* ── 7 Innovations ── */}
+      <section id="innovationen" className="py-20 sm:py-28 px-6 bg-bg-warm">
+        <div className="max-w-3xl mx-auto">
+          <Label>7 Ideen die es noch nirgendwo gibt</Label>
+          <Title sub="Technisch machbar, politisch möglich, nirgendwo implementiert. Wir bauen sie.">
+            Demokratie neu erfinden
+          </Title>
+
+          <div className="space-y-2">
+            {innovations.map(inv => {
+              const open = openInnovation === inv.id
+              const impactColor = inv.impact === 'transformativ' ? 'bg-gold-bg text-gold' : inv.impact === 'hoch' ? 'bg-sage-bg text-sage' : 'bg-blue-bg text-blue'
+              const feasColor = inv.feasibility === 'sofort' ? 'bg-sage-bg text-sage' : inv.feasibility === '1-2 Jahre' ? 'bg-gold-bg text-gold' : 'bg-coral-bg text-coral'
+              return (
+                <div key={inv.id} className={`rounded-2xl border transition-all duration-300 ${open ? 'bg-bg-card shadow-[0_4px_30px_rgba(0,0,0,0.05)] border-gold/20' : 'bg-bg-card border-border hover:border-border-hover'}`}>
+                  <button onClick={() => setOpenInnovation(open ? null : inv.id)} className="w-full flex items-center justify-between p-5 text-left cursor-pointer">
+                    <div className="flex items-center gap-4">
+                      <span className="text-2xl">{inv.emoji}</span>
+                      <div>
+                        <h3 className="font-display text-[15px]">{inv.title}</h3>
+                        <p className="text-[11px] text-ink-muted">{inv.oneLiner}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Pill variant={inv.feasibility === 'sofort' ? 'sage' : inv.feasibility === '1-2 Jahre' ? 'gold' : 'coral'}>{inv.feasibility}</Pill>
+                      {open ? <ChevronUp className="w-4 h-4 text-gold" /> : <ChevronDown className="w-4 h-4 text-ink-muted/30" />}
+                    </div>
+                  </button>
+                  {open && (
+                    <div className="px-5 pb-6 space-y-4">
+                      <div className="bg-coral-bg rounded-xl p-4">
+                        <Pill variant="coral">Problem</Pill>
+                        <p className="text-[13px] text-ink-soft mt-2">{inv.problem}</p>
+                      </div>
+                      <div className="bg-sage-bg rounded-xl p-4">
+                        <Pill variant="sage">Lösung</Pill>
+                        <p className="text-[13px] text-ink-soft mt-2">{inv.solution}</p>
+                      </div>
+                      <div>
+                        <p className="text-[11px] font-semibold uppercase tracking-wider text-ink-muted mb-2">Wie es funktioniert</p>
+                        {inv.howItWorks.map((step, i) => (
+                          <div key={i} className="flex items-start gap-2 mb-1.5">
+                            <span className="text-gold font-display text-[13px] mt-0.5 w-5 shrink-0">{i + 1}.</span>
+                            <span className="text-[13px] text-ink-soft">{step}</span>
+                          </div>
+                        ))}
+                      </div>
+                      <div className="bg-blue-bg rounded-xl p-4">
+                        <Pill variant="blue">Existiert schon?</Pill>
+                        <p className="text-[13px] text-ink-soft mt-2">{inv.exists}</p>
+                      </div>
+                      <div className="flex gap-3">
+                        <div className={`rounded-lg px-3 py-1.5 text-[11px] font-medium ${impactColor}`}>Impact: {inv.impact}</div>
+                        <div className={`rounded-lg px-3 py-1.5 text-[11px] font-medium ${feasColor}`}>Machbar: {inv.feasibility}</div>
+                        <div className="rounded-lg px-3 py-1.5 text-[11px] font-medium bg-violet-bg text-violet">Tech: {inv.techNeeded}</div>
+                      </div>
+                    </div>
+                  )}
                 </div>
               )
             })}
