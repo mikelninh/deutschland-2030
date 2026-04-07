@@ -2,7 +2,8 @@ import { useState } from 'react'
 import { reforms, principles, stats } from './data/manifesto'
 import { timeline, costs, partyReactions, generationImpact } from './data/roadmap'
 import { voters, satisfactionSummary } from './data/voters'
-import { ChevronDown, ChevronUp, Globe, Heart, Users, ArrowRight, CheckCircle, Clock, Target, TrendingUp, Scale, Sparkles, X, MessageCircle } from 'lucide-react'
+import { deepNeeds, trustPillars, partyPathTo80, internationalCeiling, truthBomb } from './data/path-to-80'
+import { ChevronDown, ChevronUp, Globe, Heart, Users, ArrowRight, CheckCircle, Clock, Target, TrendingUp, Scale, Sparkles, X, MessageCircle, Lightbulb } from 'lucide-react'
 import './index.css'
 
 function ProgressBar({ value, max, color = 'bg-sage' }: { value: number; max: number; color?: string }) {
@@ -65,6 +66,7 @@ function App() {
     { id: 'rechnung', label: 'Rechnung' },
     { id: 'parteien', label: 'Parteien' },
     { id: 'waehler', label: 'Wähler' },
+    { id: 'weg-zu-80', label: '→ 80%' },
     { id: 'generationen', label: 'Für dich' },
   ]
 
@@ -603,8 +605,204 @@ function App() {
         </div>
       </section>
 
+      {/* Path to 80% */}
+      <section id="weg-zu-80" className="py-24 px-6 bg-parchment">
+        <div className="max-w-5xl mx-auto">
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <Lightbulb className="w-5 h-5 text-gold" />
+            <p className="text-gold uppercase tracking-[0.2em] text-sm">Der Weg zu 80%</p>
+          </div>
+          <h2 className="font-serif text-4xl sm:text-5xl text-center mb-4">Was wollen Menschen wirklich?</h2>
+          <p className="text-center text-ink-light/60 mb-16 max-w-2xl mx-auto">
+            Nicht Parteiprogramme. Nicht Ideologie. Forschung zeigt: 5 tiefe Bedürfnisse bestimmen, ob Menschen mit ihrem Land zufrieden sind.
+          </p>
+
+          {/* Deep Needs — Maslow for Governance */}
+          <div className="mb-16">
+            <h3 className="font-serif text-2xl text-center mb-8">Die 5 Bedürfnisse — und wo Deutschland steht</h3>
+            <div className="space-y-4">
+              {deepNeeds.map((need, i) => (
+                <div key={i} className="bg-white rounded-2xl p-6 border border-parchment-dark">
+                  <div className="flex items-center gap-4 mb-3">
+                    <span className="text-3xl">{need.emoji}</span>
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between">
+                        <h4 className="font-serif text-lg">{need.level}. {need.need}</h4>
+                        <span className="text-sm font-serif">
+                          <span className="text-accent">{need.germanyScore}</span>
+                          <span className="text-ink-light/30"> → </span>
+                          <span className="text-sage">{need.targetScore}</span>
+                        </span>
+                      </div>
+                      <p className="text-xs text-ink-light/50">{need.govEquivalent}</p>
+                    </div>
+                  </div>
+                  <div className="relative h-4 bg-parchment-dark rounded-full overflow-hidden mb-2">
+                    <div className="absolute inset-y-0 left-0 bg-accent/30 rounded-full" style={{ width: `${need.germanyScore}%` }} />
+                    <div className="absolute inset-y-0 left-0 bg-sage rounded-full opacity-40" style={{ width: `${need.targetScore}%` }} />
+                    <div className="absolute inset-y-0 left-0 bg-accent rounded-full" style={{ width: `${need.germanyScore}%` }} />
+                  </div>
+                  <p className="text-xs text-ink-light/50 leading-relaxed">{need.gap}</p>
+                </div>
+              ))}
+            </div>
+            <p className="text-center text-ink-light/40 text-xs mt-4">
+              Rot = Deutschland jetzt. Grün (transparent) = Zielwert 2035. Basierend auf World Happiness Report, OECD, Eurobarometer.
+            </p>
+          </div>
+
+          {/* 6 Trust Pillars */}
+          <div className="mb-16">
+            <h3 className="font-serif text-2xl text-center mb-4">6 Hebel die alles verändern</h3>
+            <p className="text-center text-ink-light/60 text-sm mb-8 max-w-xl mx-auto">
+              Was macht Dänemark (92%), Irland (83%) und die Schweiz (78%) anders? Die Forschung ist eindeutig.
+            </p>
+            <div className="space-y-6">
+              {trustPillars.map(pillar => (
+                <div key={pillar.id} className="bg-white rounded-2xl border border-parchment-dark overflow-hidden">
+                  <div className="p-6">
+                    <div className="flex items-start gap-4 mb-4">
+                      <span className="text-3xl">{pillar.emoji}</span>
+                      <div>
+                        <h4 className="font-serif text-xl mb-1">{pillar.title}</h4>
+                        <p className="text-sm text-ink-light/70 italic">{pillar.insight}</p>
+                      </div>
+                    </div>
+
+                    <div className="bg-parchment/50 rounded-xl p-4 mb-4 border border-parchment-dark">
+                      <p className="text-xs uppercase tracking-wider text-ink-light/40 mb-1">Was die Forschung sagt</p>
+                      <p className="text-sm text-ink-light/70 leading-relaxed">{pillar.research}</p>
+                    </div>
+
+                    <div className="grid sm:grid-cols-2 gap-4 mb-4">
+                      <div className="bg-accent/5 rounded-xl p-4">
+                        <p className="text-xs uppercase tracking-wider text-accent/60 mb-1">Deutschland heute</p>
+                        <p className="text-sm text-ink-light/70">{pillar.germanyNow}</p>
+                      </div>
+                      <div className="bg-sage/5 rounded-xl p-4">
+                        <p className="text-xs uppercase tracking-wider text-sage/60 mb-1">Ziel 2035</p>
+                        <p className="text-sm text-ink-light/70">{pillar.target}</p>
+                      </div>
+                    </div>
+
+                    <div className="bg-sky/5 rounded-xl p-4 mb-4 border border-sky/10">
+                      <p className="text-xs uppercase tracking-wider text-sky/60 mb-1">{pillar.roleModel.flag} Vorbild: {pillar.roleModel.country}</p>
+                      <p className="text-sm text-ink-light/70 mb-1">{pillar.roleModel.what}</p>
+                      <p className="text-sm text-sage font-medium">{pillar.roleModel.result}</p>
+                    </div>
+
+                    <div>
+                      <p className="text-xs uppercase tracking-wider text-gold/60 mb-2">Konkrete Schritte für Deutschland</p>
+                      {pillar.concreteStep.map((s, i) => (
+                        <div key={i} className="flex items-start gap-2 mb-1.5">
+                          <ArrowRight className="w-3.5 h-3.5 text-gold mt-0.5 shrink-0" />
+                          <span className="text-sm text-ink-light/70">{s}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* International Ceiling Comparison */}
+          <div className="mb-16">
+            <h3 className="font-serif text-2xl text-center mb-8">Die Messlatte: Wo stehen die Besten?</h3>
+            <div className="bg-white rounded-2xl p-6 border border-parchment-dark">
+              <div className="space-y-3">
+                {internationalCeiling.map(c => (
+                  <div key={c.country} className="flex items-center gap-4">
+                    <span className="text-xl w-8">{c.flag}</span>
+                    <span className="w-28 text-sm font-medium">{c.country}</span>
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2">
+                        <div className="flex-1 relative h-6 bg-parchment-dark rounded-full overflow-hidden">
+                          <div
+                            className={`absolute inset-y-0 left-0 rounded-full ${c.country === 'Deutschland' ? 'bg-accent' : 'bg-sage'}`}
+                            style={{ width: `${c.satisfaction}%` }}
+                          />
+                        </div>
+                        <span className={`text-sm font-serif w-10 text-right ${c.country === 'Deutschland' ? 'text-accent' : 'text-sage'}`}>
+                          {c.satisfaction}%
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <p className="text-xs text-ink-light/40 mt-4 text-center">Zufriedenheit mit der Demokratie (Eurobarometer 2023)</p>
+            </div>
+          </div>
+
+          {/* Party Path to 80% */}
+          <div className="mb-16">
+            <h3 className="font-serif text-2xl text-center mb-4">Parteien: Der Weg über 80%</h3>
+            <p className="text-center text-ink-light/60 text-sm mb-8 max-w-xl mx-auto">
+              Was jede Partei WIRKLICH will — und welcher Kompromiss sie auf 80%+ bringt.
+            </p>
+            <div className="grid md:grid-cols-2 gap-4">
+              {partyPathTo80.map(p => (
+                <div key={p.party} className="bg-white rounded-2xl p-5 border border-parchment-dark">
+                  <div className="flex items-center justify-between mb-3">
+                    <h4 className="font-serif text-lg">{p.party}</h4>
+                    <div className="text-right">
+                      <span className="text-sm text-accent">{p.currentApproval}%</span>
+                      <span className="text-ink-light/30 text-sm"> → </span>
+                      <span className={`text-sm font-medium ${p.potentialApproval >= 80 ? 'text-sage' : 'text-gold'}`}>{p.potentialApproval}%</span>
+                    </div>
+                  </div>
+                  <div className="relative h-3 bg-parchment-dark rounded-full overflow-hidden mb-4">
+                    <div className="absolute inset-y-0 left-0 bg-accent/30 rounded-full" style={{ width: `${p.currentApproval}%` }} />
+                    <div className={`absolute inset-y-0 left-0 rounded-full ${p.potentialApproval >= 80 ? 'bg-sage' : 'bg-gold'}`} style={{ width: `${p.potentialApproval}%` }} />
+                  </div>
+                  <p className="text-xs text-ink-light/50 italic mb-3">Will eigentlich: {p.whatTheyReallyWant}</p>
+                  <div className="mb-3">
+                    <p className="text-xs uppercase tracking-wider text-sage/60 mb-1">Was sie über 80% bringt</p>
+                    {p.whatGetsThemTo80.slice(0, 3).map((w, i) => (
+                      <div key={i} className="flex items-start gap-1.5 mb-1">
+                        <CheckCircle className="w-3 h-3 text-sage mt-0.5 shrink-0" />
+                        <span className="text-xs text-ink-light/70">{w}</span>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="bg-gold/5 rounded-lg p-3 border border-gold/10">
+                    <p className="text-xs uppercase tracking-wider text-gold/60 mb-1">Der entscheidende Kompromiss</p>
+                    <p className="text-xs text-ink-light/70">{p.keyCompromise}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* The honest truth */}
+          <div className="bg-ink rounded-2xl p-8">
+            <h3 className="font-serif text-2xl text-white text-center mb-6">{truthBomb.question}</h3>
+            <p className="text-white/70 text-sm leading-relaxed mb-6">{truthBomb.answer}</p>
+            <div className="bg-white/5 rounded-xl p-4 mb-6 border border-white/10">
+              <p className="text-white/50 text-xs leading-relaxed">{truthBomb.proof}</p>
+            </div>
+            <div className="grid sm:grid-cols-3 gap-4">
+              <div className="bg-sage/10 rounded-xl p-4 text-center">
+                <p className="text-3xl font-serif text-sage-light mb-1">80%+</p>
+                <p className="text-white/40 text-xs">Ist erreichbar (4 Länder beweisen es)</p>
+              </div>
+              <div className="bg-gold/10 rounded-xl p-4 text-center">
+                <p className="text-3xl font-serif text-gold mb-1">53→80</p>
+                <p className="text-white/40 text-xs">Deutschlands Weg (+27 Punkte)</p>
+              </div>
+              <div className="bg-white/5 rounded-xl p-4 text-center">
+                <p className="text-3xl font-serif text-white/70 mb-1">~10 J.</p>
+                <p className="text-white/40 text-xs">So lange dauert Vertrauensaufbau</p>
+              </div>
+            </div>
+            <p className="text-white/30 text-xs text-center mt-6">Die Forschung ist klar: Vertrauen baut man auf der Output-Seite — durch faire, funktionierende, respektvolle Institutionen. Nicht durch Reden, sondern durch Tun.</p>
+          </div>
+        </div>
+      </section>
+
       {/* Generation Impact — For You */}
-      <section id="generationen" className="py-24 px-6 bg-parchment">
+      <section id="generationen" className="py-24 px-6 bg-white">
         <div className="max-w-5xl mx-auto">
           <div className="flex items-center justify-center gap-3 mb-4">
             <Sparkles className="w-5 h-5 text-gold" />
