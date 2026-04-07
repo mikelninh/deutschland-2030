@@ -122,9 +122,9 @@ export const reforms: Reform[] = [
     subtitle: "Die Revolution beginnt in der Schulkantine",
     problem: "15% der Kinder in DE sind adipös (Japan: 5%). Schulessen ist oft Tiefkühl-Massenware. Keine Ernährungsbildung. Werbung für Zucker überall.",
     solution: [
-      "Kostenloses Schulessen für alle (wie Finnland seit 1948)",
-      "Ernährungsfachkraft in jeder Schule (wie Japan)",
-      "50% pflanzlich, 20% bio, tägliche vegane Option in allen Kantinen",
+      "Kostenloses 100% veganes Schulessen für alle (Finnland + Japan + Portugal)",
+      "Ernährungsfachkraft in jeder Schule — Kinder lernen kochen und verstehen Nahrung",
+      "Fleisch optional mit Aufpreis — aber unnötig wenn Kinder echte Ernährung lernen",
       "Zuckersteuer nach UK-Vorbild (→ 46% weniger Zucker in Softdrinks)",
       "Keine Werbung für ungesunde Lebensmittel an Kinder unter 16",
     ],

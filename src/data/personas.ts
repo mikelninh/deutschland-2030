@@ -63,7 +63,7 @@ export const policyScenarios: PolicyScenario[] = [
     id: "schulessen",
     emoji: "🍽️",
     title: "Kostenloses veganes Schulessen für alle",
-    description: "Wie Japan (Shokuiku) + Finnland + Portugal: warmes pflanzliches Mittagessen + Ernährungsbildung. 5% Adipositas (Japan) statt 15% (DE).",
+    description: "100% pflanzlich, kostenlos, für jedes Kind. Ernährungsbildung wie Japan (Shokuiku). Fleisch optional mit Aufpreis — aber unnötig, wenn Kinder echte Ernährung lernen. Tierwohl + Gesundheit + Umwelt in einem.",
     annualCost: 4.1,
     annualSaving: 8.2,
     reactions: [
