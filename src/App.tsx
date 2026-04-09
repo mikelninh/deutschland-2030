@@ -528,6 +528,82 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
         </div>
       </Section>
 
+      {/* ━━━━ UBS WALLET DEMO ━━━━ */}
+      <Section id="wallet" bg="bg-bg-alt">
+        <div className="text-center mb-10">
+          <Tag color="green">So fühlt sich UBS an</Tag>
+          <h2 className="font-display text-3xl sm:text-4xl mt-4 mb-2">Dein UBS-Wallet</h2>
+          <p className="text-ink-muted">Statt Formulare, Anträge und Ämter &mdash; eine Karte. Tippen. Fertig.</p>
+        </div>
+
+        {/* Side-by-side comparison */}
+        <div className="grid sm:grid-cols-2 gap-4 mb-8">
+          {/* VORHER: Bürgergeld */}
+          <Card className="border-red/20">
+            <Tag color="red">Heute: Bürgergeld</Tag>
+            <div className="mt-4 space-y-3">
+              <div className="flex justify-between text-sm"><span className="text-ink-muted">Regelsatz</span><span className="font-display">€563/Monat</span></div>
+              <div className="flex justify-between text-sm"><span className="text-ink-muted">Davon Essen</span><span className="font-display text-red">€174</span></div>
+              <div className="flex justify-between text-sm"><span className="text-ink-muted">Davon ÖPNV</span><span className="font-display text-red">€45</span></div>
+              <div className="flex justify-between text-sm"><span className="text-ink-muted">Davon Strom</span><span className="font-display text-red">€42</span></div>
+              <div className="border-t border-border pt-3 mt-3 space-y-1">
+                <p className="text-xs text-red flex items-center gap-2"><X className="w-3 h-3" /> Sanktionen bis 30%</p>
+                <p className="text-xs text-red flex items-center gap-2"><X className="w-3 h-3" /> Anträge, Formulare, Termine</p>
+                <p className="text-xs text-red flex items-center gap-2"><X className="w-3 h-3" /> Stigma: &bdquo;Bürgergeld-Empfänger&ldquo;</p>
+                <p className="text-xs text-red flex items-center gap-2"><X className="w-3 h-3" /> Kein Vermögensaufbau möglich</p>
+              </div>
+            </div>
+          </Card>
+
+          {/* NACHHER: UBS-Wallet */}
+          <Card className="border-green/20 bg-green-light">
+            <Tag color="green">UBS-Wallet: Zugang für alle</Tag>
+            <div className="mt-4 space-y-3">
+              {[
+                { emoji: '🚌', label: 'Mobilität', value: '€0', note: 'ÖPNV frei (u25/ü65)', pct: 100 },
+                { emoji: '🍽️', label: 'Schulessen', value: '€0', note: 'Kostenlos für jedes Kind', pct: 100 },
+                { emoji: '👶', label: 'Kinderbetreuung', value: '€0', note: 'Kita 0-6 frei', pct: 100 },
+                { emoji: '🏥', label: 'Gesundheit', value: '€0', note: 'Ein System für alle', pct: 100 },
+                { emoji: '📶', label: 'Internet', value: '€0', note: 'Breitband als Grundrecht', pct: 100 },
+                { emoji: '💰', label: 'Deutschlandfonds', value: '+€280', note: 'Dein Vermögen wächst', pct: 100 },
+              ].map((item, i) => (
+                <div key={i} className="flex items-center gap-3">
+                  <span className="text-lg">{item.emoji}</span>
+                  <div className="flex-1">
+                    <div className="flex justify-between">
+                      <span className="text-sm font-bold">{item.label}</span>
+                      <span className="text-sm font-display text-green">{item.value}</span>
+                    </div>
+                    <p className="text-xs text-ink-muted">{item.note}</p>
+                  </div>
+                </div>
+              ))}
+              <div className="border-t border-green/20 pt-3 mt-3 space-y-1">
+                <p className="text-xs text-green flex items-center gap-2"><CheckCircle className="w-3 h-3" /> Keine Anträge</p>
+                <p className="text-xs text-green flex items-center gap-2"><CheckCircle className="w-3 h-3" /> Kein Stigma &mdash; alle bekommen es</p>
+                <p className="text-xs text-green flex items-center gap-2"><CheckCircle className="w-3 h-3" /> Eine Karte. Tippen. Fertig.</p>
+                <p className="text-xs text-green flex items-center gap-2"><CheckCircle className="w-3 h-3" /> Vermögen wächst automatisch</p>
+              </div>
+            </div>
+          </Card>
+        </div>
+
+        {/* The Omi explanation */}
+        <Card className="bg-gold-light border-gold/10 mb-6">
+          <p className="font-display text-lg mb-3">Wie erklärt man es Omi?</p>
+          <p className="text-ink-soft text-[15px] leading-relaxed italic">&bdquo;Stell dir vor, der Staat gibt dir eine Karte. Damit fährst du Bus &mdash; kostenlos. Damit isst dein Enkel in der Schule &mdash; kostenlos. Damit gehst du zum Arzt &mdash; kostenlos. Die Karte funktioniert wie deine EC-Karte. Tippen. Piep. Fertig. Kein Antrag. Kein Formular. Kein Amt.&ldquo;</p>
+          <p className="text-sm text-ink-muted mt-3">&bdquo;Und wer bezahlt das?&ldquo;</p>
+          <p className="text-ink-soft text-[15px] mt-1">&bdquo;Die 0,3% der Deutschen die mehr als 5 Millionen Euro haben. Die zahlen ein halbes Prozent davon. Die merken das kaum. Aber für dich bedeutet es: Bus, Essen, Arzt &mdash; ohne nachzudenken.&ldquo;</p>
+        </Card>
+
+        <div className="text-center">
+          <button onClick={() => { trackAction('wallet_shared'); share('Stell dir vor: eine Karte. Bus, Essen, Arzt — kostenlos. Kein Antrag. Kein Amt. Das ist das UBS-Wallet. faireint.de #FairEint #Fair1') }} className="px-6 py-3 bg-gold text-white rounded-xl font-bold cursor-pointer hover:bg-gold/90 transition-colors">
+            UBS-Wallet teilen
+          </button>
+          <p className="text-xs text-ink-muted mt-3">Zeig es deiner Familie, deinen Freunden, deiner Omi.</p>
+        </div>
+      </Section>
+
       {/* ━━━━ 9. FAHRPLAN ━━━━ */}
       <Section id="fahrplan" bg="bg-bg">
         <div className="text-center mb-10">
