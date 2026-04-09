@@ -873,7 +873,7 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
             <p className="text-xs text-ink-muted font-bold mb-2">Dieses Projekt unterstützen</p>
             <p className="text-xs text-ink-muted mb-3">FairEint ist ehrenamtlich und kostenlos. Wenn dir das Projekt hilft, kannst du die Arbeit daran unterstützen.</p>
             <div className="flex gap-2 justify-center flex-wrap">
-              <a href="https://ko-fi.com/michaelninh" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-4 py-2 bg-gold text-white rounded-xl text-xs font-bold hover:bg-gold/90 transition-colors btn-press">
+              <a href="https://ko-fi.com/mikel777" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-4 py-2 bg-gold text-white rounded-xl text-xs font-bold hover:bg-gold/90 transition-colors btn-press">
                 <Heart className="w-3 h-3" /> Unterstützen
               </a>
               <a href="https://github.com/sponsors/mikelninh" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-4 py-2 bg-bg border border-border rounded-xl text-xs font-bold hover:bg-bg-alt transition-colors btn-press">
