@@ -868,6 +868,19 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
               ))}
             </div>
           </div>
+          {/* Support / Donation */}
+          <div className="border-t border-border pt-4 mt-4 mb-4">
+            <p className="text-xs text-ink-muted font-bold mb-2">Dieses Projekt unterstützen</p>
+            <p className="text-xs text-ink-muted mb-3">FairEint ist ehrenamtlich und kostenlos. Wenn dir das Projekt hilft, kannst du die Arbeit daran unterstützen.</p>
+            <div className="flex gap-2 justify-center flex-wrap">
+              <a href="https://ko-fi.com/michaelninh" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-4 py-2 bg-gold text-white rounded-xl text-xs font-bold hover:bg-gold/90 transition-colors btn-press">
+                <Heart className="w-3 h-3" /> Unterstützen
+              </a>
+              <a href="https://github.com/sponsors/mikelninh" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-4 py-2 bg-bg border border-border rounded-xl text-xs font-bold hover:bg-bg-alt transition-colors btn-press">
+                GitHub Sponsors
+              </a>
+            </div>
+          </div>
           <div className="border-t border-border pt-4 mt-4">
             <p className="text-xs text-ink-muted font-bold mb-1">Impressum (Angaben gem. &sect; 5 TMG)</p>
             <p className="text-xs text-ink-muted">Michael Ninh &middot; Kontakt: <a href="https://github.com/mikelninh/faireint/issues" target="_blank" rel="noopener noreferrer" className="text-gold hover:underline">GitHub Issues</a> &middot; <a href="https://www.linkedin.com/in/michael-ninh/" target="_blank" rel="noopener noreferrer" className="text-gold hover:underline">LinkedIn</a></p>
