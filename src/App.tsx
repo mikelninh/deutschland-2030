@@ -385,7 +385,7 @@ export default function App() {
         </div>
         <div className="space-y-6">
           {timeline.map((step, i) => {
-            const colors = ['border-gold/30 bg-gold-light/30', 'border-green/30 bg-green-light/30', 'border-blue/30 bg-blue-light/30']
+            const colors = ['border-gold bg-gold-light', 'border-green bg-green-light', 'border-blue bg-blue-light']
             const dots = ['bg-gold', 'bg-green', 'bg-blue']
             const tags: Array<'gold' | 'green' | 'blue'> = ['gold', 'green', 'blue']
             const labels = ['Sofort spürbar', 'Systeme ändern sich', 'Ein anderes Deutschland']
