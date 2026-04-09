@@ -5,10 +5,20 @@ import { voters, satisfactionSummary } from './data/voters'
 import { partyPathTo80 } from './data/path-to-80'
 import { policyScenarios, simulatePolicy, personas } from './data/personas'
 import { innovations } from './data/innovations'
-import { ChevronDown, ChevronUp, Heart, ArrowRight, CheckCircle, X } from 'lucide-react'
+import { ChevronDown, ChevronUp, Heart, ArrowRight, CheckCircle, X, Copy, Share2 } from 'lucide-react'
 import './index.css'
 
 /* ── Helpers ── */
+
+function Toast({ message, onClose }: { message: string; onClose: () => void }) {
+  return (
+    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-ink text-bg px-5 py-3 rounded-xl shadow-lg text-sm font-medium flex items-center gap-3 animate-fade-in">
+      <CheckCircle className="w-4 h-4 text-green shrink-0" />
+      {message}
+      <button onClick={onClose} className="text-bg/50 hover:text-bg cursor-pointer">&times;</button>
+    </div>
+  )
+}
 
 function Section({ id, bg = 'bg-bg', children }: { id?: string; bg?: string; children: React.ReactNode }) {
   return <section id={id} className={`py-16 sm:py-24 px-5 sm:px-8 ${bg}`}><div className="max-w-3xl mx-auto">{children}</div></section>
@@ -42,6 +52,38 @@ export default function App() {
   const [openVoter, setOpenVoter] = useState<string | null>(null)
   const [activePolicy, setActivePolicy] = useState(policyScenarios[0].id)
   const [openInnovation, setOpenInnovation] = useState<string | null>(null)
+  const [toast, setToast] = useState<string | null>(null)
+
+  function showToast(msg: string) {
+    setToast(msg)
+    setTimeout(() => setToast(null), 3000)
+  }
+
+  function share(text: string) {
+    if (navigator.share) {
+      navigator.share({ title: 'FairEint', text, url: window.location.href })
+    } else {
+      navigator.clipboard.writeText(window.location.href)
+      showToast('Link in die Zwischenablage kopiert!')
+    }
+  }
+
+  const letterTemplate = `Sehr geehrte/r Abgeordnete/r,
+
+ich schreibe Ihnen als Bürger/in Ihres Wahlkreises.
+
+Deutschland hat seit 1996 keine Vermögensteuer mehr — obwohl sie nie abgeschafft wurde (Art. 106 GG). Die Schweiz erhebt sie seit Jahrzehnten und erwirtschaftet damit €9,5 Mrd./Jahr.
+
+Gleichzeitig werden Kapitalerträge mit 25% besteuert, Arbeit mit bis zu 45%. Wer mit Geld Geld verdient, zahlt weniger als wer arbeitet. Das empfinde ich als unfair.
+
+Meine Frage: Unterstützen Sie eine Reaktivierung der Vermögensteuer (z.B. 0,5% ab €5 Mio.)? Und die Integration von Kapitalerträgen in die Einkommensteuer?
+
+Vielen Dank für Ihre Antwort.
+
+Mit freundlichen Grüßen
+[Ihr Name]
+
+Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
 
   // Compute totals from data
   const totalCost = costs.reduce((s, c) => s + c.annualCost, 0)
@@ -50,6 +92,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen">
+      {toast && <Toast message={toast} onClose={() => setToast(null)} />}
 
       {/* ── Nav ── */}
       <nav className="fixed top-0 w-full z-50 bg-bg/90 backdrop-blur-lg border-b border-border">
@@ -118,14 +161,7 @@ export default function App() {
           <p className="text-ink-soft text-lg mb-4">
             Ungleichheit ist kein Schicksal. Sie kostet uns <strong className="text-ink">€70-110 Mrd. pro Jahr</strong> — durch verlorenes Wachstum, Krankheit und Kriminalität. Das sind <strong className="text-ink">€1.300 pro Bürger pro Jahr</strong>, die uns einfach verloren gehen.
           </p>
-          <button onClick={() => {
-            if (navigator.share) {
-              navigator.share({ title: 'FairEint', text: 'Ungleichheit kostet Deutschland €1.300 pro Bürger pro Jahr. Das muss sich ändern.', url: window.location.href })
-            } else {
-              navigator.clipboard.writeText(window.location.href)
-              alert('Link kopiert!')
-            }
-          }} className="px-4 py-2 bg-red/10 border border-red/20 rounded-xl text-sm font-bold text-red cursor-pointer hover:bg-red/20 transition-colors">
+          <button onClick={() => share('Ungleichheit kostet Deutschland €1.300 pro Bürger pro Jahr. Das muss sich ändern.')} className="px-4 py-2 bg-red/10 border border-red/20 rounded-xl text-sm font-bold text-red cursor-pointer hover:bg-red/20 transition-colors">
             Diese Zahl teilen
           </button>
         </Card>
@@ -250,12 +286,12 @@ export default function App() {
         <div className="text-center mb-10">
           <Tag color="purple">Simulator</Tag>
           <h2 className="font-display text-3xl sm:text-4xl mt-4 mb-2">Wie reagiert Deutschland?</h2>
-          <p className="text-ink-muted">23 Personas, gewichtet nach Bevölkerungsanteil. Wähle eine Reform.</p>
+          <p className="text-ink-muted">23 fiktive Personas, gewichtet nach Sinus-Milieus. Keine Umfrage &mdash; eine Simulation.</p>
         </div>
-        <div className="flex flex-wrap gap-2 justify-center mb-8">
+        <div className="flex gap-2 overflow-x-auto pb-2 mb-8 -mx-2 px-2 sm:flex-wrap sm:justify-center sm:overflow-visible">
           {policyScenarios.map(s => (
             <button key={s.id} onClick={() => setActivePolicy(s.id)}
-              className={`px-4 py-2.5 rounded-xl text-sm font-medium cursor-pointer transition-all ${activePolicy === s.id ? 'bg-gold text-white shadow-md' : 'bg-bg-card border border-border text-ink-muted hover:text-ink'}`}>
+              className={`px-4 py-2.5 rounded-xl text-sm font-medium cursor-pointer transition-all whitespace-nowrap shrink-0 ${activePolicy === s.id ? 'bg-gold text-white shadow-md' : 'bg-bg-card border border-border text-ink-muted hover:text-ink'}`}>
               {s.emoji} {s.title}
             </button>
           ))}
@@ -401,7 +437,7 @@ export default function App() {
                 <div className="space-y-2">
                   {step.laws?.map((law, j) => (
                     <div key={j} className="flex items-start gap-3">
-                      <CheckCircle className="w-5 h-5 text-green mt-0.5 shrink-0" />
+                      <ArrowRight className="w-4 h-4 text-ink-muted mt-1 shrink-0" />
                       <span className="text-[15px]">{law}</span>
                     </div>
                   ))}
@@ -478,22 +514,15 @@ export default function App() {
 
         {/* CTA — zero friction */}
         <div className="max-w-md mx-auto space-y-4 mb-12">
-          <h3 className="font-display text-2xl">3 Dinge die du jetzt tun kannst</h3>
+          <h3 className="font-display text-2xl">4 Dinge die du jetzt tun kannst</h3>
 
           <Card className="text-left !p-5">
             <div className="flex items-start gap-4">
-              <span className="text-2xl">1.</span>
+              <Share2 className="w-6 h-6 text-gold mt-0.5 shrink-0" />
               <div>
                 <p className="font-bold">Teile diese Seite</p>
-                <p className="text-sm text-ink-muted mt-1">Schick den Link an eine Person, der Politik wichtig ist. WhatsApp, Instagram, LinkedIn &mdash; egal wo.</p>
-                <button onClick={() => {
-                  if (navigator.share) {
-                    navigator.share({ title: 'FairEint', text: 'Einigkeit beginnt mit Fairness. 10 evidenzbasierte Reformen für Deutschland — mit Simulator, Zahlen und Quellen.', url: window.location.href })
-                  } else {
-                    navigator.clipboard.writeText(window.location.href)
-                    alert('Link kopiert!')
-                  }
-                }} className="mt-3 px-5 py-2.5 bg-gold text-white rounded-xl text-sm font-bold cursor-pointer hover:bg-gold/90 transition-colors">
+                <p className="text-sm text-ink-muted mt-1">Schick den Link an eine Person, der Politik wichtig ist. Ein Tap.</p>
+                <button onClick={() => share('Einigkeit beginnt mit Fairness. 10 evidenzbasierte Reformen mit Simulator und Zahlen.')} className="mt-3 px-5 py-2.5 bg-gold text-white rounded-xl text-sm font-bold cursor-pointer hover:bg-gold/90 transition-colors">
                   Jetzt teilen
                 </button>
               </div>
@@ -502,24 +531,42 @@ export default function App() {
 
           <Card className="text-left !p-5">
             <div className="flex items-start gap-4">
-              <span className="text-2xl">2.</span>
+              <Copy className="w-6 h-6 text-gold mt-0.5 shrink-0" />
               <div>
                 <p className="font-bold">Schreib deinem Abgeordneten</p>
-                <p className="text-sm text-ink-muted mt-1">Finde deinen Bundestagsabgeordneten und frag: &bdquo;Warum hat Deutschland keine Vermögensteuer, obwohl die Schweiz es seit Jahrzehnten vormacht?&ldquo;</p>
-                <a href="https://www.bundestag.de/abgeordnete" target="_blank" rel="noopener noreferrer" className="inline-block mt-3 px-5 py-2.5 bg-bg border border-border rounded-xl text-sm font-bold hover:bg-bg-alt transition-colors">
-                  Abgeordnete finden &rarr;
-                </a>
+                <p className="text-sm text-ink-muted mt-1">Fertige Vorlage &mdash; kopieren, einfügen, abschicken. Dauert 2 Minuten.</p>
+                <div className="flex gap-2 mt-3 flex-wrap">
+                  <button onClick={() => { navigator.clipboard.writeText(letterTemplate); showToast('Brief-Vorlage kopiert! Jetzt an deinen Abgeordneten senden.') }} className="px-5 py-2.5 bg-gold text-white rounded-xl text-sm font-bold cursor-pointer hover:bg-gold/90 transition-colors">
+                    Brief kopieren
+                  </button>
+                  <a href="https://www.bundestag.de/abgeordnete" target="_blank" rel="noopener noreferrer" className="inline-block px-5 py-2.5 bg-bg border border-border rounded-xl text-sm font-bold hover:bg-bg-alt transition-colors">
+                    Abgeordnete finden &rarr;
+                  </a>
+                </div>
               </div>
             </div>
           </Card>
 
           <Card className="text-left !p-5">
             <div className="flex items-start gap-4">
-              <span className="text-2xl">3.</span>
+              <Heart className="w-6 h-6 text-gold mt-0.5 shrink-0" />
               <div>
-                <p className="font-bold">Werde Teil der Bewegung</p>
-                <p className="text-sm text-ink-muted mt-1">Dieses Projekt ist Open Source. Jeder kann Daten prüfen, Reformen vorschlagen, oder den Code verbessern.</p>
-                <a href="https://github.com/mikelninh/faireint" target="_blank" rel="noopener noreferrer" className="inline-block mt-3 px-5 py-2.5 bg-bg border border-border rounded-xl text-sm font-bold hover:bg-bg-alt transition-colors">
+                <p className="font-bold">Mach ein Reel / TikTok / Story</p>
+                <p className="text-sm text-ink-muted mt-1">Zeig den Starbucks-Vergleich, den Simulator, oder den Fahrplan. Nutze <strong>#FairEint</strong> oder <strong>#Fair1</strong>. Wir reposten die besten.</p>
+                <button onClick={() => share('€4 pro Tag — weniger als ein Kaffee. So viel kostet ein faires Deutschland. faireint.de #FairEint #Fair1')} className="mt-3 px-5 py-2.5 bg-bg border border-border rounded-xl text-sm font-bold cursor-pointer hover:bg-bg-alt transition-colors">
+                  Reel-Text kopieren
+                </button>
+              </div>
+            </div>
+          </Card>
+
+          <Card className="text-left !p-5">
+            <div className="flex items-start gap-4">
+              <ArrowRight className="w-6 h-6 text-gold mt-0.5 shrink-0" />
+              <div>
+                <p className="font-bold">Code prüfen, verbessern, mitbauen</p>
+                <p className="text-sm text-ink-muted mt-1">Open Source. Jede Zahl ist im Code nachvollziehbar. Pull Requests willkommen.</p>
+                <a href="https://github.com/mikelninh/faireint" target="_blank" rel="noopener noreferrer" className="inline-block mt-3 px-5 py-2.5 bg-bg border border-border rounded-xl text-sm font-bold cursor-pointer hover:bg-bg-alt transition-colors">
                   GitHub &rarr;
                 </a>
               </div>
@@ -536,10 +583,34 @@ export default function App() {
         <p className="text-sm text-ink-muted max-w-md mx-auto">Alle Zahlen sind Vorschläge auf Basis internationaler Evidenz &mdash; keine beschlossenen Gesetze. Quellen und Berechnungen sind offen einsehbar.</p>
       </section>
 
+      {/* ━━━━ ÜBER / IMPRESSUM ━━━━ */}
+      <Section bg="bg-bg">
+        <div className="max-w-md mx-auto text-center">
+          <h3 className="font-display text-2xl mb-4">Über dieses Projekt</h3>
+          <p className="text-sm text-ink-muted mb-4">
+            FairEint ist ein unabhängiges, ehrenamtliches Open-Source-Projekt. Keine Partei, kein Verein, keine Lobby.
+            Erstellt von Bürgern, die glauben dass evidenzbasierte Politik möglich ist.
+          </p>
+          <p className="text-sm text-ink-muted mb-4">
+            Alle Daten stammen aus öffentlich zugänglichen Quellen (OECD, WHO, IMF, Bundesbank, Eurostat, World Inequality Database).
+            Die Persona-Reaktionen sind <strong>Simulationen</strong>, keine empirischen Umfragen.
+            Alle Berechnungen sind im <a href="https://github.com/mikelninh/faireint" target="_blank" rel="noopener noreferrer" className="text-gold hover:underline">Quellcode</a> offen einsehbar.
+          </p>
+          <p className="text-sm text-ink-muted mb-4">
+            Dieses Projekt ersetzt keine wissenschaftliche Studie und keine politische Beratung.
+            Es ist ein Diskussionsbeitrag &mdash; offen für Kritik, Korrekturen und Verbesserungen.
+          </p>
+          <div className="border-t border-border pt-4 mt-4">
+            <p className="text-xs text-ink-muted">Kontakt: <a href="https://github.com/mikelninh/faireint/issues" target="_blank" rel="noopener noreferrer" className="text-gold hover:underline">GitHub Issues</a> &middot; <a href="https://www.linkedin.com/in/mikelninh/" target="_blank" rel="noopener noreferrer" className="text-gold hover:underline">LinkedIn</a></p>
+            <p className="text-xs text-ink-muted mt-1">MIT Lizenz &middot; Demokratie sollte Open Source sein.</p>
+          </div>
+        </div>
+      </Section>
+
       {/* ━━━━ FOOTER ━━━━ */}
-      <footer className="py-8 px-6 border-t border-border text-center bg-bg">
+      <footer className="py-6 px-6 border-t border-border text-center bg-bg-alt">
         <p className="text-ink-muted text-sm">FairEint &mdash; Einigkeit beginnt mit Fairness</p>
-        <p className="text-ink-muted/50 text-xs mt-1">Quellen: OECD &middot; WHO &middot; IMF &middot; Bundesbank &middot; Eurostat &middot; World Inequality Database &middot; Open Source</p>
+        <p className="text-ink-muted/50 text-xs mt-1">Quellen: OECD &middot; WHO &middot; IMF &middot; Bundesbank &middot; Eurostat &middot; World Inequality Database</p>
       </footer>
     </div>
   )
