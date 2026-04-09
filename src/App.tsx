@@ -882,12 +882,7 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
         <p className="text-ink-muted/50 text-xs mt-1">Quellen: OECD &middot; WHO &middot; IMF &middot; Bundesbank &middot; Eurostat &middot; World Inequality Database</p>
       </footer>
 
-      {/* ── Sticky CTA on mobile ── */}
-      <div className="fixed bottom-0 left-0 right-0 z-40 bg-bg/95 backdrop-blur border-t border-border p-3 lg:hidden">
-        <button onClick={() => share('Einigkeit beginnt mit Fairness. 10 evidenzbasierte Reformen. faireint.de')} className="w-full py-3 bg-gold text-white rounded-xl font-bold text-sm btn-press cursor-pointer">
-          FairEint teilen
-        </button>
-      </div>
+      {/* Removed sticky CTA — was intrusive. CTAs live in #handeln section instead. */}
 
       {/* ── NPS Micro-Survey (appears after 90 seconds) ── */}
       {showNPS && !npsSubmitted && (
