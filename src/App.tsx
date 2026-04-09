@@ -5,7 +5,7 @@ import { voters, satisfactionSummary } from './data/voters'
 import { partyPathTo80 } from './data/path-to-80'
 import { policyScenarios, simulatePolicy, personas } from './data/personas'
 import { innovations } from './data/innovations'
-import { ChevronDown, ChevronUp, Heart, ArrowRight, CheckCircle, X, Copy, Share2 } from 'lucide-react'
+import { ChevronDown, ChevronUp, Heart, ArrowRight, CheckCircle, X, Copy, Share2, Menu } from 'lucide-react'
 import './index.css'
 
 /* ── Helpers ── */
@@ -15,17 +15,17 @@ function Toast({ message, onClose }: { message: string; onClose: () => void }) {
     <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-ink text-bg px-5 py-3 rounded-xl shadow-lg text-sm font-medium flex items-center gap-3 animate-fade-in">
       <CheckCircle className="w-4 h-4 text-green shrink-0" />
       {message}
-      <button onClick={onClose} className="text-bg/50 hover:text-bg cursor-pointer">&times;</button>
+      <button onClick={onClose} className="text-bg/50 hover:text-bg cursor-pointer btn-press">&times;</button>
     </div>
   )
 }
 
-function Section({ id, bg = 'bg-bg', children }: { id?: string; bg?: string; children: React.ReactNode }) {
-  return <section id={id} className={`py-16 sm:py-24 px-5 sm:px-8 ${bg}`}><div className="max-w-3xl mx-auto">{children}</div></section>
+function Section({ id, bg = 'bg-bg', label, children }: { id?: string; bg?: string; label?: string; children: React.ReactNode }) {
+  return <section id={id} aria-label={label} className={`py-16 sm:py-24 px-5 sm:px-8 ${bg}`}><div className="max-w-3xl mx-auto">{children}</div></section>
 }
 
-function WideSection({ id, bg = 'bg-bg', children }: { id?: string; bg?: string; children: React.ReactNode }) {
-  return <section id={id} className={`py-16 sm:py-24 px-5 sm:px-8 ${bg}`}><div className="max-w-5xl mx-auto">{children}</div></section>
+function WideSection({ id, bg = 'bg-bg', label, children }: { id?: string; bg?: string; label?: string; children: React.ReactNode }) {
+  return <section id={id} aria-label={label} className={`py-16 sm:py-24 px-5 sm:px-8 ${bg}`}><div className="max-w-5xl mx-auto">{children}</div></section>
 }
 
 function Tag({ children, color = 'gold' }: { children: React.ReactNode; color?: string }) {
@@ -48,6 +48,8 @@ function Card({ children, className = '' }: { children: React.ReactNode; classNa
 /* ── App ── */
 
 export default function App() {
+  const [mobileMenu, setMobileMenu] = useState(false)
+  const [showAllCosts, setShowAllCosts] = useState(false)
   const [openReform, setOpenReform] = useState<string | null>(null)
   const [openVoter, setOpenVoter] = useState<string | null>(null)
   const [activePolicy, setActivePolicy] = useState(policyScenarios[0].id)
@@ -158,18 +160,25 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
               ))}
             </div>
             <div className="flex items-center gap-0.5 ml-2 border-l border-border pl-2">
-              <button onClick={() => setFontSize(Math.max(-1, fontSize - 1))} className="px-2 py-1 text-xs text-ink-muted hover:text-ink cursor-pointer rounded hover:bg-bg-alt">A-</button>
-              <button onClick={() => setFontSize(Math.min(1, fontSize + 1))} className="px-2 py-1 text-sm text-ink-muted hover:text-ink cursor-pointer rounded hover:bg-bg-alt">A+</button>
+              <button onClick={() => setFontSize(Math.max(-1, fontSize - 1))} className="px-2 py-1 text-xs text-ink-muted hover:text-ink cursor-pointer btn-press rounded hover:bg-bg-alt">A-</button>
+              <button onClick={() => setFontSize(Math.min(1, fontSize + 1))} className="px-2 py-1 text-sm text-ink-muted hover:text-ink cursor-pointer btn-press rounded hover:bg-bg-alt">A+</button>
             </div>
+            <button onClick={() => setMobileMenu(!mobileMenu)} className="lg:hidden p-2 rounded-lg hover:bg-bg-alt cursor-pointer btn-press" aria-label="Menu"><Menu className="w-5 h-5 text-ink-muted" /></button>
           </div>
         </div>
+        {mobileMenu && (
+          <div className="lg:hidden border-t border-border bg-bg/95 backdrop-blur-lg px-5 py-3 flex flex-col gap-1 animate-slide-up">
+            {[['problem','Problem'],['reformen','Reformen'],['rechnung','Zahlen'],['simulator','Simulator'],['parteien','Parteien'],['fahrplan','Fahrplan'],['handeln','Handeln']].map(([id, label]) => (
+              <a key={id} href={`#${id}`} onClick={() => setMobileMenu(false)} className="px-3 py-2 rounded-lg text-ink-muted hover:text-ink hover:bg-bg-alt transition-colors text-sm">{label}</a>
+            ))}
+          </div>
+        )}
       </nav>
 
       {/* ━━━━ 1. HERO ━━━━ */}
-      <header className="min-h-[85vh] flex flex-col items-center justify-center px-6 text-center pt-20 bg-bg">
+      <header className="min-h-[70vh] flex flex-col items-center justify-center px-6 text-center pt-20 bg-bg">
         <div className="max-w-2xl mx-auto fade-in">
-          <Tag>Einigkeit beginnt mit Fairness</Tag>
-          <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl leading-[1.1] mt-6 mb-6 tracking-tight">
+          <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl leading-[1.1] mb-6 tracking-tight">
             Einigkeit. Und <span className="text-gold">Recht</span>. Und <span className="text-gold">Freiheit</span>.
           </h1>
           <p className="text-xl sm:text-2xl text-ink-soft leading-relaxed mb-4">
@@ -178,21 +187,20 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
           <p className="text-ink-muted mb-10">10 Reformen. Jede existiert bereits — irgendwo auf der Welt. Wir zeigen was sie kosten, was sie bringen, und wie Deutschland darauf reagiert.</p>
 
           {/* The killer comparison */}
-          <Card className="max-w-md mx-auto mb-12 fade-in-delay">
-            <p className="text-ink-muted text-sm mb-4">Die zentrale Erkenntnis</p>
+          <div className="max-w-md mx-auto mb-12 fade-in-delay bg-bg-card rounded-2xl border border-border p-5">
             <div className="flex items-center justify-center gap-4 sm:gap-6 mb-3">
               <div className="text-center">
-                <p className="text-3xl sm:text-4xl font-display text-red">€70-110 Mrd.</p>
+                <p className="text-2xl sm:text-3xl font-display text-red">€70-110 Mrd.</p>
                 <p className="text-sm text-ink-muted mt-1">kostet Ungleichheit pro Jahr</p>
               </div>
               <span className="text-ink-muted text-2xl font-display">vs</span>
               <div className="text-center">
-                <p className="text-3xl sm:text-4xl font-display text-green">€30-45 Mrd.</p>
+                <p className="text-2xl sm:text-3xl font-display text-green">€30-45 Mrd.</p>
                 <p className="text-sm text-ink-muted mt-1">kostet die Lösung</p>
               </div>
             </div>
             <p className="text-sm text-ink-muted">Das sind €4 pro Bürger pro Tag. Weniger als ein Kaffee bei Starbucks.</p>
-          </Card>
+          </div>
 
           <a href="#problem" className="text-gold text-sm hover:underline">
             Was genau ist das Problem? <ChevronDown className="w-4 h-4 inline ml-1 animate-bounce" />
@@ -201,7 +209,7 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
       </header>
 
       {/* ━━━━ 2. DAS PROBLEM ━━━━ */}
-      <Section id="problem" bg="bg-bg-alt">
+      <Section id="problem" bg="bg-bg-alt" label="Das Problem">
         <div className="text-center mb-10">
           <Tag color="red">Das Problem</Tag>
           <h2 className="font-display text-3xl sm:text-4xl mt-4 mb-3">Deutschland funktioniert — aber es <span className="text-red">fühlt</span> sich nicht so an.</h2>
@@ -220,7 +228,7 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
           <p className="text-ink-soft text-lg mb-4">
             Ungleichheit ist kein Schicksal. Sie kostet uns <strong className="text-ink">€70-110 Mrd. pro Jahr</strong> — durch verlorenes Wachstum, Krankheit und Kriminalität. Das sind <strong className="text-ink">€1.300 pro Bürger pro Jahr</strong>, die uns einfach verloren gehen.
           </p>
-          <button onClick={() => share('Ungleichheit kostet Deutschland €1.300 pro Bürger pro Jahr. Das muss sich ändern.')} className="px-4 py-2 bg-red/10 border border-red/20 rounded-xl text-sm font-bold text-red cursor-pointer hover:bg-red/20 transition-colors">
+          <button onClick={() => share('Ungleichheit kostet Deutschland €1.300 pro Bürger pro Jahr. Das muss sich ändern.')} className="px-4 py-2 bg-red/10 border border-red/20 rounded-xl text-sm font-bold text-red cursor-pointer btn-press hover:bg-red/20 transition-colors">
             Diese Zahl teilen
           </button>
         </Card>
@@ -245,7 +253,7 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
       </WideSection>
 
       {/* ━━━━ 4. REFORMEN ━━━━ */}
-      <WideSection id="reformen" bg="bg-bg-alt">
+      <WideSection id="reformen" bg="bg-bg-alt" label="Die Reformen">
         <div className="text-center mb-10">
           <Tag color="green">Die Reformen</Tag>
           <h2 className="font-display text-3xl sm:text-4xl mt-4 mb-2">10 Bereiche. Jede Reform existiert bereits.</h2>
@@ -255,7 +263,7 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
         <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 mb-8">
           {reforms.map(r => (
             <button key={r.id} onClick={() => setOpenReform(openReform === r.id ? null : r.id)}
-              className={`rounded-2xl p-4 text-center cursor-pointer transition-all ${openReform === r.id ? 'bg-gold text-white shadow-lg scale-105' : 'bg-bg-card border border-border hover:border-gold/30 hover:shadow-md'}`}>
+              className={`rounded-2xl p-4 text-center cursor-pointer btn-press transition-all ${openReform === r.id ? 'bg-gold text-white shadow-lg scale-105' : 'bg-bg-card border border-border hover:border-gold/30 hover:shadow-md'}`}>
               <span className="text-2xl block mb-1">{r.emoji}</span>
               <span className="font-display text-sm block">{r.title}</span>
             </button>
@@ -264,13 +272,13 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
 
         {/* Detail panel — only shows selected reform */}
         {reforms.filter(r => r.id === openReform).map(r => (
-          <div key={r.id} className="bg-bg-card rounded-2xl border border-gold/20 shadow-lg p-6 sm:p-8 space-y-5 max-w-3xl mx-auto">
+          <div key={r.id} className="bg-bg-card rounded-2xl border border-gold/20 shadow-lg p-6 sm:p-8 space-y-5 max-w-3xl mx-auto panel-enter">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <span className="text-3xl">{r.emoji}</span>
                 <div><h3 className="font-display text-xl">{r.title}</h3><p className="text-sm text-ink-muted">{r.subtitle}</p></div>
               </div>
-              <button onClick={() => setOpenReform(null)} className="text-ink-muted hover:text-ink cursor-pointer text-xl">&times;</button>
+              <button onClick={() => setOpenReform(null)} className="text-ink-muted hover:text-ink cursor-pointer btn-press text-xl">&times;</button>
             </div>
             <p className="text-ink-soft text-sm bg-red-light rounded-xl p-4">{r.problem}</p>
             <ul className="space-y-2">{r.solution.map((s, i) => (
@@ -289,7 +297,7 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
       </WideSection>
 
       {/* ━━━━ 5. DIE RECHNUNG ━━━━ */}
-      <WideSection id="rechnung" bg="bg-bg">
+      <WideSection id="rechnung" bg="bg-bg" label="Die Rechnung">
         <div className="text-center mb-10">
           <Tag color="green">Die Rechnung</Tag>
           <h2 className="font-display text-3xl sm:text-4xl mt-4 mb-2">Können wir uns das leisten?</h2>
@@ -334,7 +342,7 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
           </details>
         </Card>
         <div className="grid sm:grid-cols-2 gap-4">
-          {[...costs].sort((a, b) => b.annualSaving - a.annualSaving).map((c, i) => {
+          {[...costs].sort((a, b) => b.annualSaving - a.annualSaving).slice(0, showAllCosts ? costs.length : 3).map((c, i) => {
             const roi = c.annualCost > 0 ? c.annualSaving / c.annualCost : c.annualSaving
             return (
               <Card key={i}>
@@ -351,6 +359,13 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
             )
           })}
         </div>
+        {!showAllCosts && (
+          <div className="text-center mt-6">
+            <button onClick={() => setShowAllCosts(true)} className="px-6 py-3 bg-bg-card border border-border rounded-xl text-sm font-bold cursor-pointer btn-press hover:bg-bg-alt transition-colors">
+              Alle {costs.length} Reformen anzeigen
+            </button>
+          </div>
+        )}
         <p className="text-center text-sm text-ink-muted mt-6">Dies sind keine beschlossenen Gesetze. Es sind evidenzbasierte Vorschläge mit nachprüfbaren Quellen.</p>
 
         {/* Expert quotes for credibility */}
@@ -369,7 +384,7 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
       </WideSection>
 
       {/* ━━━━ 6. POLICY SIMULATOR ━━━━ */}
-      <Section id="simulator" bg="bg-bg-alt">
+      <Section id="simulator" bg="bg-bg-alt" label="Policy Simulator">
         <div className="text-center mb-10">
           <Tag color="purple">Simulator</Tag>
           <h2 className="font-display text-3xl sm:text-4xl mt-4 mb-2">Wie reagiert Deutschland?</h2>
@@ -378,7 +393,7 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
         <div className="flex gap-2 overflow-x-auto pb-2 mb-8 -mx-2 px-2 sm:flex-wrap sm:justify-center sm:overflow-visible">
           {policyScenarios.map(s => (
             <button key={s.id} onClick={() => { setActivePolicy(s.id); trackAction(`sim_${s.id}`) }}
-              className={`px-4 py-2.5 rounded-xl text-sm font-medium cursor-pointer transition-all whitespace-nowrap shrink-0 ${activePolicy === s.id ? 'bg-gold text-white shadow-md' : 'bg-bg-card border border-border text-ink-muted hover:text-ink'}`}>
+              className={`px-4 py-2.5 rounded-xl text-sm font-medium cursor-pointer btn-press transition-all whitespace-nowrap shrink-0 ${activePolicy === s.id ? 'bg-gold text-white shadow-md' : 'bg-bg-card border border-border text-ink-muted hover:text-ink'}`}>
               {s.emoji} {s.title}
             </button>
           ))}
@@ -418,7 +433,7 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
       </Section>
 
       {/* ━━━━ 7. MENSCHEN ━━━━ */}
-      <WideSection id="menschen" bg="bg-bg">
+      <WideSection id="menschen" bg="bg-bg" label="Wählerprofile">
         <div className="text-center mb-10">
           <Tag>8 Wählerprofile</Tag>
           <h2 className="font-display text-3xl sm:text-4xl mt-4 mb-2">
@@ -432,7 +447,7 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
             return (
               <div key={v.id} className="flex flex-col">
                 <button onClick={() => setOpenVoter(open ? null : v.id)}
-                  className={`rounded-2xl p-4 text-center cursor-pointer transition-all ${open ? 'bg-gold text-white shadow-lg scale-105' : 'bg-bg-card border border-border hover:border-gold/30 hover:shadow-md'}`}>
+                  className={`rounded-2xl p-4 text-center cursor-pointer btn-press transition-all ${open ? 'bg-gold text-white shadow-lg scale-105' : 'bg-bg-card border border-border hover:border-gold/30 hover:shadow-md'}`}>
                   <span className="text-2xl block">{v.emoji}</span>
                   <span className="font-display text-sm block mt-1">{v.name}, {v.age}</span>
                   <span className={`text-xs block mt-0.5 ${open ? 'text-white/70' : 'text-ink-muted'}`}>{v.votedLast}</span>
@@ -443,7 +458,7 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
           })}
         </div>
         {voters.filter(v => v.id === openVoter).map(v => (
-          <div key={v.id} className="bg-bg-card rounded-2xl border border-gold/20 shadow-lg p-6 sm:p-8 mt-6 max-w-2xl mx-auto">
+          <div key={v.id} className="bg-bg-card rounded-2xl border border-gold/20 shadow-lg p-6 sm:p-8 mt-6 max-w-2xl mx-auto panel-enter">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
                 <span className="text-3xl">{v.emoji}</span>
@@ -452,7 +467,7 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
                   <p className="text-sm text-ink-muted">{v.location} &middot; {v.votedLast} &middot; {v.income}</p>
                 </div>
               </div>
-              <button onClick={() => setOpenVoter(null)} className="text-ink-muted hover:text-ink cursor-pointer text-xl">&times;</button>
+              <button onClick={() => setOpenVoter(null)} className="text-ink-muted hover:text-ink cursor-pointer btn-press text-xl">&times;</button>
             </div>
             <div className="flex items-center gap-3 mb-4">
               <span className="text-sm text-red font-display">{v.currentSatisfaction}%</span>
@@ -482,7 +497,7 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
       </WideSection>
 
       {/* ━━━━ 8. PARTEIEN ━━━━ */}
-      <WideSection id="parteien" bg="bg-bg-alt">
+      <WideSection id="parteien" bg="bg-bg-alt" label="Parteien-Check">
         <div className="text-center mb-10">
           <Tag color="blue">Parteien-Check</Tag>
           <h2 className="font-display text-3xl sm:text-4xl mt-4 mb-2">Können die Parteien zustimmen?</h2>
@@ -525,7 +540,7 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
             const open = openFAQ === i
             return (
               <div key={i} className={`rounded-2xl border transition-all ${open ? 'bg-bg-card shadow-lg border-gold/30' : 'bg-bg-card border-border'}`}>
-                <button onClick={() => setOpenFAQ(open ? null : i)} className="w-full flex items-center justify-between p-5 text-left cursor-pointer">
+                <button onClick={() => setOpenFAQ(open ? null : i)} className="w-full flex items-center justify-between p-5 text-left cursor-pointer btn-press">
                   <span className="font-display text-[15px] pr-4">{faq.question}</span>
                   {open ? <ChevronUp className="w-5 h-5 text-gold shrink-0" /> : <ChevronDown className="w-5 h-5 text-ink-muted/30 shrink-0" />}
                 </button>
@@ -541,7 +556,7 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
       </Section>
 
       {/* ━━━━ UBS WALLET DEMO ━━━━ */}
-      <Section id="wallet" bg="bg-bg-alt">
+      <Section id="wallet" bg="bg-bg-alt" label="UBS-Wallet">
         <div className="text-center mb-10">
           <Tag color="green">So fühlt sich UBS an</Tag>
           <h2 className="font-display text-3xl sm:text-4xl mt-4 mb-2">Dein UBS-Wallet</h2>
@@ -639,7 +654,7 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
         </Card>
 
         <div className="text-center">
-          <button onClick={() => { trackAction('wallet_shared'); share('Stell dir vor: eine Karte. Bus, Essen, Arzt — kostenlos. Kein Antrag. Kein Amt. Brasilien hat Pix in 3 Jahren an 150 Mio. gebracht. Wir k&ouml;nnen das auch. faireint.de #FairEint #Fair1') }} className="px-6 py-3 bg-gold text-white rounded-xl font-bold cursor-pointer hover:bg-gold/90 transition-colors">
+          <button onClick={() => { trackAction('wallet_shared'); share('Stell dir vor: eine Karte. Bus, Essen, Arzt — kostenlos. Kein Antrag. Kein Amt. Brasilien hat Pix in 3 Jahren an 150 Mio. gebracht. Wir k&ouml;nnen das auch. faireint.de #FairEint #Fair1') }} className="px-6 py-3 bg-gold text-white rounded-xl font-bold cursor-pointer btn-press hover:bg-gold/90 transition-colors">
             UBS-Wallet teilen
           </button>
           <p className="text-xs text-ink-muted mt-3">Zeig es deiner Familie, deinen Freunden, deiner Omi.</p>
@@ -647,7 +662,7 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
       </Section>
 
       {/* ━━━━ 9. FAHRPLAN ━━━━ */}
-      <Section id="fahrplan" bg="bg-bg">
+      <Section id="fahrplan" bg="bg-bg" label="Fahrplan">
         <div className="text-center mb-10">
           <Tag color="blue">Der Fahrplan</Tag>
           <h2 className="font-display text-3xl sm:text-4xl mt-4 mb-2">Was passiert wann?</h2>
@@ -681,7 +696,7 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
           })}
         </div>
         <div className="text-center mt-8">
-          <a href="#handeln" className="inline-block px-6 py-3 bg-gold text-white rounded-xl font-bold cursor-pointer hover:bg-gold/90 transition-colors">
+          <a href="#handeln" className="inline-block px-6 py-3 bg-gold text-white rounded-xl font-bold cursor-pointer btn-press hover:bg-gold/90 transition-colors">
             Ich will, dass das passiert &rarr;
           </a>
         </div>
@@ -699,7 +714,7 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
             const open = openInnovation === inv.id
             return (
               <div key={inv.id} className={`rounded-2xl border transition-all ${open ? 'bg-bg-card shadow-lg border-gold/30' : 'bg-bg-card border-border'}`}>
-                <button onClick={() => setOpenInnovation(open ? null : inv.id)} className="w-full flex items-center justify-between p-5 sm:p-6 text-left cursor-pointer">
+                <button onClick={() => setOpenInnovation(open ? null : inv.id)} className="w-full flex items-center justify-between p-5 sm:p-6 text-left cursor-pointer btn-press">
                   <div className="flex items-center gap-4">
                     <span className="text-3xl">{inv.emoji}</span>
                     <div><h3 className="font-display text-lg">{inv.title}</h3><p className="text-sm text-ink-muted">{inv.oneLiner}</p></div>
@@ -756,7 +771,7 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
               <div>
                 <p className="font-bold">Teile diese Seite</p>
                 <p className="text-sm text-ink-muted mt-1">Schick den Link an eine Person, der Politik wichtig ist. Ein Tap.</p>
-                <button onClick={() => share('Einigkeit beginnt mit Fairness. 10 evidenzbasierte Reformen mit Simulator und Zahlen.')} className="mt-3 px-5 py-2.5 bg-gold text-white rounded-xl text-sm font-bold cursor-pointer hover:bg-gold/90 transition-colors">
+                <button onClick={() => share('Einigkeit beginnt mit Fairness. 10 evidenzbasierte Reformen mit Simulator und Zahlen.')} className="mt-3 px-5 py-2.5 bg-gold text-white rounded-xl text-sm font-bold cursor-pointer btn-press hover:bg-gold/90 transition-colors">
                   Jetzt teilen
                 </button>
               </div>
@@ -770,7 +785,7 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
                 <p className="font-bold">Schreib deinem Abgeordneten</p>
                 <p className="text-sm text-ink-muted mt-1">Fertige Vorlage &mdash; kopieren, einfügen, abschicken. Dauert 2 Minuten.</p>
                 <div className="flex gap-2 mt-3 flex-wrap">
-                  <button onClick={() => { navigator.clipboard.writeText(letterTemplate); trackAction('brief_copied'); showToast('Brief-Vorlage kopiert! Jetzt an deinen Abgeordneten senden.') }} className="px-5 py-2.5 bg-gold text-white rounded-xl text-sm font-bold cursor-pointer hover:bg-gold/90 transition-colors">
+                  <button onClick={() => { navigator.clipboard.writeText(letterTemplate); trackAction('brief_copied'); showToast('Brief-Vorlage kopiert! Jetzt an deinen Abgeordneten senden.') }} className="px-5 py-2.5 bg-gold text-white rounded-xl text-sm font-bold cursor-pointer btn-press hover:bg-gold/90 transition-colors">
                     Brief kopieren
                   </button>
                   <a href="https://www.bundestag.de/abgeordnete" target="_blank" rel="noopener noreferrer" className="inline-block px-5 py-2.5 bg-bg border border-border rounded-xl text-sm font-bold hover:bg-bg-alt transition-colors">
@@ -787,7 +802,7 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
               <div>
                 <p className="font-bold">Mach ein Reel / TikTok / Story</p>
                 <p className="text-sm text-ink-muted mt-1">Zeig den Starbucks-Vergleich, den Simulator, oder den Fahrplan. Nutze <strong>#FairEint</strong> oder <strong>#Fair1</strong>. Wir reposten die besten.</p>
-                <button onClick={() => { trackAction('reel_copied'); share('€4 pro Tag — weniger als ein Kaffee. So viel kostet ein faires Deutschland. faireint.de #FairEint #Fair1'); }} className="mt-3 px-5 py-2.5 bg-bg border border-border rounded-xl text-sm font-bold cursor-pointer hover:bg-bg-alt transition-colors">
+                <button onClick={() => { trackAction('reel_copied'); share('€4 pro Tag — weniger als ein Kaffee. So viel kostet ein faires Deutschland. faireint.de #FairEint #Fair1'); }} className="mt-3 px-5 py-2.5 bg-bg border border-border rounded-xl text-sm font-bold cursor-pointer btn-press hover:bg-bg-alt transition-colors">
                   Reel-Text kopieren
                 </button>
               </div>
@@ -800,7 +815,7 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
               <div>
                 <p className="font-bold">Code prüfen, verbessern, mitbauen</p>
                 <p className="text-sm text-ink-muted mt-1">Open Source. Jede Zahl ist im Code nachvollziehbar. Pull Requests willkommen.</p>
-                <a href="https://github.com/mikelninh/faireint" target="_blank" rel="noopener noreferrer" className="inline-block mt-3 px-5 py-2.5 bg-bg border border-border rounded-xl text-sm font-bold cursor-pointer hover:bg-bg-alt transition-colors">
+                <a href="https://github.com/mikelninh/faireint" target="_blank" rel="noopener noreferrer" className="inline-block mt-3 px-5 py-2.5 bg-bg border border-border rounded-xl text-sm font-bold cursor-pointer btn-press hover:bg-bg-alt transition-colors">
                   GitHub &rarr;
                 </a>
               </div>
@@ -846,7 +861,7 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
                 'Universal Basic Services hat 80% Zustimmung in der Bevölkerungssimulation.',
               ].map((stat, i) => (
                 <button key={i} onClick={() => { navigator.clipboard.writeText(stat + ' — faireint.de #FairEint'); trackAction('stat_copied'); showToast('Zahl kopiert!') }}
-                  className="w-full text-left text-xs text-ink-muted hover:text-ink hover:bg-bg-alt p-2 rounded-lg cursor-pointer transition-colors flex items-start gap-2">
+                  className="w-full text-left text-xs text-ink-muted hover:text-ink hover:bg-bg-alt p-2 rounded-lg cursor-pointer btn-press transition-colors flex items-start gap-2">
                   <Copy className="w-3 h-3 mt-0.5 shrink-0 text-gold" />
                   <span>{stat}</span>
                 </button>
@@ -867,10 +882,17 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
         <p className="text-ink-muted/50 text-xs mt-1">Quellen: OECD &middot; WHO &middot; IMF &middot; Bundesbank &middot; Eurostat &middot; World Inequality Database</p>
       </footer>
 
+      {/* ── Sticky CTA on mobile ── */}
+      <div className="fixed bottom-0 left-0 right-0 z-40 bg-bg/95 backdrop-blur border-t border-border p-3 lg:hidden">
+        <button onClick={() => share('Einigkeit beginnt mit Fairness. 10 evidenzbasierte Reformen. faireint.de')} className="w-full py-3 bg-gold text-white rounded-xl font-bold text-sm btn-press cursor-pointer">
+          FairEint teilen
+        </button>
+      </div>
+
       {/* ── NPS Micro-Survey (appears after 90 seconds) ── */}
       {showNPS && !npsSubmitted && (
-        <div className="fixed bottom-6 right-6 z-50 bg-bg-card border border-border rounded-2xl shadow-xl p-5 max-w-xs animate-fade-in">
-          <button onClick={() => setShowNPS(false)} className="absolute top-2 right-3 text-ink-muted hover:text-ink cursor-pointer text-lg">&times;</button>
+        <div className="fixed bottom-6 right-6 z-50 bg-bg-card border border-border rounded-2xl shadow-xl p-5 max-w-xs animate-slide-up">
+          <button onClick={() => setShowNPS(false)} className="absolute top-2 right-3 text-ink-muted hover:text-ink cursor-pointer btn-press text-lg">&times;</button>
           <p className="font-display text-sm mb-3">Würdest du FairEint weiterempfehlen?</p>
           <div className="flex gap-1 mb-2">
             {[1,2,3,4,5,6,7,8,9,10].map(n => (
@@ -880,7 +902,7 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
                 setNpsSubmitted(true)
                 showToast(n >= 7 ? 'Danke! Teile FairEint mit einer Person die es lesen sollte.' : 'Danke für dein ehrliches Feedback!')
                 setTimeout(() => setShowNPS(false), 3000)
-              }} className="w-8 h-8 rounded-lg text-xs font-bold cursor-pointer transition-colors bg-bg-alt hover:bg-gold hover:text-white border border-border">
+              }} className="w-8 h-8 rounded-lg text-xs font-bold cursor-pointer btn-press transition-colors bg-bg-alt hover:bg-gold hover:text-white border border-border">
                 {n}
               </button>
             ))}
