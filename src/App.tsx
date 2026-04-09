@@ -54,7 +54,7 @@ export default function App() {
       {/* ── Nav ── */}
       <nav className="fixed top-0 w-full z-50 bg-bg/90 backdrop-blur-lg border-b border-border">
         <div className="max-w-5xl mx-auto flex items-center justify-between px-5 h-14">
-          <a href="#" className="font-display text-xl">Reform<span className="text-gold">Check</span></a>
+          <a href="#" className="font-display text-xl">Fair<span className="text-gold">Eint</span></a>
           <div className="hidden lg:flex gap-1 text-[13px]">
             {[['problem','Problem'],['reformen','Reformen'],['rechnung','Zahlen'],['simulator','Simulator'],['menschen','Menschen'],['parteien','Parteien'],['fahrplan','Fahrplan']].map(([id, label]) => (
               <a key={id} href={`#${id}`} className="px-3 py-1.5 rounded-lg text-ink-muted hover:text-ink hover:bg-bg-alt transition-colors">{label}</a>
@@ -66,14 +66,14 @@ export default function App() {
       {/* ━━━━ 1. HERO ━━━━ */}
       <header className="min-h-[85vh] flex flex-col items-center justify-center px-6 text-center pt-20 bg-bg">
         <div className="max-w-2xl mx-auto fade-in">
-          <Tag>Evidenzbasiert &middot; Open Source</Tag>
+          <Tag>Einigkeit beginnt mit Fairness</Tag>
           <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl leading-[1.1] mt-6 mb-6 tracking-tight">
-            Ungleichheit kostet Deutschland <span className="text-red">mehr</span> als Gerechtigkeit.
+            Einigkeit. Und <span className="text-gold">Recht</span>. Und <span className="text-gold">Freiheit</span>.
           </h1>
           <p className="text-xl sm:text-2xl text-ink-soft leading-relaxed mb-4">
-            10 Reformen. Jede existiert bereits — irgendwo auf der Welt.
+            Aber Einigkeit funktioniert nur, wenn sie <strong>fair</strong> ist.
           </p>
-          <p className="text-ink-muted mb-10">Wir zeigen was sie kosten, was sie bringen, und wie Deutschland darauf reagiert. Mit Zahlen, Quellen und Simulation.</p>
+          <p className="text-ink-muted mb-10">10 Reformen. Jede existiert bereits — irgendwo auf der Welt. Wir zeigen was sie kosten, was sie bringen, und wie Deutschland darauf reagiert.</p>
 
           {/* The killer comparison */}
           <Card className="max-w-md mx-auto mb-12 fade-in-delay">
@@ -482,7 +482,7 @@ export default function App() {
                 <p className="text-sm text-ink-muted mt-1">Schick den Link an eine Person, der Politik wichtig ist. WhatsApp, Instagram, LinkedIn &mdash; egal wo.</p>
                 <button onClick={() => {
                   if (navigator.share) {
-                    navigator.share({ title: 'ReformCheck', text: 'Ungleichheit kostet Deutschland mehr als Gerechtigkeit. 10 Reformen mit Zahlen und Simulation.', url: window.location.href })
+                    navigator.share({ title: 'FairEint', text: 'Einigkeit beginnt mit Fairness. 10 evidenzbasierte Reformen für Deutschland — mit Simulator, Zahlen und Quellen.', url: window.location.href })
                   } else {
                     navigator.clipboard.writeText(window.location.href)
                     alert('Link kopiert!')
@@ -513,7 +513,7 @@ export default function App() {
               <div>
                 <p className="font-bold">Werde Teil der Bewegung</p>
                 <p className="text-sm text-ink-muted mt-1">Dieses Projekt ist Open Source. Jeder kann Daten prüfen, Reformen vorschlagen, oder den Code verbessern.</p>
-                <a href="https://github.com/mikelninh/reformcheck" target="_blank" rel="noopener noreferrer" className="inline-block mt-3 px-5 py-2.5 bg-bg border border-border rounded-xl text-sm font-bold hover:bg-bg-alt transition-colors">
+                <a href="https://github.com/mikelninh/faireint" target="_blank" rel="noopener noreferrer" className="inline-block mt-3 px-5 py-2.5 bg-bg border border-border rounded-xl text-sm font-bold hover:bg-bg-alt transition-colors">
                   GitHub &rarr;
                 </a>
               </div>
@@ -532,7 +532,7 @@ export default function App() {
 
       {/* ━━━━ FOOTER ━━━━ */}
       <footer className="py-8 px-6 border-t border-border text-center bg-bg">
-        <p className="text-ink-muted text-sm">ReformCheck &mdash; Evidenzbasierte Vorschläge für Deutschland</p>
+        <p className="text-ink-muted text-sm">FairEint &mdash; Einigkeit beginnt mit Fairness</p>
         <p className="text-ink-muted/50 text-xs mt-1">Quellen: OECD &middot; WHO &middot; IMF &middot; Bundesbank &middot; Eurostat &middot; World Inequality Database &middot; Open Source</p>
       </footer>
     </div>
