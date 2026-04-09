@@ -226,5 +226,5 @@ export const stats = [
   { value: "12", label: "Länder als Vorbild" },
   { value: "10", label: "Reformbereiche" },
   { value: "7", label: "Simulierte Gesetzentwürfe" },
-  { value: "1", label: "Ziel: Deutschland 2030" },
+  { value: "1", label: "Ziel: Faire Zukunft" },
 ]

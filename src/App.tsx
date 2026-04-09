@@ -66,34 +66,34 @@ export default function App() {
       {/* ━━━━ 1. HERO ━━━━ */}
       <header className="min-h-[85vh] flex flex-col items-center justify-center px-6 text-center pt-20 bg-bg">
         <div className="max-w-2xl mx-auto fade-in">
-          <Tag>Evidenzbasiert</Tag>
-          <h1 className="font-display text-5xl sm:text-6xl lg:text-7xl leading-[1.1] mt-6 mb-6 tracking-tight">
-            Reform<span className="text-gold">Check</span>
+          <Tag>Evidenzbasiert &middot; Open Source</Tag>
+          <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl leading-[1.1] mt-6 mb-6 tracking-tight">
+            Ungleichheit kostet Deutschland <span className="text-red">mehr</span> als Gerechtigkeit.
           </h1>
           <p className="text-xl sm:text-2xl text-ink-soft leading-relaxed mb-4">
-            Was wäre, wenn wir das Beste aus 12 Ländern nehmen — und daraus ein Land bauen?
+            10 Reformen. Jede existiert bereits — irgendwo auf der Welt.
           </p>
-          <p className="text-ink-muted mb-10">10 Reformen. Jede existiert bereits irgendwo auf der Welt. Mit Zahlen, Quellen und Simulation.</p>
+          <p className="text-ink-muted mb-10">Wir zeigen was sie kosten, was sie bringen, und wie Deutschland darauf reagiert. Mit Zahlen, Quellen und Simulation.</p>
 
-          {/* The one number */}
-          <Card className="max-w-sm mx-auto mb-12 fade-in-delay">
-            <p className="text-ink-muted text-sm mb-4">Zufriedenheit mit unserer Demokratie</p>
-            <div className="flex items-center justify-center gap-6 mb-2">
+          {/* The killer comparison */}
+          <Card className="max-w-md mx-auto mb-12 fade-in-delay">
+            <p className="text-ink-muted text-sm mb-4">Die zentrale Erkenntnis</p>
+            <div className="flex items-center justify-center gap-4 sm:gap-6 mb-3">
               <div className="text-center">
-                <p className="text-4xl font-display text-red">53%</p>
-                <p className="text-sm text-ink-muted mt-1">Heute</p>
+                <p className="text-3xl sm:text-4xl font-display text-red">€70-110 Mrd.</p>
+                <p className="text-sm text-ink-muted mt-1">kostet Ungleichheit pro Jahr</p>
               </div>
-              <ArrowRight className="w-5 h-5 text-border" />
+              <span className="text-ink-muted text-2xl font-display">vs</span>
               <div className="text-center">
-                <p className="text-4xl font-display text-green">80%+</p>
-                <p className="text-sm text-ink-muted mt-1">Unser Ziel</p>
+                <p className="text-3xl sm:text-4xl font-display text-green">€30-45 Mrd.</p>
+                <p className="text-sm text-ink-muted mt-1">kostet die Lösung</p>
               </div>
             </div>
-            <p className="text-sm text-ink-muted">Skandinavien schafft 90%+. Es ist möglich.</p>
+            <p className="text-sm text-ink-muted">Das sind €4 pro Bürger pro Tag. Weniger als ein Kaffee bei Starbucks.</p>
           </Card>
 
           <a href="#problem" className="text-gold text-sm hover:underline">
-            Was ist das Problem? <ChevronDown className="w-4 h-4 inline ml-1 animate-bounce" />
+            Was genau ist das Problem? <ChevronDown className="w-4 h-4 inline ml-1 animate-bounce" />
           </a>
         </div>
       </header>
@@ -104,19 +104,21 @@ export default function App() {
           <Tag color="red">Das Problem</Tag>
           <h2 className="font-display text-3xl sm:text-4xl mt-4 mb-3">Deutschland funktioniert — aber es <span className="text-red">fühlt</span> sich nicht so an.</h2>
         </div>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div className="grid sm:grid-cols-2 gap-4 mb-8">
           {[
-            { n: '67%', l: 'des Vermögens', s: 'gehört den Top 10%' },
-            { n: '€2,43', l: 'Diesel/Liter', s: 'Allzeithoch' },
-            { n: '3%', l: 'für Prävention', s: '97% für Reparatur' },
-            { n: '1,4%', l: 'Vermögen', s: 'gehört der unteren 50%' },
+            { n: '€65.000', l: 'Median-Vermögen in Deutschland', s: 'Weniger als Italien, Spanien, Griechenland. Die Hälfte aller Deutschen besitzt fast nichts.' },
+            { n: '67%', l: 'des gesamten Vermögens gehört den Top 10%', s: 'Die untere Hälfte teilt sich 1,4%. Ein Kind in Grünwald erbt mehr als ein Kind in Gelsenkirchen je verdienen wird.' },
+            { n: '25% vs 45%', l: 'Kapitalerträge vs. Arbeit besteuert', s: 'Wer mit Geld Geld verdient, zahlt weniger Steuern als wer arbeitet.' },
+            { n: '€0', l: 'Vermögensteuer seit 1996', s: 'Nie abgeschafft — nur ausgesetzt. Die Schweiz erhebt sie seit Jahrzehnten: €9,5 Mrd./Jahr.' },
           ].map((s, i) => (
-            <Card key={i}><p className="text-3xl font-display text-red mb-1">{s.n}</p><p className="text-ink-soft">{s.l}</p><p className="text-sm text-ink-muted">{s.s}</p></Card>
+            <Card key={i}><p className="text-2xl font-display text-red mb-1">{s.n}</p><p className="text-ink-soft font-bold text-sm">{s.l}</p><p className="text-sm text-ink-muted mt-2">{s.s}</p></Card>
           ))}
         </div>
-        <p className="text-center text-ink-muted text-lg">
-          Es geht nicht nur um Geld. Es geht darum, ob der Staat dich <strong className="text-ink">respektiert</strong>, ob du dir eine <strong className="text-ink">Zukunft</strong> aufbauen kannst, und ob du dich <strong className="text-ink">frei</strong> fühlst.
-        </p>
+        <Card className="bg-red-light border-red/10 text-center">
+          <p className="text-ink-soft text-lg">
+            Ungleichheit ist kein Schicksal. Sie kostet uns <strong className="text-ink">€70-110 Mrd. pro Jahr</strong> — durch verlorenes Wachstum, Krankheit und Kriminalität. Das sind <strong className="text-ink">€1.300 pro Bürger pro Jahr</strong>, die uns einfach verloren gehen.
+          </p>
+        </Card>
       </Section>
 
       {/* ━━━━ 3. PRINZIPIEN ━━━━ */}
@@ -188,13 +190,16 @@ export default function App() {
         <div className="text-center mb-10">
           <Tag color="green">Die Rechnung</Tag>
           <h2 className="font-display text-3xl sm:text-4xl mt-4 mb-2">Können wir uns das leisten?</h2>
-          <p className="text-ink-muted">Jede Zahl ist überprüfbar. Quellen: OECD, WHO, Bundesbank, IMF.</p>
+          <p className="text-ink-muted">Kurze Antwort: Ja. Wir geben mehr für die Folgen von Ungleichheit aus als die Lösung kosten würde.</p>
         </div>
-        <div className="grid sm:grid-cols-3 gap-4 mb-10">
-          <Card><p className="text-3xl font-display text-red">€{Math.round(totalCost)} Mrd.</p><p className="text-ink-soft">Investition pro Jahr</p></Card>
-          <Card><p className="text-3xl font-display text-green">€{Math.round(totalSaving)} Mrd.</p><p className="text-ink-soft">Ersparnis + Einnahmen</p></Card>
-          <Card className="border-gold/20 bg-gold-light"><p className="text-3xl font-display text-gold">+€{Math.round(netGain)} Mrd.</p><p className="text-ink-soft">Nettogewinn pro Jahr</p><p className="text-sm text-ink-muted">= €{Math.round(netGain * 1000 / 83)} pro Bürger</p></Card>
+        <div className="grid sm:grid-cols-3 gap-4 mb-6">
+          <Card><p className="text-3xl font-display text-red">€{Math.round(totalCost)} Mrd.</p><p className="text-ink-soft">Investition pro Jahr</p><p className="text-xs text-ink-muted mt-1">= €{Math.round(totalCost / 83 * 1000 / 12)}/Bürger/Monat</p></Card>
+          <Card><p className="text-3xl font-display text-green">€{Math.round(totalSaving)} Mrd.</p><p className="text-ink-soft">Ersparnis + Einnahmen</p><p className="text-xs text-ink-muted mt-1">= €{Math.round(totalSaving / 83 * 1000 / 12)}/Bürger/Monat</p></Card>
+          <Card className="border-gold/20 bg-gold-light"><p className="text-3xl font-display text-gold">+€{Math.round(netGain)} Mrd.</p><p className="text-ink-soft">Nettogewinn pro Jahr</p><p className="text-xs text-ink-muted mt-1">= +€{Math.round(netGain / 83 * 1000 / 12)}/Bürger/Monat</p></Card>
         </div>
+        <Card className="mb-10 bg-blue-light border-blue/10">
+          <p className="text-sm text-ink-soft text-center"><strong>Zum Vergleich:</strong> Die Energiekrise 2022-2023 hat Deutschland über <strong>€100 Mrd.</strong> für Gaspreisbremse und Tankrabatt gekostet — an einem Wochenende beschlossen. Alle unsere Reformen zusammen kosten weniger als das. Der Unterschied: sie wirken dauerhaft.</p>
+        </Card>
         <div className="grid sm:grid-cols-2 gap-4">
           {costs.map((c, i) => {
             const roi = c.annualCost > 0 ? c.annualSaving / c.annualCost : c.annualSaving
@@ -450,24 +455,79 @@ export default function App() {
         </div>
       </Section>
 
-      {/* ━━━━ 12. FINALE ━━━━ */}
+      {/* ━━━━ 12. FINALE + CTA ━━━━ */}
       <section className="py-20 sm:py-28 px-6 bg-bg-alt text-center">
         <Heart className="w-8 h-8 text-gold mx-auto mb-8" />
         <h2 className="font-display text-3xl sm:text-4xl max-w-lg mx-auto mb-6 leading-tight">
           Jede Reform existiert bereits. <span className="text-gold">Irgendwo auf der Welt.</span>
         </h2>
-        <p className="text-ink-muted text-lg mb-8 max-w-md mx-auto">Wir müssen es nur zusammensetzen. Und anfangen.</p>
+        <p className="text-ink-muted text-lg mb-4 max-w-md mx-auto">Die Lösungen sind da. Die Zahlen stimmen. Die Menschen wollen es.</p>
+        <p className="text-ink font-bold text-lg mb-8">Was fehlt, bist du.</p>
+
         <div className="flex flex-wrap justify-center gap-3 text-3xl mb-10">
           {["🇯🇵","🇫🇮","🇹🇼","🇪🇪","🇨🇭","🇩🇰","🇵🇹","🇸🇬","🇬🇧","🇮🇸","🇸🇪","🇳🇴","🇦🇹"].map((f, i) => (
             <span key={i} className="hover:scale-150 transition-transform duration-500 cursor-default">{f}</span>
           ))}
         </div>
-        <Card className="max-w-xs mx-auto text-left">
+
+        {/* CTA — zero friction */}
+        <div className="max-w-md mx-auto space-y-4 mb-12">
+          <h3 className="font-display text-2xl">3 Dinge die du jetzt tun kannst</h3>
+
+          <Card className="text-left !p-5">
+            <div className="flex items-start gap-4">
+              <span className="text-2xl">1.</span>
+              <div>
+                <p className="font-bold">Teile diese Seite</p>
+                <p className="text-sm text-ink-muted mt-1">Schick den Link an eine Person, der Politik wichtig ist. WhatsApp, Instagram, LinkedIn &mdash; egal wo.</p>
+                <button onClick={() => {
+                  if (navigator.share) {
+                    navigator.share({ title: 'ReformCheck', text: 'Ungleichheit kostet Deutschland mehr als Gerechtigkeit. 10 Reformen mit Zahlen und Simulation.', url: window.location.href })
+                  } else {
+                    navigator.clipboard.writeText(window.location.href)
+                    alert('Link kopiert!')
+                  }
+                }} className="mt-3 px-5 py-2.5 bg-gold text-white rounded-xl text-sm font-bold cursor-pointer hover:bg-gold/90 transition-colors">
+                  Jetzt teilen
+                </button>
+              </div>
+            </div>
+          </Card>
+
+          <Card className="text-left !p-5">
+            <div className="flex items-start gap-4">
+              <span className="text-2xl">2.</span>
+              <div>
+                <p className="font-bold">Schreib deinem Abgeordneten</p>
+                <p className="text-sm text-ink-muted mt-1">Finde deinen Bundestagsabgeordneten und frag: &bdquo;Warum hat Deutschland keine Vermögensteuer, obwohl die Schweiz es seit Jahrzehnten vormacht?&ldquo;</p>
+                <a href="https://www.bundestag.de/abgeordnete" target="_blank" rel="noopener noreferrer" className="inline-block mt-3 px-5 py-2.5 bg-bg border border-border rounded-xl text-sm font-bold hover:bg-bg-alt transition-colors">
+                  Abgeordnete finden &rarr;
+                </a>
+              </div>
+            </div>
+          </Card>
+
+          <Card className="text-left !p-5">
+            <div className="flex items-start gap-4">
+              <span className="text-2xl">3.</span>
+              <div>
+                <p className="font-bold">Werde Teil der Bewegung</p>
+                <p className="text-sm text-ink-muted mt-1">Dieses Projekt ist Open Source. Jeder kann Daten prüfen, Reformen vorschlagen, oder den Code verbessern.</p>
+                <a href="https://github.com/mikelninh/reformcheck" target="_blank" rel="noopener noreferrer" className="inline-block mt-3 px-5 py-2.5 bg-bg border border-border rounded-xl text-sm font-bold hover:bg-bg-alt transition-colors">
+                  GitHub &rarr;
+                </a>
+              </div>
+            </div>
+          </Card>
+        </div>
+
+        <Card className="max-w-xs mx-auto text-left mb-8">
           <div className="flex justify-between mb-1"><span className="text-ink-muted text-sm">Investition</span><span className="font-display text-red">€{Math.round(totalCost)} Mrd.</span></div>
           <div className="flex justify-between mb-1"><span className="text-ink-muted text-sm">Ersparnis</span><span className="font-display text-green">€{Math.round(totalSaving)} Mrd.</span></div>
           <div className="border-t border-border pt-2 mt-2 flex justify-between"><span className="font-bold">Nettogewinn</span><span className="font-display text-gold text-xl">+€{Math.round(netGain)} Mrd.</span></div>
+          <p className="text-xs text-ink-muted mt-2 text-center">= +€{Math.round(netGain / 83 * 1000 / 12)} pro Bürger pro Monat</p>
         </Card>
-        <p className="text-sm text-ink-muted mt-8 max-w-md mx-auto">Alle Zahlen sind Vorschläge auf Basis internationaler Evidenz &mdash; keine beschlossenen Gesetze. Quellen und Berechnungen sind offen einsehbar.</p>
+        <p className="text-sm text-ink-muted max-w-md mx-auto">Alle Zahlen sind Vorschläge auf Basis internationaler Evidenz &mdash; keine beschlossenen Gesetze. Quellen und Berechnungen sind offen einsehbar.</p>
       </section>
 
       {/* ━━━━ FOOTER ━━━━ */}
