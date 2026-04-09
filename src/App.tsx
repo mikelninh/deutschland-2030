@@ -291,6 +291,16 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
               <div className="bg-red-light rounded-xl p-4"><p className="text-xs font-bold text-red mb-1">{r.story.name} &mdash; VORHER</p><p className="text-sm text-ink-soft">{r.story.before}</p></div>
               <div className="bg-green-light rounded-xl p-4"><p className="text-xs font-bold text-green mb-1">{r.story.name} &mdash; NACHHER</p><p className="text-sm text-ink-soft">{r.story.after}</p></div>
             </div>
+            {/* Citizen vote */}
+            <div className="flex items-center justify-between bg-bg-alt rounded-xl p-4">
+              <p className="text-sm text-ink-muted">Unterstützt du diese Reform?</p>
+              <div className="flex gap-2">
+                <button onClick={() => { trackAction(`vote_yes_${r.id}`); showToast(`Stimme für "${r.title}" gezählt!`) }}
+                  className="px-4 py-2 bg-green text-white rounded-xl text-sm font-bold btn-press cursor-pointer hover:bg-green/90">Ja</button>
+                <button onClick={() => { trackAction(`vote_no_${r.id}`); showToast('Danke für dein ehrliches Feedback.') }}
+                  className="px-4 py-2 bg-bg border border-border rounded-xl text-sm font-bold btn-press cursor-pointer hover:bg-bg-alt text-ink-muted">Nein</button>
+              </div>
+            </div>
           </div>
         ))}
         {!openReform && <p className="text-center text-ink-muted text-sm">Tippe auf einen Bereich um Details zu sehen.</p>}
@@ -702,6 +712,33 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
         </div>
       </Section>
 
+      {/* ━━━━ 5-JAHRES-VISION ━━━━ */}
+      <WideSection bg="bg-bg-alt" label="5-Jahres-Vision">
+        <div className="text-center mb-10">
+          <Tag color="gold">Vision 2030</Tag>
+          <h2 className="font-display text-3xl sm:text-4xl mt-4 mb-2">Deutschland als Vorbild &mdash; in 5 Jahren</h2>
+          <p className="text-ink-muted">Fair nach innen, stark nach außen. Beides gleichzeitig.</p>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-5 gap-3">
+          {[
+            { year: '2026', color: 'bg-red-light', label: 'Entbürokratisieren', items: ['Firmengründung in 24h', 'eID endlich nutzen', 'Gratis Schulessen + Kita'] },
+            { year: '2027', color: 'bg-gold-light', label: 'Fair finanzieren', items: ['Vermögensteuer 0,5%', 'Kapital = Arbeit besteuern', 'Deutschlandfonds startet'] },
+            { year: '2028', color: 'bg-green-light', label: 'Innovation starten', items: ['Startup-Gesetz (ESOP)', '10% IT-Budget für AI', 'Energiekosten senken'] },
+            { year: '2029', color: 'bg-blue-light', label: 'EU führen', items: ['EU-Vermögensteuer', 'Digitaler Euro + UBS', 'Ausbildung in 20 Ländern'] },
+            { year: '2030', color: 'bg-purple-light', label: 'Ernte', items: ['Top 5 Digital + Innovation', 'Ungleichheit gesunken', 'Fair UND wettbewerbsfähig'] },
+          ].map((step, i) => (
+            <div key={i} className={`${step.color} rounded-2xl p-4 text-center`}>
+              <p className="font-display text-2xl">{step.year}</p>
+              <p className="font-bold text-xs text-ink-soft mb-3">{step.label}</p>
+              {step.items.map((item, j) => (
+                <p key={j} className="text-xs text-ink-muted mb-1">{item}</p>
+              ))}
+            </div>
+          ))}
+        </div>
+        <p className="text-center text-sm text-ink-muted mt-6">Fairness ist kein Hindernis für Wettbewerb &mdash; sie ist die Voraussetzung. Skandinavien beweist es.</p>
+      </WideSection>
+
       {/* ━━━━ 10. INNOVATIONEN ━━━━ */}
       <Section id="innovationen" bg="bg-bg">
         <div className="text-center mb-10">
@@ -888,6 +925,19 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
           </div>
         </div>
       </Section>
+
+      {/* ━━━━ ECOSYSTEM BAR ━━━━ */}
+      <div className="bg-gold-light border-t border-gold/20 py-3 text-center text-[13px]">
+        <a href="https://mikelninh.github.io/" className="text-gold font-bold hover:underline">Digitale Demokratie</a>
+        <span className="text-ink-muted"> &middot; </span>
+        <span className="text-ink font-bold">FairEint</span>
+        <span className="text-ink-muted"> &middot; </span>
+        <a href="https://mikelninh.github.io/gitlaw/" className="text-ink-muted hover:text-ink hover:underline">GitLaw</a>
+        <span className="text-ink-muted"> &middot; </span>
+        <a href="https://github.com/mikelninh/Public-Money-Mirror" className="text-ink-muted hover:text-ink hover:underline">Public Money Mirror</a>
+        <span className="text-ink-muted"> &middot; </span>
+        <a href="https://github.com/mikelninh/safevoice" className="text-ink-muted hover:text-ink hover:underline">SafeVoice</a>
+      </div>
 
       {/* ━━━━ FOOTER ━━━━ */}
       <footer className="py-6 px-6 border-t border-border text-center bg-bg-alt">
