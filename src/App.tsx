@@ -596,8 +596,38 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
           <p className="text-ink-soft text-[15px] mt-1">&bdquo;Die 0,3% der Deutschen die mehr als 5 Millionen Euro haben. Die zahlen ein halbes Prozent davon. Die merken das kaum. Aber für dich bedeutet es: Bus, Essen, Arzt &mdash; ohne nachzudenken.&ldquo;</p>
         </Card>
 
+        {/* 3-year roadmap — learning from Kenya, India, Brazil */}
+        <Card className="mb-6">
+          <Tag color="blue">3 Jahre statt 10</Tag>
+          <p className="font-display text-lg mt-3 mb-4">Brasilien hat Pix in 3 Jahren an 150 Mio. Menschen gebracht. Deutschland hat bessere Infrastruktur. Also k&ouml;nnen wir das auch.</p>
+          <div className="grid sm:grid-cols-3 gap-3">
+            <div className="bg-gold-light rounded-xl p-4">
+              <p className="font-display text-sm">2026</p>
+              <p className="text-xs text-ink-muted mt-1">Schulessen, Kita und &Ouml;PNV einfach <strong>kostenlos machen</strong>. Keine App n&ouml;tig. Keine Karte. Einfach: gratis.</p>
+            </div>
+            <div className="bg-green-light rounded-xl p-4">
+              <p className="font-display text-sm">2027</p>
+              <p className="text-xs text-ink-muted mt-1"><strong>B&uuml;rgerkarte:</strong> Dein Personalausweis wird zur UBS-Karte. Kontaktlos. Automatisch. Wie Estlands eID.</p>
+            </div>
+            <div className="bg-blue-light rounded-xl p-4">
+              <p className="font-display text-sm">2028</p>
+              <p className="text-xs text-ink-muted mt-1"><strong>Alles verbunden:</strong> Deutschlandfonds, transparenter Haushalt, programmierbare Dienste. Du siehst wohin deine Steuern flie&szlig;en.</p>
+            </div>
+          </div>
+          <div className="flex flex-wrap gap-2 mt-4 justify-center">
+            {[
+              { flag: '🇧🇷', label: 'Pix: 3 Jahre → 150 Mio.' },
+              { flag: '🇮🇳', label: 'UPI: 10 Mrd. Transaktionen/Monat' },
+              { flag: '🇰🇪', label: 'M-Pesa: 66 Mio. ohne Blockchain' },
+              { flag: '🇪🇪', label: 'eID: Personalausweis = alles' },
+            ].map((v, i) => (
+              <span key={i} className="text-xs bg-bg-alt px-3 py-1.5 rounded-full text-ink-muted">{v.flag} {v.label}</span>
+            ))}
+          </div>
+        </Card>
+
         <div className="text-center">
-          <button onClick={() => { trackAction('wallet_shared'); share('Stell dir vor: eine Karte. Bus, Essen, Arzt — kostenlos. Kein Antrag. Kein Amt. Das ist das UBS-Wallet. faireint.de #FairEint #Fair1') }} className="px-6 py-3 bg-gold text-white rounded-xl font-bold cursor-pointer hover:bg-gold/90 transition-colors">
+          <button onClick={() => { trackAction('wallet_shared'); share('Stell dir vor: eine Karte. Bus, Essen, Arzt — kostenlos. Kein Antrag. Kein Amt. Brasilien hat Pix in 3 Jahren an 150 Mio. gebracht. Wir k&ouml;nnen das auch. faireint.de #FairEint #Fair1') }} className="px-6 py-3 bg-gold text-white rounded-xl font-bold cursor-pointer hover:bg-gold/90 transition-colors">
             UBS-Wallet teilen
           </button>
           <p className="text-xs text-ink-muted mt-3">Zeig es deiner Familie, deinen Freunden, deiner Omi.</p>
