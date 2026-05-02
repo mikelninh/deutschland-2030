@@ -63,6 +63,7 @@ function barColorClass(approval: number) {
 export default function App() {
   const [mobileMenu, setMobileMenu] = useState(false)
   const [topView, setTopView] = useState<'politik' | 'buerger'>('politik')
+  const [showMoreIntro, setShowMoreIntro] = useState(false)
   const [showAllCosts, setShowAllCosts] = useState(false)
   const [openReform, setOpenReform] = useState<string | null>(null)
   const [openVoter, setOpenVoter] = useState<string | null>(null)
@@ -311,57 +312,71 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
             ))}
           </div>
         </Card>
-        <div className="grid sm:grid-cols-2 xl:grid-cols-4 gap-4">
-          <Card>
-            <p className="text-xs uppercase tracking-widest text-gold font-bold mb-2">Warum</p>
-            <h3 className="font-display text-xl mb-2">{backcastGoalCount} Ziele bis 2030 sichtbar machen</h3>
-            <p className="text-sm text-ink-muted">Zero Hunger, Zero Poverty, Health, Wealth, Freedom, Happiness und Tierwuerde als klares Zielbild.</p>
-          </Card>
-          <Card>
-            <p className="text-xs uppercase tracking-widest text-green font-bold mb-2">Was</p>
-            <h3 className="font-display text-xl mb-2">{reformCount} Reformbereiche</h3>
-            <p className="text-sm text-ink-muted">Jede Reform hat Problem, Loesung, Vorbilder, Alltagsbeispiel, Zahlenlogik und jetzt auch einen Umsetzungsplan.</p>
-          </Card>
-          <Card>
-            <p className="text-xs uppercase tracking-widest text-purple font-bold mb-2">Wie realistisch</p>
-            <h3 className="font-display text-xl mb-2">{scenarioCount} Gesetzespakete simulieren</h3>
-            <p className="text-sm text-ink-muted">{citizenPersonaCount} Buerger-Personas, {politicalBlocCount} politische Lager und echter Netto-Return zeigen, was traegt und was blockiert.</p>
-          </Card>
-          <Card>
-            <p className="text-xs uppercase tracking-widest text-blue font-bold mb-2">Wie fuehlt es sich an</p>
-            <h3 className="font-display text-xl mb-2">{voterProfileCount} Lebensrealitaeten</h3>
-            <p className="text-sm text-ink-muted">Vom Handwerker bis zur Rentnerin: was sich aendert, was offen bleibt und wie Zustimmung gewonnen werden kann.</p>
-          </Card>
-        </div>
-        <Card className="mt-6 border-gold/20">
-          <div className="flex items-start justify-between gap-4 flex-wrap">
-            <div className="max-w-2xl">
-              <p className="text-xs uppercase tracking-widest text-gold font-bold mb-2">Executive Summary</p>
-              <h3 className="font-display text-2xl mb-2">Beste aktuelle Paket-Lesart: {flagshipScenario.title}</h3>
-              <p className="text-sm text-ink-muted">Wenn ein Politiker oder eine Politikerin nur 30 Sekunden hat, ist das die Kernbotschaft: hohes Entlastungspotenzial, starke Buergerakzeptanz, schwieriger aber nicht unmoeglicher Politikpfad.</p>
-            </div>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-              <div className="bg-purple-light rounded-xl p-4 text-center"><p className="text-xl font-display text-purple">{flagshipMetrics.citizenApproval}%</p><p className="text-xs text-ink-muted">Buerger:innen</p></div>
-              <div className="bg-gold-light rounded-xl p-4 text-center"><p className="text-xl font-display text-gold">{flagshipMetrics.politicianApproval}%</p><p className="text-xs text-ink-muted">Politik</p></div>
-              <div className="bg-green-light rounded-xl p-4 text-center"><p className="text-xl font-display text-green">€{flagshipMetrics.netReturn}</p><p className="text-xs text-ink-muted">Mrd. netto / Jahr</p></div>
-              <div className="bg-blue-light rounded-xl p-4 text-center"><p className="text-xl font-display text-blue">{flagshipMetrics.overallPassability}%</p><p className="text-xs text-ink-muted">Passability</p></div>
-            </div>
+        {!showMoreIntro && (
+          <div className="text-center mt-6">
+            <button
+              onClick={() => setShowMoreIntro(true)}
+              className="px-6 py-3 bg-bg-card border border-border rounded-xl text-sm font-bold cursor-pointer btn-press hover:bg-bg transition-colors"
+            >
+              Mehr sehen
+            </button>
           </div>
-          <div className="grid sm:grid-cols-3 gap-3 mt-5">
-            <div className="bg-bg-alt rounded-xl p-4">
-              <p className="text-xs uppercase tracking-wider text-ink-muted font-bold mb-1">Sofort</p>
-              <p className="text-sm text-ink-soft">Schulessen, Kita, Mobilität und Pflegeentlastung sichtbar machen.</p>
+        )}
+        {showMoreIntro && (
+          <>
+            <div className="grid sm:grid-cols-2 xl:grid-cols-4 gap-4">
+              <Card>
+                <p className="text-xs uppercase tracking-widest text-gold font-bold mb-2">Warum</p>
+                <h3 className="font-display text-xl mb-2">{backcastGoalCount} Ziele bis 2030 sichtbar machen</h3>
+                <p className="text-sm text-ink-muted">Zero Hunger, Zero Poverty, Health, Wealth, Freedom, Happiness und Tierwuerde als klares Zielbild.</p>
+              </Card>
+              <Card>
+                <p className="text-xs uppercase tracking-widest text-green font-bold mb-2">Was</p>
+                <h3 className="font-display text-xl mb-2">{reformCount} Reformbereiche</h3>
+                <p className="text-sm text-ink-muted">Jede Reform hat Problem, Loesung, Vorbilder, Alltagsbeispiel, Zahlenlogik und jetzt auch einen Umsetzungsplan.</p>
+              </Card>
+              <Card>
+                <p className="text-xs uppercase tracking-widest text-purple font-bold mb-2">Wie realistisch</p>
+                <h3 className="font-display text-xl mb-2">{scenarioCount} Gesetzespakete simulieren</h3>
+                <p className="text-sm text-ink-muted">{citizenPersonaCount} Buerger-Personas, {politicalBlocCount} politische Lager und echter Netto-Return zeigen, was traegt und was blockiert.</p>
+              </Card>
+              <Card>
+                <p className="text-xs uppercase tracking-widest text-blue font-bold mb-2">Wie fuehlt es sich an</p>
+                <h3 className="font-display text-xl mb-2">{voterProfileCount} Lebensrealitaeten</h3>
+                <p className="text-sm text-ink-muted">Vom Handwerker bis zur Rentnerin: was sich aendert, was offen bleibt und wie Zustimmung gewonnen werden kann.</p>
+              </Card>
             </div>
-            <div className="bg-bg-alt rounded-xl p-4">
-              <p className="text-xs uppercase tracking-wider text-ink-muted font-bold mb-1">Politischer Hebel</p>
-              <p className="text-sm text-ink-soft">Erbschaftsschlupflöcher schließen und Mittelstandsschutz explizit machen.</p>
-            </div>
-            <div className="bg-bg-alt rounded-xl p-4">
-              <p className="text-xs uppercase tracking-wider text-ink-muted font-bold mb-1">Erste 100 Tage</p>
-              <p className="text-sm text-ink-soft">Bündelgesetz, Schutzregeln, Fonds-Setup und Entlastungs-Kommunikation.</p>
-            </div>
-          </div>
-        </Card>
+            <Card className="mt-6 border-gold/20">
+              <div className="flex items-start justify-between gap-4 flex-wrap">
+                <div className="max-w-2xl">
+                  <p className="text-xs uppercase tracking-widest text-gold font-bold mb-2">Executive Summary</p>
+                  <h3 className="font-display text-2xl mb-2">Beste aktuelle Paket-Lesart: {flagshipScenario.title}</h3>
+                  <p className="text-sm text-ink-muted">Wenn ein Politiker oder eine Politikerin nur 30 Sekunden hat, ist das die Kernbotschaft: hohes Entlastungspotenzial, starke Buergerakzeptanz, schwieriger aber nicht unmoeglicher Politikpfad.</p>
+                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  <div className="bg-purple-light rounded-xl p-4 text-center"><p className="text-xl font-display text-purple">{flagshipMetrics.citizenApproval}%</p><p className="text-xs text-ink-muted">Buerger:innen</p></div>
+                  <div className="bg-gold-light rounded-xl p-4 text-center"><p className="text-xl font-display text-gold">{flagshipMetrics.politicianApproval}%</p><p className="text-xs text-ink-muted">Politik</p></div>
+                  <div className="bg-green-light rounded-xl p-4 text-center"><p className="text-xl font-display text-green">€{flagshipMetrics.netReturn}</p><p className="text-xs text-ink-muted">Mrd. netto / Jahr</p></div>
+                  <div className="bg-blue-light rounded-xl p-4 text-center"><p className="text-xl font-display text-blue">{flagshipMetrics.overallPassability}%</p><p className="text-xs text-ink-muted">Passability</p></div>
+                </div>
+              </div>
+              <div className="grid sm:grid-cols-3 gap-3 mt-5">
+                <div className="bg-bg-alt rounded-xl p-4">
+                  <p className="text-xs uppercase tracking-wider text-ink-muted font-bold mb-1">Sofort</p>
+                  <p className="text-sm text-ink-soft">Schulessen, Kita, Mobilität und Pflegeentlastung sichtbar machen.</p>
+                </div>
+                <div className="bg-bg-alt rounded-xl p-4">
+                  <p className="text-xs uppercase tracking-wider text-ink-muted font-bold mb-1">Politischer Hebel</p>
+                  <p className="text-sm text-ink-soft">Erbschaftsschlupflöcher schließen und Mittelstandsschutz explizit machen.</p>
+                </div>
+                <div className="bg-bg-alt rounded-xl p-4">
+                  <p className="text-xs uppercase tracking-wider text-ink-muted font-bold mb-1">Erste 100 Tage</p>
+                  <p className="text-sm text-ink-soft">Bündelgesetz, Schutzregeln, Fonds-Setup und Entlastungs-Kommunikation.</p>
+                </div>
+              </div>
+            </Card>
+          </>
+        )}
       </WideSection>
 
       {/* ━━━━ 2. DAS PROBLEM ━━━━ */}
@@ -391,7 +406,7 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
       </Section>
 
       {/* ━━━━ 3. PRINZIPIEN ━━━━ */}
-      <WideSection bg="bg-bg">
+      {showMoreIntro && <WideSection bg="bg-bg">
         <div className="text-center mb-10">
           <Tag>Unsere Philosophie</Tag>
           <h2 className="font-display text-3xl sm:text-4xl mt-4 mb-2">6 Prinzipien</h2>
@@ -406,7 +421,7 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
             </Card>
           ))}
         </div>
-      </WideSection>
+      </WideSection>}
 
       {/* ━━━━ 4. REFORMEN ━━━━ */}
       <WideSection id="reformen" bg="bg-bg-alt" label="Die Reformen">
