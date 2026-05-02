@@ -202,7 +202,7 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
     ? [
         { kicker: 'Empfohlenes Paket', title: flagshipScenario.title, body: `${flagshipMetrics.citizenApproval}% Buerger:innen, ${flagshipMetrics.politicianApproval}% Politik, €${flagshipMetrics.netReturn} Mrd. netto pro Jahr.`, bullets: ['Hoher Netto-Return', 'Mehrheit bei Buerger:innen', 'Politisch noch formbar'] },
         { kicker: '3 Risiken', title: 'Woran es scheitern kann', body: 'Die Gegnerstory ist vorhersehbar. Sie muss vor dem Gesetzestext entkraeftet werden.', bullets: ['Mittelstandsangst', 'Neidsteuer-Frame', 'Zu abstrakte Nutzenstory'] },
-        { kicker: '3 Massnahmen', title: 'Wie es passbar wird', body: 'Das Paket gewinnt, wenn der Alltag zuerst und die Ideologie zuletzt sichtbar ist.', bullets: ['Familienheim schuetzen', 'Schlupfloecher zuerst', 'Kita + Schulessen sofort zeigen'] },
+        { kicker: '3 Massnahmen', title: 'Wie es passbar wird', body: 'Das Paket gewinnt, wenn der Alltag zuerst und die Ideologie zuletzt sichtbar ist.', bullets: ['Familienheim schuetzen', 'Schlupfloecher zuerst schliessen', 'Kita und Schulessen sofort sichtbar machen'] },
       ]
     : [
         { kicker: 'Was spare ich?', title: 'Weniger Fixkosten', body: 'Schulessen, Kita, Mobilitaet und digitale Basisdienste druecken laufende Monatskosten.', bullets: ['Weniger Monatsdruck', 'Mehr frei verfuegbares Geld', 'Sofort statt spaeter'] },
@@ -408,9 +408,11 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
                   <p className="text-base text-ink-soft mb-3">{card.body}</p>
                   <div className="space-y-2">
                     {card.bullets.map((line, lineIndex) => (
-                      <div key={lineIndex} className="flex items-start gap-2">
-                        <span className={`mt-1.5 w-2 h-2 rounded-full shrink-0 ${index === 0 ? 'bg-red' : 'bg-green'}`} />
-                        <p className="text-sm text-ink-soft">{line}</p>
+                      <div key={lineIndex} className="rounded-2xl bg-white/70 border border-white p-3">
+                        <div className="flex items-start gap-3">
+                          <span className={`mt-1 w-2.5 h-2.5 rounded-full shrink-0 ${index === 0 ? 'bg-red' : 'bg-green'}`} />
+                          <p className="text-sm text-ink-soft leading-relaxed">{line}</p>
+                        </div>
                       </div>
                     ))}
                   </div>
