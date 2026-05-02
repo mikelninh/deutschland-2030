@@ -64,10 +64,12 @@ export default function App() {
   const [mobileMenu, setMobileMenu] = useState(false)
   const [topView, setTopView] = useState<'politik' | 'buerger'>('politik')
   const [showMoreIntro, setShowMoreIntro] = useState(false)
+  const [showReforms, setShowReforms] = useState(false)
+  const [showAllPolicies, setShowAllPolicies] = useState(false)
   const [showAllCosts, setShowAllCosts] = useState(false)
   const [openReform, setOpenReform] = useState<string | null>(null)
   const [openVoter, setOpenVoter] = useState<string | null>(null)
-  const [activePolicy, setActivePolicy] = useState(policyScenarios[0].id)
+  const [activePolicy, setActivePolicy] = useState('vermoegenspaket')
   const [activeGoal, setActiveGoal] = useState(backcastGoals[0].id)
   const [openInnovation, setOpenInnovation] = useState<string | null>(null)
   const [toast, setToast] = useState<string | null>(null)
@@ -168,6 +170,10 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
   const netGain = totalSaving - totalCost
   const flagshipScenario = policyScenarios.find((scenario) => scenario.id === 'vermoegenspaket') ?? policyScenarios[0]
   const flagshipMetrics = getPolicyMetrics(flagshipScenario.id)
+  const featuredScenarioIds = ['vermoegenspaket', 'ubs', 'erbschaft']
+  const visiblePolicyScenarios = showAllPolicies
+    ? policyScenarios
+    : policyScenarios.filter((scenario) => featuredScenarioIds.includes(scenario.id))
   const topViewSummary = topView === 'politik'
     ? {
         eyebrow: 'Ultra-kompakt fuer Politik',
@@ -406,24 +412,44 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
           <Tag color="red">Das Problem</Tag>
           <h2 className="font-display text-3xl sm:text-4xl mt-4 mb-3">Deutschland funktioniert — aber es <span className="text-red">fühlt</span> sich nicht so an.</h2>
         </div>
-        <div className="grid sm:grid-cols-2 gap-4 mb-8">
-          {[
-            { n: '€65.000', l: 'Median-Vermögen in Deutschland', s: 'Weniger als Italien, Spanien, Griechenland. Die Hälfte aller Deutschen besitzt fast nichts.' },
-            { n: '67%', l: 'des gesamten Vermögens gehört den Top 10%', s: 'Die untere Hälfte teilt sich 1,4%. Ein Kind in Grünwald erbt mehr als ein Kind in Gelsenkirchen je verdienen wird.' },
-            { n: '25% vs 45%', l: 'Kapitalerträge vs. Arbeit besteuert', s: 'Wer mit Geld Geld verdient, zahlt weniger Steuern als wer arbeitet.' },
-            { n: '€0', l: 'Vermögensteuer seit 1996', s: 'Nie abgeschafft — nur ausgesetzt. Die Schweiz erhebt sie seit Jahrzehnten: €9,5 Mrd./Jahr.' },
-          ].map((s, i) => (
-            <Card key={i}><p className="text-2xl font-display text-red mb-1">{s.n}</p><p className="text-ink-soft font-bold text-sm">{s.l}</p><p className="text-sm text-ink-muted mt-2">{s.s}</p></Card>
-          ))}
+        <div className="grid lg:grid-cols-[1.15fr_0.85fr] gap-4 items-stretch">
+          <div className="bg-red-light rounded-[1.75rem] border border-red/10 p-6 sm:p-8">
+            <p className="text-xs uppercase tracking-widest text-red font-bold mb-3">Das Verdikt</p>
+            <h3 className="font-display text-3xl sm:text-4xl leading-tight mb-4">Ungleichheit kostet jedes Jahr mehr, als gerechte Reformen kosten würden.</h3>
+            <p className="text-lg text-ink-soft mb-5">Nicht als Gefühl, sondern als verlorenes Wachstum, vermeidbare Krankheit, Kriminalität und weniger Freiheit im Alltag.</p>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="bg-bg-card rounded-2xl p-4 border border-white/80">
+                <p className="text-xs uppercase tracking-wider text-ink-muted font-bold mb-1">Verlust / Jahr</p>
+                <p className="font-display text-3xl text-red">€70-110 Mrd.</p>
+              </div>
+              <div className="bg-bg-card rounded-2xl p-4 border border-white/80">
+                <p className="text-xs uppercase tracking-wider text-ink-muted font-bold mb-1">Pro Person / Jahr</p>
+                <p className="font-display text-3xl text-red">€1.300</p>
+              </div>
+            </div>
+            <div className="flex flex-wrap gap-2 mt-5">
+              <button onClick={() => share('Ungleichheit kostet Deutschland €1.300 pro Bürger pro Jahr. Das muss sich ändern.')} className="px-4 py-2 bg-red/10 border border-red/20 rounded-xl text-sm font-bold text-red cursor-pointer btn-press hover:bg-red/20 transition-colors">
+                Diese Zahl teilen
+              </button>
+              <a href="#rechnung" className="px-4 py-2 bg-bg-card border border-border rounded-xl text-sm font-bold hover:bg-bg transition-colors">
+                Rechnung ansehen
+              </a>
+            </div>
+          </div>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-1 gap-4">
+            {[
+              { n: '67%', l: 'des Vermögens bei den Top 10%', s: 'Die untere Hälfte teilt sich nur 1,4%.' },
+              { n: '25% vs 45%', l: 'Kapital vs. Arbeit besteuert', s: 'Wer mit Geld Geld verdient, zahlt oft weniger als wer arbeitet.' },
+              { n: '€0', l: 'Vermögensteuer seit 1996', s: 'Nicht abgeschafft, nur ausgesetzt.' },
+            ].map((s, i) => (
+              <div key={i} className="bg-bg-card rounded-[1.5rem] border border-border p-5">
+                <p className="text-2xl font-display text-red mb-1">{s.n}</p>
+                <p className="text-ink-soft font-bold text-sm">{s.l}</p>
+                <p className="text-sm text-ink-muted mt-2">{s.s}</p>
+              </div>
+            ))}
+          </div>
         </div>
-        <Card className="bg-red-light border-red/10 text-center">
-          <p className="text-ink-soft text-lg mb-4">
-            Ungleichheit ist kein Schicksal. Sie kostet uns <strong className="text-ink">€70-110 Mrd. pro Jahr</strong> — durch verlorenes Wachstum, Krankheit und Kriminalität. Das sind <strong className="text-ink">€1.300 pro Bürger pro Jahr</strong>, die uns einfach verloren gehen.
-          </p>
-          <button onClick={() => share('Ungleichheit kostet Deutschland €1.300 pro Bürger pro Jahr. Das muss sich ändern.')} className="px-4 py-2 bg-red/10 border border-red/20 rounded-xl text-sm font-bold text-red cursor-pointer btn-press hover:bg-red/20 transition-colors">
-            Diese Zahl teilen
-          </button>
-        </Card>
       </Section>
 
       {/* ━━━━ 3. PRINZIPIEN ━━━━ */}
@@ -449,81 +475,95 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
         <div className="text-center mb-10">
           <Tag color="green">Die Reformen</Tag>
           <h2 className="font-display text-3xl sm:text-4xl mt-4 mb-2">10 Bereiche. Jede Reform existiert bereits.</h2>
+          <p className="text-ink-muted">Wichtig, aber nicht der erste Block. Erst Empfehlung verstehen, dann die Tiefe ansehen.</p>
         </div>
-
-        {/* Grid overview — compact, scannable */}
-        <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 mb-8">
-          {reforms.map(r => (
-            <button key={r.id} onClick={() => setOpenReform(openReform === r.id ? null : r.id)}
-              className={`rounded-2xl p-4 text-center cursor-pointer btn-press transition-all ${openReform === r.id ? 'bg-gold text-white shadow-lg scale-105' : 'bg-bg-card border border-border hover:border-gold/30 hover:shadow-md'}`}>
-              <span className="text-2xl block mb-1">{r.emoji}</span>
-              <span className="font-display text-sm block">{r.title}</span>
-            </button>
-          ))}
-        </div>
-
-        {/* Detail panel — only shows selected reform */}
-        {reforms.filter(r => r.id === openReform).map(r => (
-          <div key={r.id} className="bg-bg-card rounded-2xl border border-gold/20 shadow-lg p-6 sm:p-8 space-y-5 max-w-3xl mx-auto panel-enter">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <span className="text-3xl">{r.emoji}</span>
-                <div><h3 className="font-display text-xl">{r.title}</h3><p className="text-sm text-ink-muted">{r.subtitle}</p></div>
-              </div>
-              <button onClick={() => setOpenReform(null)} className="text-ink-muted hover:text-ink cursor-pointer btn-press text-xl">&times;</button>
-            </div>
-            <p className="text-ink-soft text-sm bg-red-light rounded-xl p-4">{r.problem}</p>
-            <ul className="space-y-2">{r.solution.map((s, i) => (
-              <li key={i} className="flex items-start gap-3"><CheckCircle className="w-4 h-4 text-green mt-1 shrink-0" /><span className="text-sm text-ink-soft">{s}</span></li>
-            ))}</ul>
-            <div className="grid sm:grid-cols-2 gap-3">
-              <div className="bg-blue-light rounded-xl p-4">
-                <p className="text-xs font-bold text-blue mb-2 uppercase tracking-wide">Erste 100 Tage</p>
-                {r.implementation.first100Days.map((step, i) => (
-                  <p key={i} className="text-sm text-ink-soft mb-1">&bull; {step}</p>
-                ))}
-              </div>
-              <div className="bg-gold-light rounded-xl p-4">
-                <p className="text-xs font-bold text-gold mb-2 uppercase tracking-wide">Gesetze & Umsetzung</p>
-                {r.implementation.legalSteps.map((step, i) => (
-                  <p key={i} className="text-sm text-ink-soft mb-1">&bull; {step}</p>
-                ))}
-              </div>
-            </div>
-            <div className="grid sm:grid-cols-2 gap-3">
-              <div className="bg-green-light rounded-xl p-4">
-                <p className="text-xs font-bold text-green mb-2 uppercase tracking-wide">Wer muss liefern?</p>
-                {r.implementation.operators.map((step, i) => (
-                  <p key={i} className="text-sm text-ink-soft mb-1">&bull; {step}</p>
-                ))}
-              </div>
-              <div className="bg-red-light rounded-xl p-4">
-                <p className="text-xs font-bold text-red mb-2 uppercase tracking-wide">Was blockiert?</p>
-                {r.implementation.blockers.map((step, i) => (
-                  <p key={i} className="text-sm text-ink-soft mb-1">&bull; {step}</p>
-                ))}
-              </div>
-            </div>
-            <div className="grid sm:grid-cols-2 gap-3">{r.worldwide.map((w, i) => (
-              <div key={i} className="bg-blue-light rounded-xl p-3"><p className="font-bold text-xs">{w.flag} {w.country}</p><p className="text-xs text-ink-muted mt-1">{w.lesson}</p></div>
-            ))}</div>
-            <div className="grid sm:grid-cols-2 gap-3">
-              <div className="bg-red-light rounded-xl p-4"><p className="text-xs font-bold text-red mb-1">{r.story.name} &mdash; VORHER</p><p className="text-sm text-ink-soft">{r.story.before}</p></div>
-              <div className="bg-green-light rounded-xl p-4"><p className="text-xs font-bold text-green mb-1">{r.story.name} &mdash; NACHHER</p><p className="text-sm text-ink-soft">{r.story.after}</p></div>
-            </div>
-            {/* Citizen vote */}
-            <div className="flex items-center justify-between bg-bg-alt rounded-xl p-4">
-              <p className="text-sm text-ink-muted">Unterstützt du diese Reform?</p>
-              <div className="flex gap-2">
-                <button onClick={() => { trackAction(`vote_yes_${r.id}`); showToast(`Stimme für "${r.title}" gezählt!`) }}
-                  className="px-4 py-2 bg-green text-white rounded-xl text-sm font-bold btn-press cursor-pointer hover:bg-green/90">Ja</button>
-                <button onClick={() => { trackAction(`vote_no_${r.id}`); showToast('Danke für dein ehrliches Feedback.') }}
-                  className="px-4 py-2 bg-bg border border-border rounded-xl text-sm font-bold btn-press cursor-pointer hover:bg-bg-alt text-ink-muted">Nein</button>
-              </div>
-            </div>
+        {!showReforms && (
+          <div className="max-w-3xl mx-auto">
+            <Card className="text-center">
+              <p className="text-sm text-ink-soft mb-4">Die 10 Reformbereiche bleiben voll da, aber standardmäßig im Hintergrund. Erst Paket verstehen, dann in einzelne Themen eintauchen.</p>
+              <button
+                onClick={() => setShowReforms(true)}
+                className="px-6 py-3 bg-bg-alt border border-border rounded-xl text-sm font-bold cursor-pointer btn-press hover:bg-bg transition-colors"
+              >
+                Reformen öffnen
+              </button>
+            </Card>
           </div>
-        ))}
-        {!openReform && <p className="text-center text-ink-muted text-sm">Tippe auf einen Bereich um Details zu sehen.</p>}
+        )}
+        {showReforms && (
+          <>
+            <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 mb-8">
+              {reforms.map(r => (
+                <button key={r.id} onClick={() => setOpenReform(openReform === r.id ? null : r.id)}
+                  className={`rounded-2xl p-4 text-center cursor-pointer btn-press transition-all ${openReform === r.id ? 'bg-gold text-white shadow-lg scale-105' : 'bg-bg-card border border-border hover:border-gold/30 hover:shadow-md'}`}>
+                  <span className="text-2xl block mb-1">{r.emoji}</span>
+                  <span className="font-display text-sm block">{r.title}</span>
+                </button>
+              ))}
+            </div>
+
+            {reforms.filter(r => r.id === openReform).map(r => (
+              <div key={r.id} className="bg-bg-card rounded-2xl border border-gold/20 shadow-lg p-6 sm:p-8 space-y-5 max-w-3xl mx-auto panel-enter">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <span className="text-3xl">{r.emoji}</span>
+                    <div><h3 className="font-display text-xl">{r.title}</h3><p className="text-sm text-ink-muted">{r.subtitle}</p></div>
+                  </div>
+                  <button onClick={() => setOpenReform(null)} className="text-ink-muted hover:text-ink cursor-pointer btn-press text-xl">&times;</button>
+                </div>
+                <p className="text-ink-soft text-sm bg-red-light rounded-xl p-4">{r.problem}</p>
+                <ul className="space-y-2">{r.solution.map((s, i) => (
+                  <li key={i} className="flex items-start gap-3"><CheckCircle className="w-4 h-4 text-green mt-1 shrink-0" /><span className="text-sm text-ink-soft">{s}</span></li>
+                ))}</ul>
+                <div className="grid sm:grid-cols-2 gap-3">
+                  <div className="bg-blue-light rounded-xl p-4">
+                    <p className="text-xs font-bold text-blue mb-2 uppercase tracking-wide">Erste 100 Tage</p>
+                    {r.implementation.first100Days.map((step, i) => (
+                      <p key={i} className="text-sm text-ink-soft mb-1">&bull; {step}</p>
+                    ))}
+                  </div>
+                  <div className="bg-gold-light rounded-xl p-4">
+                    <p className="text-xs font-bold text-gold mb-2 uppercase tracking-wide">Gesetze & Umsetzung</p>
+                    {r.implementation.legalSteps.map((step, i) => (
+                      <p key={i} className="text-sm text-ink-soft mb-1">&bull; {step}</p>
+                    ))}
+                  </div>
+                </div>
+                <div className="grid sm:grid-cols-2 gap-3">
+                  <div className="bg-green-light rounded-xl p-4">
+                    <p className="text-xs font-bold text-green mb-2 uppercase tracking-wide">Wer muss liefern?</p>
+                    {r.implementation.operators.map((step, i) => (
+                      <p key={i} className="text-sm text-ink-soft mb-1">&bull; {step}</p>
+                    ))}
+                  </div>
+                  <div className="bg-red-light rounded-xl p-4">
+                    <p className="text-xs font-bold text-red mb-2 uppercase tracking-wide">Was blockiert?</p>
+                    {r.implementation.blockers.map((step, i) => (
+                      <p key={i} className="text-sm text-ink-soft mb-1">&bull; {step}</p>
+                    ))}
+                  </div>
+                </div>
+                <div className="grid sm:grid-cols-2 gap-3">{r.worldwide.map((w, i) => (
+                  <div key={i} className="bg-blue-light rounded-xl p-3"><p className="font-bold text-xs">{w.flag} {w.country}</p><p className="text-xs text-ink-muted mt-1">{w.lesson}</p></div>
+                ))}</div>
+                <div className="grid sm:grid-cols-2 gap-3">
+                  <div className="bg-red-light rounded-xl p-4"><p className="text-xs font-bold text-red mb-1">{r.story.name} &mdash; VORHER</p><p className="text-sm text-ink-soft">{r.story.before}</p></div>
+                  <div className="bg-green-light rounded-xl p-4"><p className="text-xs font-bold text-green mb-1">{r.story.name} &mdash; NACHHER</p><p className="text-sm text-ink-soft">{r.story.after}</p></div>
+                </div>
+                <div className="flex items-center justify-between bg-bg-alt rounded-xl p-4">
+                  <p className="text-sm text-ink-muted">Unterstützt du diese Reform?</p>
+                  <div className="flex gap-2">
+                    <button onClick={() => { trackAction(`vote_yes_${r.id}`); showToast(`Stimme für "${r.title}" gezählt!`) }}
+                      className="px-4 py-2 bg-green text-white rounded-xl text-sm font-bold btn-press cursor-pointer hover:bg-green/90">Ja</button>
+                    <button onClick={() => { trackAction(`vote_no_${r.id}`); showToast('Danke für dein ehrliches Feedback.') }}
+                      className="px-4 py-2 bg-bg border border-border rounded-xl text-sm font-bold btn-press cursor-pointer hover:bg-bg-alt text-ink-muted">Nein</button>
+                  </div>
+                </div>
+              </div>
+            ))}
+            {!openReform && <p className="text-center text-ink-muted text-sm">Tippe auf einen Bereich um Details zu sehen.</p>}
+          </>
+        )}
       </WideSection>
 
       {/* ━━━━ 5. DIE RECHNUNG ━━━━ */}
@@ -648,8 +688,8 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
       <Section id="simulator" bg="bg-bg-alt" label="Policy Simulator">
         <div className="text-center mb-10">
           <Tag color="purple">Simulator</Tag>
-          <h2 className="font-display text-3xl sm:text-4xl mt-4 mb-2">Wer stimmt zu und wer blockiert?</h2>
-          <p className="text-ink-muted">FairEint simuliert getrennt, wie {citizenPersonaCount} B&uuml;rger-Personas und {politicalBlocCount} politische Lager reagieren &mdash; plus was die Reform netto bringt.</p>
+          <h2 className="font-display text-3xl sm:text-4xl mt-4 mb-2">Welche 3 Pakete tragen am ehesten?</h2>
+          <p className="text-ink-muted">Standardmäßig zeigt FairEint nur die 3 wichtigsten Pakete. Alles andere ist bewusst zweitrangig, bis du tiefer gehen willst.</p>
         </div>
         <Card className="mb-6 bg-bg-card border-border/60">
           <p className="text-xs uppercase tracking-wider text-ink-muted font-bold mb-2">
@@ -669,8 +709,8 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
             <div><p className="text-xs uppercase tracking-wider text-ink-muted font-bold mb-1">10 Jahre</p><p className="text-sm text-ink-soft">ob das Paket politisch und finanziell traegt</p></div>
           </div>
         </Card>
-        <div className="grid sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-8">
-          {policyScenarios.map(s => {
+        <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-4 mb-8">
+          {visiblePolicyScenarios.map(s => {
             const metrics = getPolicyMetrics(s.id)
             const active = s.id === activePolicy
             return (
@@ -717,6 +757,16 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
             )
           })}
         </div>
+        {!showAllPolicies && (
+          <div className="text-center mb-8">
+            <button
+              onClick={() => setShowAllPolicies(true)}
+              className="px-6 py-3 bg-bg-card border border-border rounded-xl text-sm font-bold cursor-pointer btn-press hover:bg-bg transition-colors"
+            >
+              Alle Pakete anzeigen
+            </button>
+          </div>
+        )}
         {policyScenarios.filter(s => s.id === activePolicy).map(scenario => {
           const citizen = simulatePolicy(scenario.id)
           const politician = simulatePoliticianPolicy(scenario.id)
