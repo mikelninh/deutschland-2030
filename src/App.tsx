@@ -167,26 +167,37 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
   const netGain = totalSaving - totalCost
   const flagshipScenario = policyScenarios.find((scenario) => scenario.id === 'vermoegenspaket') ?? policyScenarios[0]
   const flagshipMetrics = getPolicyMetrics(flagshipScenario.id)
+  const topViewSummary = topView === 'politik'
+    ? {
+        eyebrow: 'Ultra-kompakt fuer Politik',
+        title: '1 Paket. 3 Risiken. 3 Massnahmen.',
+        body: 'Die schnellste Lesart fuer Politik: was sich lohnt, was blockiert und was man in den ersten 100 Tagen tun muss.',
+      }
+    : {
+        eyebrow: 'Ultra-kompakt fuer Buerger:innen',
+        title: 'Was spare ich, was wird leichter, was bleibt geschuetzt?',
+        body: 'Die schnellste Lesart fuer Buerger:innen: was sich im Alltag veraendert, wer entlastet wird und welche Sicherheiten bestehen bleiben.',
+      }
   const topViewCards = topView === 'politik'
     ? [
-        { kicker: 'Empfehlung', title: flagshipScenario.title, body: `Das staerkste Paket derzeit: ${flagshipMetrics.citizenApproval}% Buerger:innen, ${flagshipMetrics.politicianApproval}% Politik, €${flagshipMetrics.netReturn} Mrd. netto pro Jahr.` },
-        { kicker: 'Knackpunkt', title: 'Passbar statt nur beliebt', body: 'Erbschaftsschlupfloecher schliessen, Mittelstand schuetzen, Entlastung unten sofort sichtbar machen.' },
-        { kicker: 'Naechster Schritt', title: 'Erste 100 Tage', body: 'Buendelgesetz, Schutzregeln fuer Wohneigentum und Familienbetriebe, Zukunftsfonds und klare Entlastungs-Kommunikation.' },
+        { kicker: 'Empfohlenes Paket', title: flagshipScenario.title, body: `${flagshipMetrics.citizenApproval}% Buerger:innen, ${flagshipMetrics.politicianApproval}% Politik, €${flagshipMetrics.netReturn} Mrd. netto pro Jahr.` },
+        { kicker: '3 Risiken', title: 'Woran es scheitern kann', body: '1. Angst vor Mittelstandsbelastung. 2. Framing als Neidsteuer. 3. Zu grosses Paket ohne schnelle Alltagseffekte.' },
+        { kicker: '3 Massnahmen', title: 'Wie es passbar wird', body: '1. Familienheim und kleine Betriebe schuetzen. 2. Erbschaftsschlupfloecher zuerst. 3. Entlastung durch Kita, Schulessen und Mobilitaet sofort sichtbar machen.' },
       ]
     : [
-        { kicker: 'Im Alltag', title: 'Was du direkt merken wuerdest', body: 'Schulessen, Kita, Mobilitaet, Pflege und digitale Dienste werden einfacher oder billiger statt immer komplizierter.' },
-        { kicker: 'Fairness', title: 'Wer mehr traegt', body: 'Normale Erben, Familienheime und kleine Betriebe sollen geschuetzt bleiben. Sehr grosse Vermoegen und Schlupfloecher tragen mehr.' },
-        { kicker: 'Warum das zaehlt', title: 'Weniger Stress, mehr Freiheit', body: 'Weniger Armut, weniger Buerokratie, bessere Gesundheit und mehr Sicherheit im Alltag statt nur schoener Reformsprache.' },
+        { kicker: 'Was spare ich?', title: 'Weniger Fixkosten', body: 'Schulessen, Kita, Mobilitaet und digitale Basisdienste druecken laufende Monatskosten statt nur Einmalhilfen zu verteilen.' },
+        { kicker: 'Was wird einfacher?', title: 'Weniger Antraege, weniger Stress', body: 'Mehr Leistungen kommen automatisch oder universell. Weniger Behoerdenchaos, kuerzere Wege, weniger Stigma.' },
+        { kicker: 'Was bleibt geschuetzt?', title: 'Normale Leute sollen nicht zahlen', body: 'Familienheim, kleine Erbschaften und kleine Betriebe bleiben geschuetzt. Mehr tragen sehr grosse Vermoegen und Schlupfloecher.' },
       ]
   const topViewActions = topView === 'politik'
     ? [
-        { href: '#simulator', label: 'Passability ansehen' },
-        { href: '#rechnung', label: 'Kostenlogik pruefen' },
-        { href: '#fahrplan', label: 'Umsetzung lesen' },
+        { href: '#simulator', label: 'Paket pruefen' },
+        { href: '#rechnung', label: 'Return sehen' },
+        { href: '#fahrplan', label: '100 Tage lesen' },
       ]
     : [
-        { href: '#wallet', label: 'Alltagseffekt ansehen' },
-        { href: '#reformen', label: 'Reformen verstehen' },
+        { href: '#wallet', label: 'Alltag ansehen' },
+        { href: '#reformen', label: 'Schutz verstehen' },
         { href: '#vision2030', label: '2030 fuehlen' },
       ]
 
@@ -278,17 +289,9 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
         <Card className={`mb-6 ${topView === 'politik' ? 'border-gold/20' : 'border-blue/20'}`}>
           <div className="flex items-start justify-between gap-4 flex-wrap">
             <div className="max-w-2xl">
-              <p className={`text-xs uppercase tracking-widest font-bold mb-2 ${topView === 'politik' ? 'text-gold' : 'text-blue'}`}>
-                {topView === 'politik' ? 'Ultra-kompakt fuer Politik' : 'Ultra-kompakt fuer Buerger:innen'}
-              </p>
-              <h3 className="font-display text-2xl mb-2">
-                {topView === 'politik' ? 'Welche Reform traegt, was bringt sie und wo scheitert sie?' : 'Was wird billiger, fairer und freier in meinem Alltag?'}
-              </h3>
-              <p className="text-sm text-ink-muted">
-                {topView === 'politik'
-                  ? 'Diese Sicht komprimiert FairEint auf Passability, Netto-Return, Koalitionsfaehigkeit und erste Umsetzungsschritte.'
-                  : 'Diese Sicht komprimiert FairEint auf Lebensrealitaet, Entlastung, Schutz vor Ueberforderung und sichtbare Verbesserungen bis 2030.'}
-              </p>
+              <p className={`text-xs uppercase tracking-widest font-bold mb-2 ${topView === 'politik' ? 'text-gold' : 'text-blue'}`}>{topViewSummary.eyebrow}</p>
+              <h3 className="font-display text-2xl mb-2">{topViewSummary.title}</h3>
+              <p className="text-sm text-ink-muted">{topViewSummary.body}</p>
             </div>
             <div className="flex flex-wrap gap-2">
               {topViewActions.map((action) => (
