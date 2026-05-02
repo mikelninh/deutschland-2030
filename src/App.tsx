@@ -234,6 +234,9 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
         { label: 'Schutz', value: 82, color: 'bg-gold' },
         { label: 'Zukunft', value: 76, color: 'bg-purple' },
       ]
+  const navLinks = topView === 'politik'
+    ? [['problem','Problem'],['simulator','Pakete'],['vision2030','2030'],['parteien','Parteien'],['fahrplan','Fahrplan'],['handeln','Handeln']]
+    : [['problem','Problem'],['simulator','Pakete'],['vision2030','2030'],['menschen','Menschen'],['wallet','Alltag'],['fahrplan','Fahrplan'],['handeln','Handeln']]
 
   return (
     <div className={`min-h-screen ${fontSize === 1 ? 'text-lg' : fontSize === -1 ? 'text-sm' : ''}`}>
@@ -245,11 +248,11 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
           <a href="#" className="font-display text-xl">Fair<span className="text-gold">Eint</span></a>
           <div className="flex items-center gap-1">
             <div className="hidden lg:flex gap-1 text-[13px]">
-              {[['problem','Problem'],['reformen','Reformen'],['rechnung','Zahlen'],['simulator','Simulator'],['vision2030','2030'],['parteien','Parteien'],['fahrplan','Fahrplan'],['handeln','Handeln']].map(([id, label]) => (
+              {navLinks.map(([id, label]) => (
                 <a key={id} href={`#${id}`} className="px-3 py-1.5 rounded-lg text-ink-muted hover:text-ink hover:bg-bg-alt transition-colors">{label}</a>
               ))}
             </div>
-            <div className="flex items-center gap-0.5 ml-2 border-l border-border pl-2">
+            <div className="hidden sm:flex items-center gap-0.5 ml-2 border-l border-border pl-2">
               <button onClick={() => setFontSize(Math.max(-1, fontSize - 1))} className="px-2 py-1 text-xs text-ink-muted hover:text-ink cursor-pointer btn-press rounded hover:bg-bg-alt">A-</button>
               <button onClick={() => setFontSize(Math.min(1, fontSize + 1))} className="px-2 py-1 text-sm text-ink-muted hover:text-ink cursor-pointer btn-press rounded hover:bg-bg-alt">A+</button>
             </div>
@@ -258,7 +261,7 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
         </div>
         {mobileMenu && (
           <div className="lg:hidden border-t border-border bg-bg/95 backdrop-blur-lg px-5 py-3 flex flex-col gap-1 animate-slide-up">
-            {[['problem','Problem'],['reformen','Reformen'],['rechnung','Zahlen'],['simulator','Simulator'],['vision2030','2030'],['parteien','Parteien'],['fahrplan','Fahrplan'],['handeln','Handeln']].map(([id, label]) => (
+            {navLinks.map(([id, label]) => (
               <a key={id} href={`#${id}`} onClick={() => setMobileMenu(false)} className="px-3 py-2 rounded-lg text-ink-muted hover:text-ink hover:bg-bg-alt transition-colors text-sm">{label}</a>
             ))}
           </div>
@@ -266,7 +269,7 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
       </nav>
 
       {/* ━━━━ 1. HERO ━━━━ */}
-      <header className="min-h-[70vh] flex flex-col items-center justify-center px-6 text-center pt-20 bg-bg">
+      <header className="min-h-[62vh] flex flex-col items-center justify-center px-6 text-center pt-18 bg-bg">
         <div className="max-w-2xl mx-auto fade-in">
           <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl leading-[1.1] mb-6 tracking-tight">
             Einigkeit. Und <span className="text-gold">Recht</span>. Und <span className="text-gold">Freiheit</span>.
@@ -274,10 +277,10 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
           <p className="text-xl sm:text-2xl text-ink-soft leading-relaxed mb-4">
             Aber Einigkeit funktioniert nur, wenn sie <strong>fair</strong> ist.
           </p>
-          <p className="text-ink-muted mb-10">FairEint zeigt nicht nur gute Ideen. Es zeigt ein Zielbild, konkrete Reformen, politische Akzeptanz, Kostenlogik und die ersten Schritte zur Umsetzung.</p>
+          <p className="text-ink-muted mb-8">FairEint zeigt ein Zielbild, das beste Paket und die ersten Schritte, damit es politisch tragbar und im Alltag spuerbar wird.</p>
 
           {/* The killer comparison */}
-          <div className="max-w-md mx-auto mb-12 fade-in-delay bg-bg-card rounded-2xl border border-border p-5">
+          <div className="max-w-md mx-auto mb-9 fade-in-delay bg-bg-card rounded-2xl border border-border p-5">
             <div className="flex items-center justify-center gap-4 sm:gap-6 mb-3">
               <div className="text-center">
                 <p className="text-2xl sm:text-3xl font-display text-red">€70-110 Mrd.</p>
@@ -834,6 +837,8 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
           const citizen = simulatePolicy(scenario.id)
           const politician = simulatePoliticianPolicy(scenario.id)
           const metrics = getPolicyMetrics(scenario.id)
+          const visibleVoices = scenario.reactions.slice(0, 4)
+          const hiddenVoiceCount = Math.max(0, scenario.reactions.length - visibleVoices.length)
           return (
             <div key={scenario.id}>
               <Card className="mb-6">
@@ -861,71 +866,99 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
                   <div className="flex items-center justify-between gap-3 mb-4">
                     <div>
                       <p className="text-xs uppercase tracking-wider text-ink-muted font-bold">Cross-Simulation</p>
-                      <h4 className="font-display text-xl">Akzeptanz bei Leuten und im Parlament</h4>
+                      <h4 className="font-display text-xl">Traegt es bei Leuten, Politik und im Haushalt?</h4>
                     </div>
                     <Tag color="blue">10 Jahre: €{metrics.tenYearReturn} Mrd.</Tag>
                   </div>
-                  <div className="space-y-4">
-                    <div>
-                      <div className="flex items-center justify-between text-sm mb-2">
-                        <span className="font-bold">B&uuml;rger:innen</span>
-                        <span className={approvalColorClass(citizen.approval)}>{citizen.approval}% · {citizen.label}</span>
+                  <div className="grid sm:grid-cols-3 gap-3 mb-5">
+                    {[
+                      { label: 'Buerger:innen', value: citizen.approval, note: citizen.label, color: 'bg-purple-light' },
+                      { label: 'Politik', value: politician.approval, note: politician.label, color: 'bg-gold-light' },
+                      { label: 'Passability', value: metrics.overallPassability, note: metrics.label, color: 'bg-blue-light' },
+                    ].map((item) => (
+                      <div key={item.label} className={`${item.color} rounded-2xl p-4`}>
+                        <div className="flex items-start justify-between gap-3 mb-2">
+                          <p className="text-xs uppercase tracking-wider text-ink-muted font-bold">{item.label}</p>
+                          <p className={`font-display text-2xl ${approvalColorClass(item.value)}`}>{item.value}%</p>
+                        </div>
+                        <Bar pct={item.value} color={barColorClass(item.value)} />
+                        <p className="text-xs text-ink-muted mt-2">{item.note}</p>
                       </div>
-                      <Bar pct={citizen.approval} color={barColorClass(citizen.approval)} />
-                    </div>
-                    <div>
-                      <div className="flex items-center justify-between text-sm mb-2">
-                        <span className="font-bold">Politische Lager</span>
-                        <span className={approvalColorClass(politician.approval)}>{politician.approval}% · {politician.label}</span>
-                      </div>
-                      <Bar pct={politician.approval} color={barColorClass(politician.approval)} />
-                    </div>
-                    <div>
-                      <div className="flex items-center justify-between text-sm mb-2">
-                        <span className="font-bold">Gesamt-Passability</span>
-                        <span className={approvalColorClass(metrics.overallPassability)}>{metrics.overallPassability}% · {metrics.label}</span>
-                      </div>
-                      <Bar pct={metrics.overallPassability} color={barColorClass(metrics.overallPassability)} />
-                    </div>
+                    ))}
                   </div>
-                  <div className="grid sm:grid-cols-3 gap-3 mt-5">
-                    <div className="bg-bg-alt rounded-xl p-4">
-                      <p className="text-xs uppercase tracking-wider text-ink-muted font-bold mb-1">ROI</p>
-                      <p className="font-display text-2xl text-green">1:{metrics.roi}</p>
-                      <p className="text-xs text-ink-muted mt-1">langfristig pro eingesetztem Euro</p>
+                  <div className="grid lg:grid-cols-[0.8fr_1.2fr] gap-4">
+                    <div className="bg-bg-alt rounded-[1.5rem] p-5">
+                      <p className="text-xs uppercase tracking-wider text-ink-muted font-bold mb-2">Verdikt</p>
+                      <p className="font-display text-2xl mb-2">{metrics.label}</p>
+                      <p className="text-sm text-ink-soft mb-4">Dieses Paket funktioniert am besten, wenn Nutzen sichtbar vor Ideologie kommt.</p>
+                      <div className="space-y-3">
+                        <div>
+                          <div className="flex items-center justify-between text-xs mb-1">
+                            <span className="font-bold text-ink-muted uppercase tracking-wider">Netto / Jahr</span>
+                            <span className="font-display text-lg text-green">€{metrics.netReturn} Mrd.</span>
+                          </div>
+                          <div className="flex items-center justify-between text-xs">
+                            <span className="font-bold text-ink-muted uppercase tracking-wider">ROI</span>
+                            <span className="font-display text-lg text-green">1:{metrics.roi}</span>
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                    <div className="bg-bg-alt rounded-xl p-4">
-                      <p className="text-xs uppercase tracking-wider text-ink-muted font-bold mb-1">Was hilft</p>
-                      <p className="text-sm text-ink-soft">Hohe Sichtbarkeit im Alltag und eine saubere Gegenfinanzierung.</p>
-                    </div>
-                    <div className="bg-bg-alt rounded-xl p-4">
-                      <p className="text-xs uppercase tracking-wider text-ink-muted font-bold mb-1">Was blockiert</p>
-                      <p className="text-sm text-ink-soft">Elite-Widerstand, Mittelstands-Angst oder abstrakte Nutzenversprechen.</p>
+                    <div className="grid sm:grid-cols-2 gap-3">
+                      <div className="bg-green-light rounded-[1.5rem] p-5">
+                        <p className="text-xs uppercase tracking-wider text-green font-bold mb-2">Treiber</p>
+                        <div className="flex flex-wrap gap-2">
+                          {['Sichtbarer Alltagseffekt', 'Saubere Gegenfinanzierung', 'Schnelle Entlastung'].map((item) => (
+                            <span key={item} className="px-3 py-1.5 rounded-full bg-white/80 text-sm text-ink-soft border border-white">{item}</span>
+                          ))}
+                        </div>
+                      </div>
+                      <div className="bg-red-light rounded-[1.5rem] p-5">
+                        <p className="text-xs uppercase tracking-wider text-red font-bold mb-2">Blocker</p>
+                        <div className="flex flex-wrap gap-2">
+                          {['Mittelstandsangst', 'Neidsteuer-Frame', 'Zu abstrakte Nutzenstory'].map((item) => (
+                            <span key={item} className="px-3 py-1.5 rounded-full bg-white/80 text-sm text-ink-soft border border-white">{item}</span>
+                          ))}
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </Card>
                 <Card className="!p-5">
-                  <p className="text-xs uppercase tracking-wider text-ink-muted font-bold mb-3">Politische Lager</p>
+                  <div className="flex items-center justify-between gap-3 mb-4">
+                    <div>
+                      <p className="text-xs uppercase tracking-wider text-ink-muted font-bold">Politische Lager</p>
+                      <h5 className="font-display text-xl">Wo Zustimmung kippt oder traegt</h5>
+                    </div>
+                    <Tag color="gold">{politician.approval}% Politik</Tag>
+                  </div>
                   <div className="space-y-3">
                     {scenario.politicianReactions.map(r => {
                       const bloc = politicalBlocs.find(x => x.id === r.blocId)
                       if (!bloc) return null
                       return (
-                        <div key={r.blocId}>
-                          <div className="flex items-center justify-between gap-3 text-sm mb-1.5">
+                        <div key={r.blocId} className="bg-bg-alt rounded-2xl p-4">
+                          <div className="flex items-center justify-between gap-3 text-sm mb-2">
                             <span className="font-bold">{bloc.label}</span>
                             <span className={approvalColorClass(r.approval)}>{r.approval}%</span>
                           </div>
                           <Bar pct={r.approval} color={barColorClass(r.approval)} />
-                          <p className="text-xs text-ink-muted mt-1.5">{r.reason}</p>
+                          <p className="text-xs text-ink-muted mt-2">{r.reason}</p>
                         </div>
                       )
                     })}
                   </div>
                 </Card>
               </div>
+              <div className="mb-3 flex items-center justify-between gap-3">
+                <div>
+                  <p className="text-xs uppercase tracking-wider text-ink-muted font-bold">Buergerstimmen</p>
+                  <h5 className="font-display text-xl">Wie die wichtigsten Leute reagieren</h5>
+                </div>
+                {hiddenVoiceCount > 0 && <Tag>{hiddenVoiceCount} weitere Stimmen</Tag>}
+              </div>
               <div className="grid sm:grid-cols-2 gap-3">
-                {scenario.reactions.map(r => {
+                {visibleVoices.map(r => {
                   const p = personas.find(x => x.id === r.personaId)
                   if (!p) return null
                   return (
@@ -941,6 +974,30 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
                   )
                 })}
               </div>
+              {hiddenVoiceCount > 0 && (
+                <details className="mt-4 rounded-2xl border border-border bg-bg-card p-5">
+                  <summary className="cursor-pointer font-bold text-sm text-ink-soft hover:text-ink transition-colors">
+                    Weitere Stimmen anzeigen
+                  </summary>
+                  <div className="grid sm:grid-cols-2 gap-3 mt-4">
+                    {scenario.reactions.slice(visibleVoices.length).map(r => {
+                      const p = personas.find(x => x.id === r.personaId)
+                      if (!p) return null
+                      return (
+                        <Card key={r.personaId} className="!p-4">
+                          <div className="flex items-center gap-3 mb-2">
+                            <span className="text-2xl">{p.emoji}</span>
+                            <div className="flex-1"><span className="font-bold text-sm">{p.name}, {p.age}</span><span className="text-ink-muted text-xs ml-1">({p.party})</span></div>
+                            <span className={`font-display text-lg ${approvalColorClass(r.approval)}`}>{r.approval}%</span>
+                          </div>
+                          <Bar pct={r.approval} color={barColorClass(r.approval)} />
+                          <p className="text-sm text-ink-muted mt-2 italic">&bdquo;{r.reason}&ldquo;</p>
+                        </Card>
+                      )
+                    })}
+                  </div>
+                </details>
+              )}
             </div>
           )
         })}
@@ -1269,28 +1326,54 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
               : 'Hier wird aus Politik eine Zeitlinie: wann du Entlastung, einfachere Services und echte Veraenderung spueren wuerdest.'}
           </p>
         </Card>
-        <div className="space-y-6">
+        <div className="relative space-y-5 before:absolute before:left-5 sm:before:left-8 before:top-2 before:bottom-2 before:w-px before:bg-border">
           {timeline.map((step, i) => {
             const colors = ['border-gold bg-gold-light', 'border-green bg-green-light', 'border-blue bg-blue-light']
             const dots = ['bg-gold', 'bg-green', 'bg-blue']
             const tags: Array<'gold' | 'green' | 'blue'> = ['gold', 'green', 'blue']
             const labels = ['Sofort spürbar', 'Systeme ändern sich', 'Ein anderes Deutschland']
             return (
-              <div key={i} className={`rounded-2xl border p-6 sm:p-8 ${colors[i] || ''}`}>
-                <div className="flex items-center gap-3 mb-4">
-                  <div className={`w-4 h-4 rounded-full ${dots[i]}`} />
-                  <span className="font-display text-3xl">{step.year}</span>
-                  <Tag color={tags[i]}>{labels[i]}</Tag>
-                </div>
-                <h3 className="font-display text-xl mb-2">{step.title}</h3>
-                <p className="text-ink-muted mb-4">{step.description}</p>
-                <div className="space-y-2">
-                  {step.laws?.map((law, j) => (
-                    <div key={j} className="flex items-start gap-3">
-                      <ArrowRight className="w-4 h-4 text-ink-muted mt-1 shrink-0" />
-                      <span className="text-[15px]">{law}</span>
+              <div key={i} className="relative pl-10 sm:pl-16">
+                <div className={`absolute left-[13px] sm:left-[26px] top-10 w-4 h-4 rounded-full ring-4 ring-bg ${dots[i]}`} />
+                <div className={`rounded-[1.75rem] border p-6 sm:p-7 ${colors[i] || ''}`}>
+                  <div className="flex items-center gap-3 mb-4 flex-wrap">
+                    <span className="font-display text-3xl">{step.year}</span>
+                    <Tag color={tags[i]}>{labels[i]}</Tag>
+                    <span className="text-xs uppercase tracking-wider text-ink-muted font-bold">{i + 1}/3</span>
+                  </div>
+                  <div className="grid lg:grid-cols-[0.9fr_1.1fr] gap-4 items-start">
+                    <div>
+                      <h3 className="font-display text-2xl mb-2">{step.title}</h3>
+                      <p className="text-ink-muted">{step.description}</p>
                     </div>
-                  ))}
+                    <div className="grid gap-3">
+                      {(step.laws || []).slice(0, 3).map((law, j) => (
+                        <div key={j} className="bg-white/70 rounded-2xl p-4 border border-white">
+                          <div className="flex items-start gap-3">
+                            <ArrowRight className="w-4 h-4 text-ink-muted mt-1 shrink-0" />
+                            <span className="text-[15px]">{law}</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  {step.laws && step.laws.length > 3 && (
+                    <details className="mt-4">
+                      <summary className="cursor-pointer text-sm font-bold text-ink-soft hover:text-ink transition-colors">
+                        Weitere Schritte in dieser Phase
+                      </summary>
+                      <div className="grid gap-3 mt-3">
+                        {step.laws.slice(3).map((law, j) => (
+                          <div key={j} className="bg-white/60 rounded-2xl p-4 border border-white">
+                            <div className="flex items-start gap-3">
+                              <ArrowRight className="w-4 h-4 text-ink-muted mt-1 shrink-0" />
+                              <span className="text-[15px]">{law}</span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </details>
+                  )}
                 </div>
               </div>
             )
