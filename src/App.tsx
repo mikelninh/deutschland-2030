@@ -272,46 +272,67 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
           <p className="text-ink-muted">Je nach Blickwinkel beginnt FairEint mit einer anderen Frage: Kann das passieren, oder wuerde ich das fuer mich und mein Umfeld sofort wollen?</p>
         </div>
         <div className="flex justify-center mb-6">
-          <div className="inline-flex bg-bg-card border border-border rounded-2xl p-1 gap-1">
+          <div className="inline-flex bg-bg-card border border-border rounded-2xl p-1.5 gap-1.5 soft-pill">
             <button
               onClick={() => setTopView('politik')}
-              className={`px-4 py-2 rounded-xl text-sm font-bold cursor-pointer btn-press transition-colors ${topView === 'politik' ? 'bg-gold text-white' : 'text-ink-muted hover:text-ink'}`}
+              className={`px-4 py-2 rounded-xl text-sm font-bold cursor-pointer btn-press transition-colors ${topView === 'politik' ? 'bg-gold text-white shadow-sm' : 'text-ink-muted hover:text-ink hover:bg-bg-alt'}`}
             >
               Politiker-Ansicht
             </button>
             <button
               onClick={() => setTopView('buerger')}
-              className={`px-4 py-2 rounded-xl text-sm font-bold cursor-pointer btn-press transition-colors ${topView === 'buerger' ? 'bg-blue text-white' : 'text-ink-muted hover:text-ink'}`}
+              className={`px-4 py-2 rounded-xl text-sm font-bold cursor-pointer btn-press transition-colors ${topView === 'buerger' ? 'bg-blue text-white shadow-sm' : 'text-ink-muted hover:text-ink hover:bg-bg-alt'}`}
             >
               Buerger-Ansicht
             </button>
           </div>
         </div>
-        <Card className={`mb-6 ${topView === 'politik' ? 'border-gold/20' : 'border-blue/20'}`}>
-          <div className="flex items-start justify-between gap-4 flex-wrap">
+        <div className={`mb-6 rounded-[2rem] p-4 sm:p-5 editorial-shell ${topView === 'politik' ? 'border border-gold/10' : 'border border-blue/10'}`}>
+          <div className="flex items-start justify-between gap-4 flex-wrap px-2 sm:px-3 pt-1 pb-4">
             <div className="max-w-2xl">
               <p className={`text-xs uppercase tracking-widest font-bold mb-2 ${topView === 'politik' ? 'text-gold' : 'text-blue'}`}>{topViewSummary.eyebrow}</p>
-              <h3 className="font-display text-2xl mb-2">{topViewSummary.title}</h3>
-              <p className="text-sm text-ink-muted">{topViewSummary.body}</p>
+              <h3 className="font-display text-3xl sm:text-4xl leading-tight mb-3">{topViewSummary.title}</h3>
+              <p className="text-base text-ink-muted max-w-2xl">{topViewSummary.body}</p>
             </div>
             <div className="flex flex-wrap gap-2">
               {topViewActions.map((action) => (
-                <a key={action.href} href={action.href} className="px-4 py-2 rounded-xl bg-bg-alt border border-border text-sm font-bold hover:bg-bg transition-colors">
+                <a key={action.href} href={action.href} className="px-4 py-2.5 rounded-xl bg-bg-card border border-border text-sm font-bold hover:bg-bg transition-colors soft-pill">
                   {action.label}
                 </a>
               ))}
             </div>
           </div>
-          <div className="grid sm:grid-cols-3 gap-3 mt-5">
-            {topViewCards.map((card) => (
-              <div key={card.title} className="bg-bg-alt rounded-xl p-4">
-                <p className="text-xs uppercase tracking-wider text-ink-muted font-bold mb-1">{card.kicker}</p>
-                <h4 className="font-display text-lg mb-2">{card.title}</h4>
-                <p className="text-sm text-ink-soft">{card.body}</p>
+          <div className="grid lg:grid-cols-[1.15fr_0.85fr] gap-4">
+            <div className="editorial-promo rounded-[1.75rem] p-6 sm:p-7">
+              <p className={`text-xs uppercase tracking-wider font-bold mb-2 ${topView === 'politik' ? 'text-gold' : 'text-blue'}`}>{topViewCards[0].kicker}</p>
+              <h4 className="font-display text-3xl sm:text-4xl leading-tight mb-3">{topViewCards[0].title}</h4>
+              <p className="text-lg text-ink-soft max-w-xl">{topViewCards[0].body}</p>
+              <div className="grid grid-cols-3 gap-3 mt-6">
+                <div className="bg-bg-card/80 rounded-2xl p-4 border border-white/70">
+                  <p className="text-xs uppercase tracking-wider text-ink-muted font-bold mb-1">Buerger</p>
+                  <p className="font-display text-2xl text-purple">{flagshipMetrics.citizenApproval}%</p>
+                </div>
+                <div className="bg-bg-card/80 rounded-2xl p-4 border border-white/70">
+                  <p className="text-xs uppercase tracking-wider text-ink-muted font-bold mb-1">Politik</p>
+                  <p className="font-display text-2xl text-gold">{flagshipMetrics.politicianApproval}%</p>
+                </div>
+                <div className="bg-bg-card/80 rounded-2xl p-4 border border-white/70">
+                  <p className="text-xs uppercase tracking-wider text-ink-muted font-bold mb-1">Netto/Jahr</p>
+                  <p className="font-display text-2xl text-green">€{flagshipMetrics.netReturn}</p>
+                </div>
               </div>
-            ))}
+            </div>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-1 gap-4">
+              {topViewCards.slice(1).map((card) => (
+                <div key={card.title} className="editorial-side rounded-[1.5rem] p-5">
+                  <p className="text-xs uppercase tracking-wider text-ink-muted font-bold mb-2">{card.kicker}</p>
+                  <h4 className="font-display text-2xl leading-tight mb-3">{card.title}</h4>
+                  <p className="text-base text-ink-soft">{card.body}</p>
+                </div>
+              ))}
+            </div>
           </div>
-        </Card>
+        </div>
         {!showMoreIntro && (
           <div className="text-center mt-6">
             <button

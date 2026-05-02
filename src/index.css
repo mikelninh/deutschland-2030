@@ -79,6 +79,31 @@
     from { opacity: 0; transform: translateY(30px); }
     to { opacity: 1; transform: translateY(0); }
   }
+
+  .editorial-shell {
+    background:
+      radial-gradient(circle at top left, rgba(139, 105, 20, 0.08), transparent 28%),
+      linear-gradient(180deg, rgba(255,255,255,0.96), rgba(250,250,247,0.94));
+    box-shadow: 0 24px 80px rgba(31, 28, 20, 0.06);
+  }
+
+  .editorial-promo {
+    background:
+      linear-gradient(145deg, rgba(139, 105, 20, 0.12), rgba(255,255,255,0.94)),
+      #fff;
+    border: 1px solid rgba(139, 105, 20, 0.16);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.8);
+  }
+
+  .editorial-side {
+    background:
+      linear-gradient(180deg, rgba(243,241,236,0.9), rgba(255,255,255,0.92));
+    border: 1px solid rgba(229, 227, 222, 0.95);
+  }
+
+  .soft-pill {
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 8px 20px rgba(0,0,0,0.03);
+  }
 }
 
 ::-webkit-scrollbar { width: 6px; }
