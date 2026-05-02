@@ -48,6 +48,19 @@ export interface PolicyReaction {
   reason: string
 }
 
+export interface PoliticalBloc {
+  id: string
+  label: string
+  weight: number
+  color: 'green' | 'gold' | 'red' | 'blue' | 'purple'
+}
+
+export interface PoliticianReaction {
+  blocId: string
+  approval: number // 0-100
+  reason: string
+}
+
 export interface PolicyScenario {
   id: string
   emoji: string
@@ -56,7 +69,18 @@ export interface PolicyScenario {
   annualCost: number // Mrd €
   annualSaving: number
   reactions: PolicyReaction[]
+  politicianReactions: PoliticianReaction[]
 }
+
+export const politicalBlocs: PoliticalBloc[] = [
+  { id: "union", label: "CDU/CSU", weight: 30, color: "blue" },
+  { id: "spd", label: "SPD", weight: 18, color: "red" },
+  { id: "greens", label: "Grüne", weight: 12, color: "green" },
+  { id: "left", label: "Linke", weight: 8, color: "purple" },
+  { id: "fdp", label: "FDP", weight: 8, color: "gold" },
+  { id: "afd", label: "AfD", weight: 16, color: "blue" },
+  { id: "bsw", label: "BSW", weight: 8, color: "red" },
+]
 
 export const policyScenarios: PolicyScenario[] = [
   {
@@ -80,6 +104,15 @@ export const policyScenarios: PolicyScenario[] = [
       { personaId: "maria", approval: 80, reason: "Kinder sollen gut essen. Das ist doch selbstverständlich." },
       { personaId: "juergen", approval: 95, reason: "Mein Sohn isst oft nur Toast. Das rettet Familien wie uns." },
     ],
+    politicianReactions: [
+      { blocId: "union", approval: 58, reason: "Verkaufbar, wenn Kosten, Regionalität und Freiwilligkeit sauber erklärt werden." },
+      { blocId: "spd", approval: 90, reason: "Soziale Entlastung und Bildung greifen direkt ineinander." },
+      { blocId: "greens", approval: 97, reason: "Gesundheit, Klima und Chancengleichheit in einem Gesetz." },
+      { blocId: "left", approval: 95, reason: "Universelle Leistung mit sofort sichtbarer Entlastung." },
+      { blocId: "fdp", approval: 44, reason: "Zu paternalistisch, wenn es nur ein Modell ohne Wahlfreiheit gibt." },
+      { blocId: "afd", approval: 28, reason: "Lehnt vegane Vorgaben und universelle Leistungen reflexhaft ab." },
+      { blocId: "bsw", approval: 72, reason: "Funktioniert, wenn Regionalität und Preisdisziplin im Vordergrund stehen." },
+    ],
   },
   {
     id: "praevention",
@@ -97,6 +130,15 @@ export const policyScenarios: PolicyScenario[] = [
       { personaId: "renate", approval: 90, reason: "Für mich als Pflegende ist das überlebenswichtig!" },
       { personaId: "juergen", approval: 55, reason: "Pflicht? Hmm. Aber wenn mein Blutdruck entdeckt wird..." },
       { personaId: "heinrich", approval: 70, reason: "Weniger Krankentage bei meinen Mitarbeitern? Ja bitte." },
+    ],
+    politicianReactions: [
+      { blocId: "union", approval: 76, reason: "Solide, wenn Eigenverantwortung und frühe Diagnose betont werden." },
+      { blocId: "spd", approval: 88, reason: "Prävention spart später viel Geld und Leid." },
+      { blocId: "greens", approval: 80, reason: "Stark, wenn mentale Gesundheit und kommunale Prävention mitlaufen." },
+      { blocId: "left", approval: 74, reason: "Akzeptabel, wenn es kostenlos und niedrigschwellig bleibt." },
+      { blocId: "fdp", approval: 61, reason: "Ok, wenn Datenschutz und Arbeitgeberaufwand klar geregelt sind." },
+      { blocId: "afd", approval: 54, reason: "Zustimmung nur, solange es nicht nach Zwangsmedizin wirkt." },
+      { blocId: "bsw", approval: 69, reason: "Gute Kosten-Nutzen-Logik, wenn Hausärzte gestärkt werden." },
     ],
   },
   {
@@ -116,6 +158,15 @@ export const policyScenarios: PolicyScenario[] = [
       { personaId: "max", approval: 45, reason: "Effizient ja, aber ich will Wahlfreiheit behalten." },
       { personaId: "sandra", approval: 90, reason: "Als Gig-Workerin falle ich durchs Raster. Ein System hilft." },
     ],
+    politicianReactions: [
+      { blocId: "union", approval: 32, reason: "Zu harter Eingriff in bestehende Systeme und private Interessen." },
+      { blocId: "spd", approval: 78, reason: "Bürgerversicherung ist ein alter Kernwunsch." },
+      { blocId: "greens", approval: 82, reason: "Gerechtigkeit plus Effizienz, wenn der Übergang klug gestaltet ist." },
+      { blocId: "left", approval: 93, reason: "Abschaffung der Zwei-Klassen-Medizin ist überfällig." },
+      { blocId: "fdp", approval: 18, reason: "Lehnt Systemzwang und das Ende privater Wahlmodelle ab." },
+      { blocId: "afd", approval: 26, reason: "Würde es als Staatsmedizin framen." },
+      { blocId: "bsw", approval: 71, reason: "Ein solidarisches System ist populär, wenn Landarzt-Frage mitgedacht wird." },
+    ],
   },
   {
     id: "digitalverwaltung",
@@ -133,6 +184,15 @@ export const policyScenarios: PolicyScenario[] = [
       { personaId: "juergen", approval: 20, reason: "Ich kann die Formulare kaum lesen. Digital macht es schlimmer." },
       { personaId: "dieter", approval: 25, reason: "Zu alt für Computer. Persönlicher Kontakt muss bleiben." },
       { personaId: "ahmad", approval: 75, reason: "Digital ist gut — aber in welcher Sprache?" },
+    ],
+    politicianReactions: [
+      { blocId: "union", approval: 86, reason: "Bürokratieabbau verkauft sich fast von selbst." },
+      { blocId: "spd", approval: 74, reason: "Gut, wenn analoge Hilfen und Arbeitnehmerrechte mitlaufen." },
+      { blocId: "greens", approval: 79, reason: "Stark, wenn Datenschutz und Teilhabe sauber gelöst sind." },
+      { blocId: "left", approval: 52, reason: "Nur mit klaren Schutzpfaden für Menschen ohne digitale Souveränität." },
+      { blocId: "fdp", approval: 95, reason: "Fast die reine Lehre von Modernisierung und Effizienz." },
+      { blocId: "afd", approval: 41, reason: "Würde Datenschutz- und Kontrollängste instrumentalisieren." },
+      { blocId: "bsw", approval: 49, reason: "Skeptisch, wenn der analoge Staat gleichzeitig ausgedünnt wird." },
     ],
   },
   {
@@ -164,6 +224,15 @@ export const policyScenarios: PolicyScenario[] = [
       { personaId: "ayse", approval: 82, reason: "Meine Eltern sind mit nichts gekommen. Chancengleichheit braucht Umverteilung." },
       { personaId: "juergen", approval: 75, reason: "Hab zwar nix, aber die könnten mal was abgeben." },
     ],
+    politicianReactions: [
+      { blocId: "union", approval: 28, reason: "Zu großes Framing-Risiko bei Mittelstand und Familienunternehmen." },
+      { blocId: "spd", approval: 81, reason: "Starke Fairness-Erzählung, wenn der Freibetrag hoch genug ist." },
+      { blocId: "greens", approval: 88, reason: "Sehr anschlussfähig mit Investitionsbindung und Transparenz." },
+      { blocId: "left", approval: 97, reason: "Klare Macht- und Verteilungsfrage, hier sehr hohe Zustimmung." },
+      { blocId: "fdp", approval: 9, reason: "Lehnt Substanzbesteuerung fast grundsätzlich ab." },
+      { blocId: "afd", approval: 22, reason: "Würde es als Angriff auf Leistung und Eigentum rahmen." },
+      { blocId: "bsw", approval: 74, reason: "Populär, solange Mittelstandsschutz glaubwürdig bleibt." },
+    ],
   },
   {
     id: "ubs",
@@ -192,6 +261,15 @@ export const policyScenarios: PolicyScenario[] = [
       { personaId: "pawel", approval: 70, reason: "Gilt das auch für Saisonarbeiter? Wenn ja — sehr gut." },
       { personaId: "renate", approval: 85, reason: "Pflegende Angehörige brauchen kostenlose Entlastung. UBS liefert das." },
     ],
+    politicianReactions: [
+      { blocId: "union", approval: 42, reason: "Zu teuer als Einstieg, außer es ist eng auf Familien und Basisdienste fokussiert." },
+      { blocId: "spd", approval: 86, reason: "Starke soziale Rendite mit klarer Alltagserleichterung." },
+      { blocId: "greens", approval: 90, reason: "Verbindet Klima, soziale Infrastruktur und Entlastung sauber." },
+      { blocId: "left", approval: 96, reason: "Universelle Grunddienste sind Kern linker Sozialstaatslogik." },
+      { blocId: "fdp", approval: 18, reason: "Sieht darin einen überdehnten, teuren Staat." },
+      { blocId: "afd", approval: 24, reason: "Würde es als Umverteilungsapparat bekämpfen." },
+      { blocId: "bsw", approval: 79, reason: "Hohe Zustimmung, wenn es konkret statt abstrakt erklärt wird." },
+    ],
   },
   {
     id: "erbschaft",
@@ -214,8 +292,56 @@ export const policyScenarios: PolicyScenario[] = [
       { personaId: "fatima", approval: 75, reason: "Im Islam gibt es feste Erbregeln — aber auch Pflicht zum Teilen (Zakat)." },
       { personaId: "monika", approval: 60, reason: "Mein Häuschen soll an die Kinder gehen — aber Milliarden steuerfrei? Nein." },
     ],
+    politicianReactions: [
+      { blocId: "union", approval: 51, reason: "Zustimmung nur, wenn Familienunternehmen und Wohnhäuser sauber geschützt werden." },
+      { blocId: "spd", approval: 83, reason: "Leicht zu verkaufen: Schlupflöcher schließen statt neue Steuer erfinden." },
+      { blocId: "greens", approval: 85, reason: "Sehr gutes Fairness-Narrativ bei moderatem Rechtsrisiko." },
+      { blocId: "left", approval: 94, reason: "Hohe Zustimmung, weil es geerbte Macht direkt adressiert." },
+      { blocId: "fdp", approval: 26, reason: "Skepsis bei Betriebsvermögen und Investitionsanreizen." },
+      { blocId: "afd", approval: 34, reason: "Nur tragfähig, wenn Familienerbe ausdrücklich ausgenommen bleibt." },
+      { blocId: "bsw", approval: 81, reason: "Breit populär, weil kleine Erben geschützt und große getroffen werden." },
+    ],
+  },
+  {
+    id: "vermoegenspaket",
+    emoji: "⚖️",
+    title: "Vermögenspaket: UBS + Erbschaft + Top-Vermögen",
+    description: "Ein kombiniertes Fairness-Paket: Universal Basic Services, reformierte Erbschaftsteuer und ein enger Vermögensbeitrag nur für sehr große Vermögen. Ziel: sichtbare Entlastung unten, faire Beteiligung oben, hoher Netto-Return über 10 Jahre.",
+    annualCost: 45.0,
+    annualSaving: 110.0,
+    reactions: [
+      { personaId: "thomas", approval: 60, reason: "Ich will klare Schutzregeln für Mittelstand und Immobilieneigentum — dann ist das Paket vertretbar." },
+      { personaId: "claudia", approval: 97, reason: "Genau so: Umverteilung plus konkrete öffentliche Leistungen statt nur moralischer Debatte." },
+      { personaId: "max", approval: 38, reason: "Zu viel Paket auf einmal. Nur mit klaren Standort- und Innovationsgarantien." },
+      { personaId: "lena", approval: 94, reason: "Wenn Miete, Kita und Mobilität sofort leichter werden, fühlt sich Politik endlich relevant an." },
+      { personaId: "stefan-julia", approval: 89, reason: "Wenn unser Alltag billiger wird und unser Haus geschützt bleibt, ist das sehr stark." },
+      { personaId: "kevin", approval: 99, reason: "Das ist das erste Paket, das wirklich bei Leuten wie mir ankommt statt nur zu reden." },
+      { personaId: "monika", approval: 74, reason: "Wenn Pflege und Arzttermine besser werden und kleine Erben Ruhe haben, finde ich das gut." },
+      { personaId: "heinrich", approval: 12, reason: "Das ist für Vermögende ein Frontalangriff, auch wenn UBS den Druck sozial abfedert." },
+      { personaId: "frank", approval: 86, reason: "Wenn die da oben endlich zahlen und unten etwas sichtbar ankommt, zieht das." },
+      { personaId: "sandra", approval: 98, reason: "Gratis Grunddienste plus faire Lastenverteilung. Mehr brauche ich politisch fast nicht." },
+      { personaId: "jan", approval: 48, reason: "Nur mit harten Garantien für Höfe und Familienbetriebe." },
+      { personaId: "lea", approval: 98, reason: "Hoher Return, hohe Gerechtigkeit, konkrete Infrastruktur. Genau mein Punkt." },
+      { personaId: "maria", approval: 76, reason: "Wenn alles einfacher und sicherer wird und normale Leute nicht zahlen, ist das richtig." },
+      { personaId: "renate", approval: 90, reason: "Pflegende Angehörige würden das im Alltag sofort spüren." },
+    ],
+    politicianReactions: [
+      { blocId: "union", approval: 34, reason: "Zu groß als Paket, aber einzelne Bausteine wären verhandelbar." },
+      { blocId: "spd", approval: 89, reason: "Nahe an einem idealen sozialdemokratischen Paket mit sichtbarer Rendite." },
+      { blocId: "greens", approval: 91, reason: "Sozial-ökologischer Kern mit klarer Entlastungswirkung." },
+      { blocId: "left", approval: 98, reason: "Maximale Zustimmung: Umverteilung plus universelle Dienste." },
+      { blocId: "fdp", approval: 12, reason: "Zu viel Staat, zu viel Umverteilung, zu wenig Markt." },
+      { blocId: "afd", approval: 18, reason: "Würde das Paket als ideologischen Rundumschlag bekämpfen." },
+      { blocId: "bsw", approval: 84, reason: "Hohe Zustimmung, wenn die Sprache schlicht und die Entlastung konkret bleibt." },
+    ],
   },
 ]
+
+function labelForApproval(approval: number): string {
+  if (approval >= 70) return "Breite Zustimmung"
+  if (approval >= 50) return "Knappe Mehrheit"
+  return "Umstritten"
+}
 
 export function simulatePolicy(scenarioId: string): { approval: number; label: string } {
   const scenario = policyScenarios.find(s => s.id === scenarioId)
@@ -232,6 +358,55 @@ export function simulatePolicy(scenarioId: string): { approval: number; label: s
     }
   }
   const approval = Math.round(weightedApproval / totalWeight)
-  const label = approval >= 70 ? "Breite Zustimmung" : approval >= 50 ? "Knappe Mehrheit" : "Umstritten"
-  return { approval, label }
+  return { approval, label: labelForApproval(approval) }
+}
+
+export function simulatePoliticianPolicy(scenarioId: string): { approval: number; label: string } {
+  const scenario = policyScenarios.find(s => s.id === scenarioId)
+  if (!scenario) return { approval: 0, label: "?" }
+
+  let totalWeight = 0
+  let weightedApproval = 0
+  for (const reaction of scenario.politicianReactions) {
+    const bloc = politicalBlocs.find(p => p.id === reaction.blocId)
+    if (bloc) {
+      weightedApproval += reaction.approval * bloc.weight
+      totalWeight += bloc.weight
+    }
+  }
+
+  const approval = Math.round(weightedApproval / totalWeight)
+  return { approval, label: labelForApproval(approval) }
+}
+
+export function getPolicyMetrics(scenarioId: string) {
+  const scenario = policyScenarios.find(s => s.id === scenarioId)
+  if (!scenario) {
+    return {
+      citizenApproval: 0,
+      politicianApproval: 0,
+      overallPassability: 0,
+      netReturn: 0,
+      roi: 0,
+      tenYearReturn: 0,
+      label: "?",
+    }
+  }
+
+  const citizenApproval = simulatePolicy(scenarioId).approval
+  const politicianApproval = simulatePoliticianPolicy(scenarioId).approval
+  const netReturn = +(scenario.annualSaving - scenario.annualCost).toFixed(1)
+  const roi = scenario.annualCost === 0 ? 0 : +(scenario.annualSaving / scenario.annualCost).toFixed(1)
+  const tenYearReturn = +(netReturn * 10).toFixed(0)
+  const overallPassability = Math.round(citizenApproval * 0.45 + politicianApproval * 0.35 + Math.min(100, roi * 10) * 0.2)
+
+  return {
+    citizenApproval,
+    politicianApproval,
+    overallPassability,
+    netReturn,
+    roi,
+    tenYearReturn,
+    label: labelForApproval(overallPassability),
+  }
 }

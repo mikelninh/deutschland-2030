@@ -3,7 +3,8 @@ import { reforms, principles } from './data/manifesto'
 import { timeline, costs, partyReactions, expertQuotes, faqs } from './data/roadmap'
 import { voters, satisfactionSummary } from './data/voters'
 import { partyPathTo80 } from './data/path-to-80'
-import { policyScenarios, simulatePolicy, personas } from './data/personas'
+import { policyScenarios, simulatePolicy, simulatePoliticianPolicy, getPolicyMetrics, personas, politicalBlocs } from './data/personas'
+import { backcastGoals } from './data/backcasting'
 import { innovations } from './data/innovations'
 import { ChevronDown, ChevronUp, Heart, ArrowRight, CheckCircle, X, Copy, Share2, Menu } from 'lucide-react'
 import './index.css'
@@ -45,6 +46,18 @@ function Card({ children, className = '' }: { children: React.ReactNode; classNa
   return <div className={`bg-bg-card rounded-2xl border border-border p-6 sm:p-8 hover-lift ${className}`}>{children}</div>
 }
 
+function approvalColorClass(approval: number) {
+  if (approval >= 70) return 'text-green'
+  if (approval >= 50) return 'text-gold'
+  return 'text-red'
+}
+
+function barColorClass(approval: number) {
+  if (approval >= 70) return 'bg-green'
+  if (approval >= 50) return 'bg-gold'
+  return 'bg-red'
+}
+
 /* ── App ── */
 
 export default function App() {
@@ -53,12 +66,19 @@ export default function App() {
   const [openReform, setOpenReform] = useState<string | null>(null)
   const [openVoter, setOpenVoter] = useState<string | null>(null)
   const [activePolicy, setActivePolicy] = useState(policyScenarios[0].id)
+  const [activeGoal, setActiveGoal] = useState(backcastGoals[0].id)
   const [openInnovation, setOpenInnovation] = useState<string | null>(null)
   const [toast, setToast] = useState<string | null>(null)
   const [fontSize, setFontSize] = useState(0) // -1, 0, +1
   const [showNPS, setShowNPS] = useState(false)
   const [npsSubmitted, setNpsSubmitted] = useState(false)
   const [openFAQ, setOpenFAQ] = useState<number | null>(null)
+  const reformCount = reforms.length
+  const scenarioCount = policyScenarios.length
+  const citizenPersonaCount = personas.length
+  const voterProfileCount = voters.length
+  const politicalBlocCount = politicalBlocs.length
+  const backcastGoalCount = backcastGoals.length
   // Return visitor tracking + NPS timer
   useEffect(() => {
     try {
@@ -78,7 +98,7 @@ export default function App() {
 
   // Scroll depth tracking via Intersection Observer
   useEffect(() => {
-    const sections = ['problem', 'reformen', 'rechnung', 'simulator', 'parteien', 'fahrplan', 'handeln']
+      const sections = ['problem', 'reformen', 'rechnung', 'simulator', 'vision2030', 'parteien', 'fahrplan', 'handeln']
     const observers: IntersectionObserver[] = []
     sections.forEach(id => {
       const el = document.getElementById(id)
@@ -144,6 +164,8 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
   const totalCost = costs.reduce((s, c) => s + c.annualCost, 0)
   const totalSaving = costs.reduce((s, c) => s + c.annualSaving, 0)
   const netGain = totalSaving - totalCost
+  const flagshipScenario = policyScenarios.find((scenario) => scenario.id === 'vermoegenspaket') ?? policyScenarios[0]
+  const flagshipMetrics = getPolicyMetrics(flagshipScenario.id)
 
   return (
     <div className={`min-h-screen ${fontSize === 1 ? 'text-lg' : fontSize === -1 ? 'text-sm' : ''}`}>
@@ -155,7 +177,7 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
           <a href="#" className="font-display text-xl">Fair<span className="text-gold">Eint</span></a>
           <div className="flex items-center gap-1">
             <div className="hidden lg:flex gap-1 text-[13px]">
-              {[['problem','Problem'],['reformen','Reformen'],['rechnung','Zahlen'],['simulator','Simulator'],['parteien','Parteien'],['fahrplan','Fahrplan'],['handeln','Handeln']].map(([id, label]) => (
+              {[['problem','Problem'],['reformen','Reformen'],['rechnung','Zahlen'],['simulator','Simulator'],['vision2030','2030'],['parteien','Parteien'],['fahrplan','Fahrplan'],['handeln','Handeln']].map(([id, label]) => (
                 <a key={id} href={`#${id}`} className="px-3 py-1.5 rounded-lg text-ink-muted hover:text-ink hover:bg-bg-alt transition-colors">{label}</a>
               ))}
             </div>
@@ -168,7 +190,7 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
         </div>
         {mobileMenu && (
           <div className="lg:hidden border-t border-border bg-bg/95 backdrop-blur-lg px-5 py-3 flex flex-col gap-1 animate-slide-up">
-            {[['problem','Problem'],['reformen','Reformen'],['rechnung','Zahlen'],['simulator','Simulator'],['parteien','Parteien'],['fahrplan','Fahrplan'],['handeln','Handeln']].map(([id, label]) => (
+            {[['problem','Problem'],['reformen','Reformen'],['rechnung','Zahlen'],['simulator','Simulator'],['vision2030','2030'],['parteien','Parteien'],['fahrplan','Fahrplan'],['handeln','Handeln']].map(([id, label]) => (
               <a key={id} href={`#${id}`} onClick={() => setMobileMenu(false)} className="px-3 py-2 rounded-lg text-ink-muted hover:text-ink hover:bg-bg-alt transition-colors text-sm">{label}</a>
             ))}
           </div>
@@ -184,7 +206,7 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
           <p className="text-xl sm:text-2xl text-ink-soft leading-relaxed mb-4">
             Aber Einigkeit funktioniert nur, wenn sie <strong>fair</strong> ist.
           </p>
-          <p className="text-ink-muted mb-10">10 Reformen. Jede existiert bereits — irgendwo auf der Welt. Wir zeigen was sie kosten, was sie bringen, und wie Deutschland darauf reagiert.</p>
+          <p className="text-ink-muted mb-10">FairEint zeigt nicht nur gute Ideen. Es zeigt ein Zielbild, konkrete Reformen, politische Akzeptanz, Kostenlogik und die ersten Schritte zur Umsetzung.</p>
 
           {/* The killer comparison */}
           <div className="max-w-md mx-auto mb-12 fade-in-delay bg-bg-card rounded-2xl border border-border p-5">
@@ -195,11 +217,11 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
               </div>
               <span className="text-ink-muted text-2xl font-display">vs</span>
               <div className="text-center">
-                <p className="text-2xl sm:text-3xl font-display text-green">€30-45 Mrd.</p>
-                <p className="text-sm text-ink-muted mt-1">kostet die Lösung</p>
+                <p className="text-2xl sm:text-3xl font-display text-green">€45 Mrd.</p>
+                <p className="text-sm text-ink-muted mt-1">kostet das Kernpaket pro Jahr</p>
               </div>
             </div>
-            <p className="text-sm text-ink-muted">Das sind €4 pro Bürger pro Tag. Weniger als ein Kaffee bei Starbucks.</p>
+            <p className="text-sm text-ink-muted">Das Vermoegenspaket bringt brutto ~€110 Mrd. pro Jahr und netto ~€{flagshipMetrics.netReturn} Mrd. pro Jahr. Das volle Programm liegt derzeit bei ~€{Math.round(totalCost)} Mrd. Kosten und ~€{Math.round(totalSaving)} Mrd. Brutto-Ersparnis pro Jahr.</p>
           </div>
 
           <a href="#problem" className="text-gold text-sm hover:underline">
@@ -207,6 +229,65 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
           </a>
         </div>
       </header>
+
+      <WideSection bg="bg-bg-alt" label="So funktioniert FairEint">
+        <div className="text-center mb-10">
+          <Tag>Ueberblick</Tag>
+          <h2 className="font-display text-3xl sm:text-4xl mt-4 mb-2">Ein klares Warum, Wie und Was</h2>
+          <p className="text-ink-muted">Die Seite ist gross. Deshalb hier der kurze Pfad: erst das Ziel, dann die Reform, dann die Simulation, dann die Umsetzung.</p>
+        </div>
+        <div className="grid sm:grid-cols-2 xl:grid-cols-4 gap-4">
+          <Card>
+            <p className="text-xs uppercase tracking-widest text-gold font-bold mb-2">Warum</p>
+            <h3 className="font-display text-xl mb-2">{backcastGoalCount} Ziele bis 2030 sichtbar machen</h3>
+            <p className="text-sm text-ink-muted">Zero Hunger, Zero Poverty, Health, Wealth, Freedom, Happiness und Tierwuerde als klares Zielbild.</p>
+          </Card>
+          <Card>
+            <p className="text-xs uppercase tracking-widest text-green font-bold mb-2">Was</p>
+            <h3 className="font-display text-xl mb-2">{reformCount} Reformbereiche</h3>
+            <p className="text-sm text-ink-muted">Jede Reform hat Problem, Loesung, Vorbilder, Alltagsbeispiel, Zahlenlogik und jetzt auch einen Umsetzungsplan.</p>
+          </Card>
+          <Card>
+            <p className="text-xs uppercase tracking-widest text-purple font-bold mb-2">Wie realistisch</p>
+            <h3 className="font-display text-xl mb-2">{scenarioCount} Gesetzespakete simulieren</h3>
+            <p className="text-sm text-ink-muted">{citizenPersonaCount} Buerger-Personas, {politicalBlocCount} politische Lager und echter Netto-Return zeigen, was traegt und was blockiert.</p>
+          </Card>
+          <Card>
+            <p className="text-xs uppercase tracking-widest text-blue font-bold mb-2">Wie fuehlt es sich an</p>
+            <h3 className="font-display text-xl mb-2">{voterProfileCount} Lebensrealitaeten</h3>
+            <p className="text-sm text-ink-muted">Vom Handwerker bis zur Rentnerin: was sich aendert, was offen bleibt und wie Zustimmung gewonnen werden kann.</p>
+          </Card>
+        </div>
+        <Card className="mt-6 border-gold/20">
+          <div className="flex items-start justify-between gap-4 flex-wrap">
+            <div className="max-w-2xl">
+              <p className="text-xs uppercase tracking-widest text-gold font-bold mb-2">Executive Summary</p>
+              <h3 className="font-display text-2xl mb-2">Beste aktuelle Paket-Lesart: {flagshipScenario.title}</h3>
+              <p className="text-sm text-ink-muted">Wenn ein Politiker oder eine Politikerin nur 30 Sekunden hat, ist das die Kernbotschaft: hohes Entlastungspotenzial, starke Buergerakzeptanz, schwieriger aber nicht unmoeglicher Politikpfad.</p>
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <div className="bg-purple-light rounded-xl p-4 text-center"><p className="text-xl font-display text-purple">{flagshipMetrics.citizenApproval}%</p><p className="text-xs text-ink-muted">Buerger:innen</p></div>
+              <div className="bg-gold-light rounded-xl p-4 text-center"><p className="text-xl font-display text-gold">{flagshipMetrics.politicianApproval}%</p><p className="text-xs text-ink-muted">Politik</p></div>
+              <div className="bg-green-light rounded-xl p-4 text-center"><p className="text-xl font-display text-green">€{flagshipMetrics.netReturn}</p><p className="text-xs text-ink-muted">Mrd. netto / Jahr</p></div>
+              <div className="bg-blue-light rounded-xl p-4 text-center"><p className="text-xl font-display text-blue">{flagshipMetrics.overallPassability}%</p><p className="text-xs text-ink-muted">Passability</p></div>
+            </div>
+          </div>
+          <div className="grid sm:grid-cols-3 gap-3 mt-5">
+            <div className="bg-bg-alt rounded-xl p-4">
+              <p className="text-xs uppercase tracking-wider text-ink-muted font-bold mb-1">Sofort</p>
+              <p className="text-sm text-ink-soft">Schulessen, Kita, Mobilität und Pflegeentlastung sichtbar machen.</p>
+            </div>
+            <div className="bg-bg-alt rounded-xl p-4">
+              <p className="text-xs uppercase tracking-wider text-ink-muted font-bold mb-1">Politischer Hebel</p>
+              <p className="text-sm text-ink-soft">Erbschaftsschlupflöcher schließen und Mittelstandsschutz explizit machen.</p>
+            </div>
+            <div className="bg-bg-alt rounded-xl p-4">
+              <p className="text-xs uppercase tracking-wider text-ink-muted font-bold mb-1">Erste 100 Tage</p>
+              <p className="text-sm text-ink-soft">Bündelgesetz, Schutzregeln, Fonds-Setup und Entlastungs-Kommunikation.</p>
+            </div>
+          </div>
+        </Card>
+      </WideSection>
 
       {/* ━━━━ 2. DAS PROBLEM ━━━━ */}
       <Section id="problem" bg="bg-bg-alt" label="Das Problem">
@@ -284,6 +365,34 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
             <ul className="space-y-2">{r.solution.map((s, i) => (
               <li key={i} className="flex items-start gap-3"><CheckCircle className="w-4 h-4 text-green mt-1 shrink-0" /><span className="text-sm text-ink-soft">{s}</span></li>
             ))}</ul>
+            <div className="grid sm:grid-cols-2 gap-3">
+              <div className="bg-blue-light rounded-xl p-4">
+                <p className="text-xs font-bold text-blue mb-2 uppercase tracking-wide">Erste 100 Tage</p>
+                {r.implementation.first100Days.map((step, i) => (
+                  <p key={i} className="text-sm text-ink-soft mb-1">&bull; {step}</p>
+                ))}
+              </div>
+              <div className="bg-gold-light rounded-xl p-4">
+                <p className="text-xs font-bold text-gold mb-2 uppercase tracking-wide">Gesetze & Umsetzung</p>
+                {r.implementation.legalSteps.map((step, i) => (
+                  <p key={i} className="text-sm text-ink-soft mb-1">&bull; {step}</p>
+                ))}
+              </div>
+            </div>
+            <div className="grid sm:grid-cols-2 gap-3">
+              <div className="bg-green-light rounded-xl p-4">
+                <p className="text-xs font-bold text-green mb-2 uppercase tracking-wide">Wer muss liefern?</p>
+                {r.implementation.operators.map((step, i) => (
+                  <p key={i} className="text-sm text-ink-soft mb-1">&bull; {step}</p>
+                ))}
+              </div>
+              <div className="bg-red-light rounded-xl p-4">
+                <p className="text-xs font-bold text-red mb-2 uppercase tracking-wide">Was blockiert?</p>
+                {r.implementation.blockers.map((step, i) => (
+                  <p key={i} className="text-sm text-ink-soft mb-1">&bull; {step}</p>
+                ))}
+              </div>
+            </div>
             <div className="grid sm:grid-cols-2 gap-3">{r.worldwide.map((w, i) => (
               <div key={i} className="bg-blue-light rounded-xl p-3"><p className="font-bold text-xs">{w.flag} {w.country}</p><p className="text-xs text-ink-muted mt-1">{w.lesson}</p></div>
             ))}</div>
@@ -313,23 +422,43 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
           <h2 className="font-display text-3xl sm:text-4xl mt-4 mb-2">Können wir uns das leisten?</h2>
           <p className="text-ink-muted">Kurze Antwort: Ja. Wir geben mehr für die Folgen von Ungleichheit aus als die Lösung kosten würde.</p>
         </div>
+        <Card className="mb-6 bg-bg-alt border-border/60">
+          <div className="grid sm:grid-cols-4 gap-3 text-center">
+            <div>
+              <p className="text-xs uppercase tracking-wider text-ink-muted font-bold mb-1">Sofort</p>
+              <p className="text-sm text-ink-soft">erste 100 Tage, Gesetze, Fonds und sichtbare Entlastung</p>
+            </div>
+            <div>
+              <p className="text-xs uppercase tracking-wider text-ink-muted font-bold mb-1">Pro Jahr</p>
+              <p className="text-sm text-ink-soft">Kosten, Brutto-Ersparnis und Netto-Effekt im Regelbetrieb</p>
+            </div>
+            <div>
+              <p className="text-xs uppercase tracking-wider text-ink-muted font-bold mb-1">10 Jahre</p>
+              <p className="text-sm text-ink-soft">politischer Return, Haushaltswirkung und Tragefaehigkeit</p>
+            </div>
+            <div>
+              <p className="text-xs uppercase tracking-wider text-ink-muted font-bold mb-1">Langfrist</p>
+              <p className="text-sm text-ink-soft">Praevention, Vermoegensaufbau, weniger Armut und mehr Freiheit</p>
+            </div>
+          </div>
+        </Card>
         {/* Two scenarios side by side */}
         <div className="grid sm:grid-cols-2 gap-4 mb-6">
           <Card className="border-gold/20 bg-gold-light">
-            <Tag color="green">Optimistisches Szenario</Tag>
+            <Tag color="green">Optimistisches Szenario · pro Jahr</Tag>
             <div className="grid grid-cols-3 gap-2 mt-3">
-              <div><p className="text-xl font-display text-red">€{Math.round(totalCost)}</p><p className="text-xs text-ink-muted">Mrd. Kosten</p></div>
-              <div><p className="text-xl font-display text-green">€{Math.round(totalSaving)}</p><p className="text-xs text-ink-muted">Mrd. Ersparnis</p></div>
-              <div><p className="text-xl font-display text-gold">+€{Math.round(netGain)}</p><p className="text-xs text-ink-muted">Mrd. Gewinn</p></div>
+              <div><p className="text-xl font-display text-red">€{Math.round(totalCost)}</p><p className="text-xs text-ink-muted">Mrd. Kosten / Jahr</p></div>
+              <div><p className="text-xl font-display text-green">€{Math.round(totalSaving)}</p><p className="text-xs text-ink-muted">Mrd. Brutto-Ersparnis / Jahr</p></div>
+              <div><p className="text-xl font-display text-gold">+€{Math.round(netGain)}</p><p className="text-xs text-ink-muted">Mrd. Netto / Jahr</p></div>
             </div>
             <p className="text-xs text-ink-muted mt-2">ca. +€{Math.round(netGain * 1000 / 83)} pro Bürger pro Jahr</p>
           </Card>
           <Card>
-            <Tag>Konservatives Szenario (60%)</Tag>
+            <Tag>Konservatives Szenario · pro Jahr</Tag>
             <div className="grid grid-cols-3 gap-2 mt-3">
-              <div><p className="text-xl font-display text-red">€{Math.round(totalCost)}</p><p className="text-xs text-ink-muted">Mrd. Kosten</p></div>
-              <div><p className="text-xl font-display text-green">€{Math.round(totalSaving * 0.6)}</p><p className="text-xs text-ink-muted">Mrd. Ersparnis</p></div>
-              <div><p className="text-xl font-display text-gold">+€{Math.round(totalSaving * 0.6 - totalCost)}</p><p className="text-xs text-ink-muted">Mrd. Gewinn</p></div>
+              <div><p className="text-xl font-display text-red">€{Math.round(totalCost)}</p><p className="text-xs text-ink-muted">Mrd. Kosten / Jahr</p></div>
+              <div><p className="text-xl font-display text-green">€{Math.round(totalSaving * 0.6)}</p><p className="text-xs text-ink-muted">Mrd. Brutto-Ersparnis / Jahr</p></div>
+              <div><p className="text-xl font-display text-gold">+€{Math.round(totalSaving * 0.6 - totalCost)}</p><p className="text-xs text-ink-muted">Mrd. Netto / Jahr</p></div>
             </div>
             <p className="text-xs text-ink-muted mt-2">ca. +€{Math.round((totalSaving * 0.6 - totalCost) * 1000 / 83)} pro Bürger pro Jahr</p>
           </Card>
@@ -339,7 +468,7 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
           <p className="text-sm text-ink-soft text-center"><strong>Zum Vergleich:</strong> Die Energiekrise 2022-2023 hat Deutschland über <strong>€100 Mrd.</strong> für Gaspreisbremse und Tankrabatt gekostet — an einem Wochenende beschlossen. Alle unsere Reformen zusammen kosten weniger als das. Der Unterschied: sie wirken dauerhaft.</p>
         </Card>
         <Card className="mb-10 bg-bg-alt border-border/50">
-          <p className="text-xs text-ink-muted text-center mb-3"><strong>Hinweis zur Methodik:</strong> Die Ersparnisse sind Modellschätzungen auf Basis von OECD-, WHO- und IMF-Studien. Reale Werte hängen von Umsetzung, Zeitraum und Wechselwirkungen ab. Alle Einzelberechnungen sind im <a href="https://github.com/mikelninh/faireint" target="_blank" rel="noopener noreferrer" className="text-gold hover:underline">Quellcode</a> offen einsehbar.</p>
+          <p className="text-xs text-ink-muted text-center mb-3"><strong>Hinweis zur Methodik:</strong> "Kosten" meint jaehrliche Zusatzkosten im Regelbetrieb. "Ersparnis" meint jaehrliche Brutto-Effekte. "Netto" ist Ersparnis minus Kosten. Reale Werte haengen von Umsetzung, Zeitraum und Wechselwirkungen ab. Alle Einzelberechnungen sind im <a href="https://github.com/mikelninh/faireint" target="_blank" rel="noopener noreferrer" className="text-gold hover:underline">Quellcode</a> offen einsehbar.</p>
           <details className="text-xs text-ink-muted">
             <summary className="cursor-pointer font-bold hover:text-ink transition-colors">Was wir nicht wissen (ehrlich)</summary>
             <ul className="mt-2 space-y-1 text-left pl-4">
@@ -358,12 +487,13 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
               <Card key={i}>
                 <div className="flex items-center justify-between mb-4">
                   <h4 className="font-display text-sm sm:text-base">{c.reform}</h4>
-                  <Tag>{c.annualCost > 0 ? `1:${roi.toFixed(0)}` : 'Gratis'}</Tag>
+                  <Tag>{c.annualCost > 0 ? `ROI 1:${roi.toFixed(0)}` : 'Netto positiv'}</Tag>
                 </div>
                 <div className="grid grid-cols-2 gap-3 mb-3">
-                  <div className="bg-red-light rounded-xl p-3 text-center"><p className="text-xl font-display text-red">€{c.annualCost}</p><p className="text-xs text-ink-muted">Mrd. Kosten</p></div>
-                  <div className="bg-green-light rounded-xl p-3 text-center"><p className="text-xl font-display text-green">€{c.annualSaving}</p><p className="text-xs text-ink-muted">Mrd. Ersparnis</p></div>
+                  <div className="bg-red-light rounded-xl p-3 text-center"><p className="text-xl font-display text-red">€{c.annualCost}</p><p className="text-xs text-ink-muted">Mrd. Kosten / Jahr</p></div>
+                  <div className="bg-green-light rounded-xl p-3 text-center"><p className="text-xl font-display text-green">€{c.annualSaving}</p><p className="text-xs text-ink-muted">Mrd. Brutto-Ersparnis / Jahr</p></div>
                 </div>
+                <p className="text-xs text-ink-muted mb-2">Langfristig relevant, wenn die Reform voll umgesetzt ist.</p>
                 {c.source && <a href={c.source} target="_blank" rel="noopener noreferrer" className="text-xs text-gold hover:underline">Quelle &rarr;</a>}
               </Card>
             )
@@ -397,29 +527,159 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
       <Section id="simulator" bg="bg-bg-alt" label="Policy Simulator">
         <div className="text-center mb-10">
           <Tag color="purple">Simulator</Tag>
-          <h2 className="font-display text-3xl sm:text-4xl mt-4 mb-2">Wie reagiert Deutschland?</h2>
-          <p className="text-ink-muted">23 fiktive Personas, gewichtet nach Sinus-Milieus. Keine Umfrage &mdash; eine Simulation.</p>
+          <h2 className="font-display text-3xl sm:text-4xl mt-4 mb-2">Wer stimmt zu und wer blockiert?</h2>
+          <p className="text-ink-muted">FairEint simuliert getrennt, wie {citizenPersonaCount} B&uuml;rger-Personas und {politicalBlocCount} politische Lager reagieren &mdash; plus was die Reform netto bringt.</p>
         </div>
-        <div className="flex gap-2 overflow-x-auto pb-2 mb-8 -mx-2 px-2 sm:flex-wrap sm:justify-center sm:overflow-visible">
-          {policyScenarios.map(s => (
-            <button key={s.id} onClick={() => { setActivePolicy(s.id); trackAction(`sim_${s.id}`) }}
-              className={`px-4 py-2.5 rounded-xl text-sm font-medium cursor-pointer btn-press transition-all whitespace-nowrap shrink-0 ${activePolicy === s.id ? 'bg-gold text-white shadow-md' : 'bg-bg-card border border-border text-ink-muted hover:text-ink'}`}>
-              {s.emoji} {s.title}
-            </button>
-          ))}
+        <Card className="mb-6 bg-bg-card border-border/60">
+          <div className="grid sm:grid-cols-4 gap-3 text-center">
+            <div><p className="text-xs uppercase tracking-wider text-ink-muted font-bold mb-1">Buerger:innen</p><p className="text-sm text-ink-soft">Wie der Alltag die Zustimmung treibt oder bremst</p></div>
+            <div><p className="text-xs uppercase tracking-wider text-ink-muted font-bold mb-1">Politik</p><p className="text-sm text-ink-soft">Wie Parteien, Fraktionen und Koalitionen reagieren</p></div>
+            <div><p className="text-xs uppercase tracking-wider text-ink-muted font-bold mb-1">Netto / Jahr</p><p className="text-sm text-ink-soft">fiskalischer Effekt im laufenden Betrieb</p></div>
+            <div><p className="text-xs uppercase tracking-wider text-ink-muted font-bold mb-1">10 Jahre</p><p className="text-sm text-ink-soft">ob das Paket politisch und finanziell traegt</p></div>
+          </div>
+        </Card>
+        <div className="grid sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-8">
+          {policyScenarios.map(s => {
+            const metrics = getPolicyMetrics(s.id)
+            const active = s.id === activePolicy
+            return (
+              <button
+                key={s.id}
+                onClick={() => { setActivePolicy(s.id); trackAction(`sim_${s.id}`) }}
+                className={`text-left rounded-2xl border p-4 cursor-pointer btn-press transition-all ${active ? 'bg-gold text-white border-gold shadow-lg scale-[1.02]' : 'bg-bg-card border-border hover:border-gold/30 hover:shadow-md'}`}
+              >
+                <div className="flex items-start justify-between gap-3 mb-3">
+                  <div>
+                    <p className={`text-2xl ${active ? 'text-white' : ''}`}>{s.emoji}</p>
+                    <h3 className={`font-display text-base leading-tight mt-1 ${active ? 'text-white' : 'text-ink'}`}>{s.title}</h3>
+                  </div>
+                  <div className={`text-right ${active ? 'text-white' : approvalColorClass(metrics.overallPassability)}`}>
+                    <p className="font-display text-2xl">{metrics.overallPassability}%</p>
+                    <p className={`text-[11px] uppercase tracking-wider ${active ? 'text-white/80' : 'text-ink-muted'}`}>Passability</p>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <div>
+                    <div className={`flex justify-between text-xs mb-1 ${active ? 'text-white/85' : 'text-ink-muted'}`}>
+                      <span>B&uuml;rger:innen</span><span>{metrics.citizenApproval}%</span>
+                    </div>
+                    <Bar pct={metrics.citizenApproval} color={active ? 'bg-white' : barColorClass(metrics.citizenApproval)} />
+                  </div>
+                  <div>
+                    <div className={`flex justify-between text-xs mb-1 ${active ? 'text-white/85' : 'text-ink-muted'}`}>
+                      <span>Politik</span><span>{metrics.politicianApproval}%</span>
+                    </div>
+                    <Bar pct={metrics.politicianApproval} color={active ? 'bg-white' : barColorClass(metrics.politicianApproval)} />
+                  </div>
+                </div>
+                <div className={`mt-3 pt-3 border-t ${active ? 'border-white/20 text-white/85' : 'border-border text-ink-muted'} flex items-end justify-between gap-2`}>
+                  <div>
+                    <p className="text-[11px] uppercase tracking-wider">Netto / Jahr</p>
+                    <p className="font-display text-lg">€{metrics.netReturn} Mrd.</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-[11px] uppercase tracking-wider">10 Jahre</p>
+                    <p className="font-display text-lg">€{metrics.tenYearReturn} Mrd.</p>
+                  </div>
+                </div>
+              </button>
+            )
+          })}
         </div>
         {policyScenarios.filter(s => s.id === activePolicy).map(scenario => {
-          const result = simulatePolicy(scenario.id)
+          const citizen = simulatePolicy(scenario.id)
+          const politician = simulatePoliticianPolicy(scenario.id)
+          const metrics = getPolicyMetrics(scenario.id)
           return (
             <div key={scenario.id}>
               <Card className="mb-6">
-                <p className="text-ink-soft mb-4">{scenario.description}</p>
-                <div className="grid grid-cols-3 gap-3">
-                  <div className="bg-red-light rounded-xl p-4 text-center"><p className="text-2xl font-display text-red">€{scenario.annualCost}</p><p className="text-xs text-ink-muted">Mrd. Kosten</p></div>
-                  <div className="bg-green-light rounded-xl p-4 text-center"><p className="text-2xl font-display text-green">€{scenario.annualSaving}</p><p className="text-xs text-ink-muted">Mrd. Ersparnis</p></div>
-                  <div className="bg-gold-light rounded-xl p-4 text-center"><p className="text-2xl font-display text-gold">{result.approval}%</p><p className="text-xs text-ink-muted">{result.label}</p></div>
+                <div className="flex items-start justify-between gap-4 flex-wrap mb-4">
+                  <div className="max-w-2xl">
+                    <h3 className="font-display text-2xl mb-2">{scenario.emoji} {scenario.title}</h3>
+                    <p className="text-ink-soft">{scenario.description}</p>
+                  </div>
+                  <div className="bg-gold-light rounded-2xl p-4 min-w-52">
+                    <p className="text-xs uppercase tracking-wider text-gold font-bold mb-1">Beste Lesart</p>
+                    <p className="font-display text-2xl text-gold">{metrics.overallPassability}%</p>
+                    <p className="text-sm text-ink-soft">{metrics.label}</p>
+                  </div>
+                </div>
+                <div className="grid sm:grid-cols-2 xl:grid-cols-5 gap-3">
+                  <div className="bg-red-light rounded-xl p-4 text-center"><p className="text-2xl font-display text-red">€{scenario.annualCost}</p><p className="text-xs text-ink-muted">Mrd. Kosten / Jahr</p></div>
+                  <div className="bg-green-light rounded-xl p-4 text-center"><p className="text-2xl font-display text-green">€{scenario.annualSaving}</p><p className="text-xs text-ink-muted">Mrd. Brutto-Ersparnis / Jahr</p></div>
+                  <div className="bg-blue-light rounded-xl p-4 text-center"><p className="text-2xl font-display text-blue">€{metrics.netReturn}</p><p className="text-xs text-ink-muted">Mrd. Netto / Jahr</p></div>
+                  <div className="bg-purple-light rounded-xl p-4 text-center"><p className={`text-2xl font-display ${approvalColorClass(citizen.approval)}`}>{citizen.approval}%</p><p className="text-xs text-ink-muted">B&uuml;rger:innen</p></div>
+                  <div className="bg-gold-light rounded-xl p-4 text-center"><p className={`text-2xl font-display ${approvalColorClass(politician.approval)}`}>{politician.approval}%</p><p className="text-xs text-ink-muted">Politik</p></div>
                 </div>
               </Card>
+              <div className="grid lg:grid-cols-[1.2fr_0.8fr] gap-4 mb-6">
+                <Card className="!p-5">
+                  <div className="flex items-center justify-between gap-3 mb-4">
+                    <div>
+                      <p className="text-xs uppercase tracking-wider text-ink-muted font-bold">Cross-Simulation</p>
+                      <h4 className="font-display text-xl">Akzeptanz bei Leuten und im Parlament</h4>
+                    </div>
+                    <Tag color="blue">10 Jahre: €{metrics.tenYearReturn} Mrd.</Tag>
+                  </div>
+                  <div className="space-y-4">
+                    <div>
+                      <div className="flex items-center justify-between text-sm mb-2">
+                        <span className="font-bold">B&uuml;rger:innen</span>
+                        <span className={approvalColorClass(citizen.approval)}>{citizen.approval}% · {citizen.label}</span>
+                      </div>
+                      <Bar pct={citizen.approval} color={barColorClass(citizen.approval)} />
+                    </div>
+                    <div>
+                      <div className="flex items-center justify-between text-sm mb-2">
+                        <span className="font-bold">Politische Lager</span>
+                        <span className={approvalColorClass(politician.approval)}>{politician.approval}% · {politician.label}</span>
+                      </div>
+                      <Bar pct={politician.approval} color={barColorClass(politician.approval)} />
+                    </div>
+                    <div>
+                      <div className="flex items-center justify-between text-sm mb-2">
+                        <span className="font-bold">Gesamt-Passability</span>
+                        <span className={approvalColorClass(metrics.overallPassability)}>{metrics.overallPassability}% · {metrics.label}</span>
+                      </div>
+                      <Bar pct={metrics.overallPassability} color={barColorClass(metrics.overallPassability)} />
+                    </div>
+                  </div>
+                  <div className="grid sm:grid-cols-3 gap-3 mt-5">
+                    <div className="bg-bg-alt rounded-xl p-4">
+                      <p className="text-xs uppercase tracking-wider text-ink-muted font-bold mb-1">ROI</p>
+                      <p className="font-display text-2xl text-green">1:{metrics.roi}</p>
+                      <p className="text-xs text-ink-muted mt-1">langfristig pro eingesetztem Euro</p>
+                    </div>
+                    <div className="bg-bg-alt rounded-xl p-4">
+                      <p className="text-xs uppercase tracking-wider text-ink-muted font-bold mb-1">Was hilft</p>
+                      <p className="text-sm text-ink-soft">Hohe Sichtbarkeit im Alltag und eine saubere Gegenfinanzierung.</p>
+                    </div>
+                    <div className="bg-bg-alt rounded-xl p-4">
+                      <p className="text-xs uppercase tracking-wider text-ink-muted font-bold mb-1">Was blockiert</p>
+                      <p className="text-sm text-ink-soft">Elite-Widerstand, Mittelstands-Angst oder abstrakte Nutzenversprechen.</p>
+                    </div>
+                  </div>
+                </Card>
+                <Card className="!p-5">
+                  <p className="text-xs uppercase tracking-wider text-ink-muted font-bold mb-3">Politische Lager</p>
+                  <div className="space-y-3">
+                    {scenario.politicianReactions.map(r => {
+                      const bloc = politicalBlocs.find(x => x.id === r.blocId)
+                      if (!bloc) return null
+                      return (
+                        <div key={r.blocId}>
+                          <div className="flex items-center justify-between gap-3 text-sm mb-1.5">
+                            <span className="font-bold">{bloc.label}</span>
+                            <span className={approvalColorClass(r.approval)}>{r.approval}%</span>
+                          </div>
+                          <Bar pct={r.approval} color={barColorClass(r.approval)} />
+                          <p className="text-xs text-ink-muted mt-1.5">{r.reason}</p>
+                        </div>
+                      )
+                    })}
+                  </div>
+                </Card>
+              </div>
               <div className="grid sm:grid-cols-2 gap-3">
                 {scenario.reactions.map(r => {
                   const p = personas.find(x => x.id === r.personaId)
@@ -429,9 +689,9 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
                       <div className="flex items-center gap-3 mb-2">
                         <span className="text-2xl">{p.emoji}</span>
                         <div className="flex-1"><span className="font-bold text-sm">{p.name}, {p.age}</span><span className="text-ink-muted text-xs ml-1">({p.party})</span></div>
-                        <span className={`font-display text-lg ${r.approval >= 70 ? 'text-green' : r.approval >= 40 ? 'text-gold' : 'text-red'}`}>{r.approval}%</span>
+                        <span className={`font-display text-lg ${approvalColorClass(r.approval)}`}>{r.approval}%</span>
                       </div>
-                      <Bar pct={r.approval} color={r.approval >= 70 ? 'bg-green' : r.approval >= 40 ? 'bg-gold' : 'bg-red'} />
+                      <Bar pct={r.approval} color={barColorClass(r.approval)} />
                       <p className="text-sm text-ink-muted mt-2 italic">&bdquo;{r.reason}&ldquo;</p>
                     </Card>
                   )
@@ -442,7 +702,84 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
         })}
       </Section>
 
-      {/* ━━━━ 7. MENSCHEN ━━━━ */}
+      {/* ━━━━ 7. 2050 -> 2030 ━━━━ */}
+      <WideSection id="vision2030" bg="bg-bg" label="2030 statt 2050">
+        <div className="text-center mb-10">
+          <Tag color="green">2050 &rarr; 2030</Tag>
+          <h2 className="font-display text-3xl sm:text-4xl mt-4 mb-2">Was wir erst 2050 wollen, muss 2030 sichtbar sein</h2>
+          <p className="text-ink-muted max-w-3xl mx-auto">Nicht auf die ferne Utopie warten. FairEint denkt vom besten Deutschland und der besten Welt her rückwärts: zero hunger, zero poverty, health, wealth, freedom, happiness und Tierwürde &mdash; aber so, dass die ersten Gesetze noch in diesem Jahrzehnt spürbar werden.</p>
+        </div>
+
+        <div className="grid grid-cols-2 sm:grid-cols-4 xl:grid-cols-7 gap-3 mb-8">
+          {backcastGoals.map(goal => {
+            const active = goal.id === activeGoal
+            return (
+              <button
+                key={goal.id}
+                onClick={() => setActiveGoal(goal.id)}
+                className={`rounded-2xl p-4 text-center cursor-pointer btn-press transition-all ${active ? 'bg-gold text-white shadow-lg scale-105' : 'bg-bg-card border border-border hover:border-gold/30 hover:shadow-md'}`}
+              >
+                <span className="text-2xl block mb-1">{goal.emoji}</span>
+                <span className="font-display text-sm leading-tight block">{goal.title}</span>
+              </button>
+            )
+          })}
+        </div>
+
+        {backcastGoals.filter(goal => goal.id === activeGoal).map(goal => (
+          <div key={goal.id} className="space-y-6 panel-enter">
+            <Card className="border-gold/20">
+              <div className="flex items-start justify-between gap-4 flex-wrap">
+                <div className="max-w-3xl">
+                  <p className="text-sm uppercase tracking-wider text-gold font-bold mb-2">{goal.emoji} {goal.title}</p>
+                  <h3 className="font-display text-2xl sm:text-3xl mb-3">{goal.promise}</h3>
+                  <p className="text-ink-soft mb-4">{goal.whyItMatters}</p>
+                </div>
+                <div className="bg-green-light rounded-2xl p-4 max-w-sm">
+                  <p className="text-xs uppercase tracking-wider text-green font-bold mb-1">Bis 2030 sichtbar</p>
+                  <p className="text-sm text-ink-soft">{goal['2030']}</p>
+                </div>
+              </div>
+            </Card>
+
+            <div className="grid lg:grid-cols-[0.95fr_1.05fr] gap-4">
+              <Card>
+                <p className="text-xs uppercase tracking-wider text-ink-muted font-bold mb-3">Warum die Leute das wollen wuerden</p>
+                <div className="space-y-3">
+                  <div className="bg-bg-alt rounded-xl p-4">
+                    <p className="text-sm text-ink-soft"><strong className="text-ink">Buerger:innen:</strong> Sie sehen weniger Angst, weniger Rechnungsdruck, mehr Zeit, bessere Gesundheit und mehr Sicherheit im Alltag.</p>
+                  </div>
+                  <div className="bg-bg-alt rounded-xl p-4">
+                    <p className="text-sm text-ink-soft"><strong className="text-ink">Politik:</strong> Weniger Folgekosten, weniger Reibung im Staat, mehr Zustimmung und eine klarere Geschichte, warum das Land funktioniert.</p>
+                  </div>
+                  <div className="bg-bg-alt rounded-xl p-4">
+                    <p className="text-sm text-ink-soft"><strong className="text-ink">Systemisch:</strong> Die 2050-Ziele konvergieren, weil jeder Schritt gleichzeitig Hunger, Armut, Krankheit, Freiheitsverlust und Ausgrenzung senkt.</p>
+                  </div>
+                </div>
+              </Card>
+
+              <div className="space-y-3">
+                {goal.milestones.map((step, index) => (
+                  <Card key={step.year} className="!p-5">
+                    <div className="flex items-start gap-4">
+                      <div className="shrink-0 w-14 h-14 rounded-2xl bg-gold-light text-gold flex items-center justify-center font-display text-lg">{step.year}</div>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="text-xs uppercase tracking-wider text-ink-muted font-bold">Schritt {index + 1}</span>
+                        </div>
+                        <h4 className="font-display text-xl mb-2">{step.title}</h4>
+                        <p className="text-sm text-ink-soft">{step.detail}</p>
+                      </div>
+                    </div>
+                  </Card>
+                ))}
+              </div>
+            </div>
+          </div>
+        ))}
+      </WideSection>
+
+      {/* ━━━━ 8. MENSCHEN ━━━━ */}
       <WideSection id="menschen" bg="bg-bg" label="Wählerprofile">
         <div className="text-center mb-10">
           <Tag>8 Wählerprofile</Tag>
@@ -506,7 +843,7 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
         ))}
       </WideSection>
 
-      {/* ━━━━ 8. PARTEIEN ━━━━ */}
+      {/* ━━━━ 9. PARTEIEN ━━━━ */}
       <WideSection id="parteien" bg="bg-bg-alt" label="Parteien-Check">
         <div className="text-center mb-10">
           <Tag color="blue">Parteien-Check</Tag>
@@ -892,10 +1229,10 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
             <div className="text-left space-y-1">
               {[
                 '67% des Vermögens gehört den Top 10%. Die untere Hälfte: 1,4%.',
-                'Ungleichheit kostet Deutschland €70-110 Mrd./Jahr. Die Lösung: €30-45 Mrd.',
-                '€4 pro Bürger pro Tag. Weniger als ein Kaffee. So viel kostet ein faires Deutschland.',
+                'Ungleichheit kostet Deutschland €70-110 Mrd./Jahr. Das Kernpaket kostet rund €45 Mrd./Jahr.',
+                'Das Kernpaket kostet rund €1,50 pro Bürger pro Tag. Das volle Programm etwa €2.',
                 'Vermögensteuer: nie abgeschafft, nur ausgesetzt seit 1996. Die Schweiz erhebt sie.',
-                'Universal Basic Services hat 80% Zustimmung in der Bevölkerungssimulation.',
+                'Universal Basic Services erreicht im Modell breite Zustimmung und hohen Alltagsnutzen.',
               ].map((stat, i) => (
                 <button key={i} onClick={() => { navigator.clipboard.writeText(stat + ' — faireint.de #FairEint'); trackAction('stat_copied'); showToast('Zahl kopiert!') }}
                   className="w-full text-left text-xs text-ink-muted hover:text-ink hover:bg-bg-alt p-2 rounded-lg cursor-pointer btn-press transition-colors flex items-start gap-2">

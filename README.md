@@ -10,7 +10,14 @@
 
 ## Die zentrale Erkenntnis
 
-Ungleichheit kostet Deutschland **€70-110 Mrd. pro Jahr** — durch verlorenes Wachstum, vermeidbare Krankheit und Kriminalität. Die Lösung kostet **€30-45 Mrd.** Das sind **€4 pro Bürger pro Tag**. Weniger als ein Kaffee bei Starbucks. Weniger als die Energiekrise 2022 — die an einem Wochenende beschlossen wurde.
+Ungleichheit kostet Deutschland **€70-110 Mrd. pro Jahr** — durch verlorenes Wachstum, vermeidbare Krankheit und Kriminalität. Das derzeitige **Kernpaket** kostet rund **€45 Mrd. pro Jahr**. Das **volle Programm** liegt aktuell bei rund **€61 Mrd. Kosten** und **€201 Mrd. Brutto-Ersparnis pro Jahr**.
+
+FairEint trennt deshalb bewusst:
+- **Kosten pro Jahr**
+- **Brutto-Ersparnis pro Jahr**
+- **Netto-Effekt pro Jahr**
+- **10-Jahres-Return**
+- **Langfristige Wirkung bis 2030**
 
 ---
 
@@ -20,12 +27,12 @@ Ungleichheit kostet Deutschland **€70-110 Mrd. pro Jahr** — durch verlorenes
 Energie, Rente, Soziales, Steuern, Gesellschaftsdienst, Ernährung, Gesundheit, Tierschutz, Bildung, Vermögensverteilung
 
 ### Policy-Simulator
-Wähle eine Reform — sieh wie 23 Personas (96% der Bevölkerung, gewichtet nach Sinus-Milieus) darauf reagieren. Mit Zustimmungswert, Zitat und Begründung.
+Wähle ein Gesetzespaket — sieh, wie **24 Bürger-Personas** und **7 politische Lager** darauf reagieren. Mit Zustimmungswert, Begründung, Netto-Return und 10-Jahres-Wirkung.
 
-### Vermögensverteilung
-- **Vermögensteuer** 0,5% ab €5 Mio. (wie Norwegen/Schweiz) — Simulation: 64% Zustimmung
-- **Universal Basic Services** — Gratis Schulessen, ÖPNV u25/ü65, Kinderbetreuung — Simulation: 80% Zustimmung
-- **Erbschaftsteuer-Reform** — Betriebsvermögensprivileg deckeln bei €50 Mio. — Simulation: 73% Zustimmung
+### Top-Pakete im aktuellen Modell
+- **Vermögenspaket: UBS + Erbschaft + Top-Vermögen** — hohe Bürgerzustimmung, schwieriger aber tragfähiger Politikpfad, starker Netto-Return
+- **Universal Basic Services (UBS)** — höchste Alltagssichtbarkeit, besonders stark bei Familien, Pflege und Armut
+- **Erbschaftsteuer-Reform** — politisch oft leichter vermittelbar als reine Vermögensteuer
 
 ### 12+ Länder als Vorbild
 Japan, Finnland, Taiwan, Estland, Schweiz, Dänemark, Portugal, Singapur, UK, Island, Schweden, Norwegen, Wien
@@ -33,11 +40,21 @@ Japan, Finnland, Taiwan, Estland, Schweiz, Dänemark, Portugal, Singapur, UK, Is
 ### 8 Wählerprofile
 Vom Handwerker bis zur Studentin — ehrlich was funktioniert und was nicht.
 
-### Parteien-Check
-Jede Partei bewertet. Gewinne, Bedenken, Kompromiss-Vorschläge. 4 von 6 Parteien über 50%.
+### Cross-Simulation
+Bürger:innen und Politik werden getrennt simuliert. So wird sichtbar, was populär ist, was passfähig ist und woran gute Gesetze scheitern können.
 
 ### Fahrplan 2026-2035
 Konkrete Gesetze mit konkreten Fristen.
+
+### 2030 statt 2050
+7 Zielbilder zeigen, wie Deutschland bereits **bis 2030 sichtbar** gerechter, gesünder, freier und tierfreundlicher werden kann — per Backcasting vom Ziel zurück in konkrete Schritte.
+
+### Umsetzung statt nur Vision
+Jede Reform enthält jetzt:
+- **Erste 100 Tage**
+- **Gesetze & Umsetzung**
+- **Wer muss liefern**
+- **Was blockiert**
 
 ### 7 Demokratie-Innovationen
 GitLaw, Wähler-Dashboard, Generationen-Score, AI Deliberation, Lobbying-Tracing, PolicyEngine, Bürger-Kammer
@@ -94,4 +111,3 @@ Dieses Projekt ist Teil eines Open-Source-Ökosystems für digitale Demokratie:
 | **SafeVoice** | Wer wird online angegriffen? | [GitHub](https://github.com/mikelninh/safevoice) |
 
 Alle Projekte: [github.com/mikelninh](https://github.com/mikelninh) · Unterstützen: [Ko-fi](https://ko-fi.com/mikel777) · [GitHub Sponsors](https://github.com/sponsors/mikelninh)
-

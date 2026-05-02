@@ -7,6 +7,12 @@ export interface Reform {
   solution: string[]
   worldwide: { country: string; flag: string; lesson: string }[]
   story: { name: string; age: number; role: string; before: string; after: string }
+  implementation: {
+    first100Days: string[]
+    legalSteps: string[]
+    operators: string[]
+    blockers: string[]
+  }
 }
 
 export interface Principle {
@@ -41,6 +47,24 @@ export const reforms: Reform[] = [
       { country: "Island", flag: "🇮🇸", lesson: "100% Strom aus Erneuerbaren. Zeigt: es geht." },
     ],
     story: { name: "Lena", age: 34, role: "Krankenschwester, pendelt 25km", before: "€280/Monat Sprit", after: "Mit €29-Ticket: €250/Monat gespart" },
+    implementation: {
+      first100Days: [
+        "Tempolimit per Verordnung einführen und Regionalticket bundesweit kofinanzieren.",
+        "Solar- und Wind-Beschleunigungsgesetz mit klaren Flächenzielen beschließen.",
+        "Importdiversifizierung und strategische Stromnetzplanung starten.",
+      ],
+      legalSteps: [
+        "StVG/StVO-Anpassung für Tempolimit 120.",
+        "EEG-, BauGB- und Planungsrecht-Novelle für schnellere Genehmigungen.",
+        "Energiesicherheitsgesetz mit Importobergrenzen und Speicherzielen.",
+      ],
+      operators: [
+        "BMWK, BMDV, Länderplanungsbehörden, Netzbetreiber.",
+      ],
+      blockers: [
+        "Autokultur, Genehmigungsstau, lokale Klagen gegen Wind und Netze.",
+      ],
+    },
   },
   {
     id: "rente",
@@ -59,6 +83,24 @@ export const reforms: Reform[] = [
       { country: "Singapur", flag: "🇸🇬", lesson: "Pflicht-Sparkonto für Gesundheit + Rente. Eigenverantwortung mit Sicherheitsnetz." },
     ],
     story: { name: "Marco", age: 18, role: "Azubi Elektriker", before: "Keine Ahnung, wie Rente funktioniert", after: "Fängt mit 18 an → mit 63 raus. Deutschlandfonds-Konto: geschätzt €200.000 nach 45 Jahren" },
+    implementation: {
+      first100Days: [
+        "Deutschlandfonds als öffentliche Institution gründen.",
+        "Riester-Neuzugang stoppen und Standardprodukt definieren.",
+        "45-Arbeitsjahre-Regel gesetzlich fixieren.",
+      ],
+      legalSteps: [
+        "SGB VI-Reform für Beitragsbasis, Rentenniveau und Ausstiegspfad.",
+        "Deutschlandfonds-Gesetz mit Governance, Gebührenobergrenze und Default-Anlage.",
+        "Einbeziehung neuer Selbstständiger und Beamter in Stufen regeln.",
+      ],
+      operators: [
+        "BMAS, BMF, Deutsche Rentenversicherung, öffentlicher Fondsmanager.",
+      ],
+      blockers: [
+        "Beamtenlobby, Finanzindustrie, Angst vor Kapitalmarkt und Übergangskosten.",
+      ],
+    },
   },
   {
     id: "soziales",
@@ -78,6 +120,24 @@ export const reforms: Reform[] = [
       { country: "Dänemark", flag: "🇩🇰", lesson: "Flexicurity: Einfach kündigen, aber starkes Sicherheitsnetz + aktive Arbeitsmarktpolitik." },
     ],
     story: { name: "Thomas", age: 48, role: "Depressiv, 2 Jahre Bürgergeld", before: "Druck vom Jobcenter, Sanktionsdrohung", after: "Gesundheitscheck → Therapie statt Strafe. 12 Sitzungen in 4 Wochen. Kein Vermittlungsdruck." },
+    implementation: {
+      first100Days: [
+        "Sanktionsdeckel und Pflicht-Gesundheitscheck sofort anweisen.",
+        "Jobcenter-Personaloffensive finanzieren.",
+        "Weiterbildungsanspruch mit Pilotregionen starten.",
+      ],
+      legalSteps: [
+        "SGB II-Novelle für Hinzuverdienst, Sanktionen und Gesundheitsprüfung.",
+        "Bund-Länder-Vereinbarung für Housing-First-Programme und kommunale Hilfen.",
+        "Verwaltungsvorschriften für schnelle psychische Abklärung in Jobcentern.",
+      ],
+      operators: [
+        "BMAS, Jobcenter, Kommunen, Krankenkassen, Wohnungsunternehmen.",
+      ],
+      blockers: [
+        "Moralische Debatte über Bürgergeld, Personalengpässe, föderale Unterschiede.",
+      ],
+    },
   },
   {
     id: "steuern",
@@ -96,6 +156,24 @@ export const reforms: Reform[] = [
       { country: "Estland", flag: "🇪🇪", lesson: "Digitale Steuererklärung in 5 Minuten. 95% machen es online." },
     ],
     story: { name: "Familie Yilmaz", age: 38, role: "Doppelverdiener, 2 Kinder", before: "Splitting-Vorteil ~€3.000", after: "Kinderbonus €4.000 + Grundfreibetrag €400 = netto +€4.400/Jahr" },
+    implementation: {
+      first100Days: [
+        "Kinderbonus und Tarif-auf-Rädern gesetzlich aufsetzen.",
+        "Splitting-Deckelung mit Bestandsschutz kommunizieren.",
+        "Unternehmenssteuerpfad für Reinvestitionen festlegen.",
+      ],
+      legalSteps: [
+        "EStG-Novelle für Splitting, Kinderbonus und automatische Tarifverschiebung.",
+        "KStG-Anpassung für begünstigte Reinvestition.",
+        "Digitale Steuer-Vorbefüllung durch BZSt und Länderfinanzämter beschleunigen.",
+      ],
+      operators: [
+        "BMF, Länderfinanzverwaltungen, Familienkassen, Arbeitgeber.",
+      ],
+      blockers: [
+        "Splitting-Debatte, Länderhaushalte, Komplexität im Steuer-IT-Umbau.",
+      ],
+    },
   },
   {
     id: "dienst",
@@ -114,6 +192,24 @@ export const reforms: Reform[] = [
       { country: "Südkorea", flag: "🇰🇷", lesson: "Gesellschaftsdienst als Alternative zum Militär — in Pflege, Kultur, Katastrophenschutz." },
     ],
     story: { name: "Jonas", age: 18, role: "Nach dem Abi unentschlossen", before: "FSJ für €450 Taschengeld? Nein danke.", after: "6 Monate Pflege für €1.400 + Führerschein + Studienbonus. Weiß jetzt, was er studieren will." },
+    implementation: {
+      first100Days: [
+        "Pflichttag gesetzlich verankern und Platzkontingente definieren.",
+        "Pilotkontingente in Pflege, Katastrophenschutz und Bildung starten.",
+        "Vergütung, Rentenpunkte und Bonusmechanik festlegen.",
+      ],
+      legalSteps: [
+        "Neues Gesellschaftsdienstgesetz mit Freiwilligkeits- und Bonuslogik.",
+        "Änderungen in SGB, BAföG und Fahrerlaubnisrecht für Anreize.",
+        "Koordinierungsstelle zwischen Bund, Ländern und Trägern schaffen.",
+      ],
+      operators: [
+        "BMFSFJ, BMVg, Pflegeeinrichtungen, THW, Feuerwehr, Schulen.",
+      ],
+      blockers: [
+        "Zwangsdebatte, Trägerkapazität, Gewerkschaftssorgen wegen Ersatz regulärer Jobs.",
+      ],
+    },
   },
   {
     id: "ernaehrung",
@@ -134,6 +230,24 @@ export const reforms: Reform[] = [
       { country: "Finnland", flag: "🇫🇮", lesson: "Kostenloses Schulessen seit 1948. >90% nehmen teil. €2,70/Mahlzeit." },
     ],
     story: { name: "Mia", age: 8, role: "Grundschülerin in Essen", before: "Nutella-Brot oder Kiosk-Schokoriegel", after: "Kostenloses warmes Essen: Linsen-Curry, Gemüse, Obst. 1x/Woche kocht die Klasse selbst." },
+    implementation: {
+      first100Days: [
+        "Bundesprogramm für kostenloses Schulessen mit kommunalen Piloten starten.",
+        "Zuckersteuer und Werbebeschränkung für Kinder ins Gesetzgebungsverfahren geben.",
+        "Ernährungsfachkräfte in Brennpunktschulen priorisieren.",
+      ],
+      legalSteps: [
+        "Schulverpflegungsgesetz mit Qualitätsstandard und Finanzierungslogik.",
+        "Lebensmittelwerbe- und Verbrauchsteuerrecht anpassen.",
+        "Beschaffungsrichtlinien für pflanzliche Standardoptionen in öffentlicher Verpflegung.",
+      ],
+      operators: [
+        "BMEL, Länder, Kommunen, Schulträger, Caterer, Gesundheitsämter.",
+      ],
+      blockers: [
+        "Kulturkampf um Ernährung, kommunale Küchenkapazität, Catering-Lobby.",
+      ],
+    },
   },
   {
     id: "gesundheit",
@@ -156,6 +270,24 @@ export const reforms: Reform[] = [
       { country: "Kuba", flag: "🇨🇺", lesson: "1 Arzt pro 1.000 Einwohner in der Nachbarschaft. Hausbesuche. Säuglingssterblichkeit niedriger als USA — bei 1/14 der Kosten." },
     ],
     story: { name: "Helmut", age: 55, role: "Lagerarbeiter, übergewichtig", before: "Geht erst zum Arzt, wenn's wehtut", after: "Pflicht-Check entdeckt Prä-Diabetes. Kostenlose Ernährungsberatung + Kochkurs. 8kg leichter, kein Diabetes. Spart dem System ~€10.000/Jahr." },
+    implementation: {
+      first100Days: [
+        "Pflicht-Gesundheitscheck und Präventionsbudget verdoppeln.",
+        "50 kommunale Präventionsregionen ausschreiben.",
+        "Fahrplan für ein einheitliches Versicherungssystem vorlegen.",
+      ],
+      legalSteps: [
+        "SGB V-Reform für Präventionspflichten und Kassenanreize.",
+        "Gesetzlicher Übergangspfad GKV/PKV mit Qualitätsgarantien.",
+        "Digitale Gesundheitsakte und Standarddatenflüsse bundeseinheitlich regeln.",
+      ],
+      operators: [
+        "BMG, Krankenkassen, Kassenärztliche Vereinigungen, Kommunen, Kliniken.",
+      ],
+      blockers: [
+        "PKV-Lobby, Ärztevergütung, Datenschutzangst, föderale Krankenhauspolitik.",
+      ],
+    },
   },
   {
     id: "tierschutz",
@@ -176,6 +308,24 @@ export const reforms: Reform[] = [
       { country: "Dänemark", flag: "🇩🇰", lesson: "Erste CO₂-Steuer auf Tierhaltung weltweit (2024): €40/Tonne, steigend." },
     ],
     story: { name: "Bauer Müller", age: 55, role: "Schweinemast, 3.000 Tiere", before: "Gefangen im System: niedrige Margen, hohe Schulden", after: "Übergangsprogramm: Staat kauft Betrieb. 80% Förderung für Umstieg auf pflanzliche Landwirtschaft oder Solar." },
+    implementation: {
+      first100Days: [
+        "Tierwuerde-Novelle vorbereiten und Umstiegsfonds aufsetzen.",
+        "Stallumbau- und Ausstiegspfade mit Landwirtschaftsverbänden verhandeln.",
+        "Öffentliche Beschaffung auf pflanzliche Standardoptionen drehen.",
+      ],
+      legalSteps: [
+        "Tierschutzgesetz und ggf. Grundgesetz anpassen.",
+        "CO2-/Verbrauchsteuer auf tierische Produkte mit Rückverteilungslogik einführen.",
+        "Agrarförderung von Tierzahl auf Umstieg und Bodenbindung umstellen.",
+      ],
+      operators: [
+        "BMEL, Umweltressorts, Länderagrarministerien, Kommunalküchen.",
+      ],
+      blockers: [
+        "Agrarlobby, Kulturkampf, EU-Beihilferecht, Angst vor Bauernsterben.",
+      ],
+    },
   },
   {
     id: "bildung",
@@ -197,6 +347,24 @@ export const reforms: Reform[] = [
       { country: "Singapur", flag: "🇸🇬", lesson: "PISA-Platz 1 weltweit (Mathe, Lesen, Naturwissenschaften). Konkret-Bild-Abstrakt Methode." },
     ],
     story: { name: "Ben", age: 10, role: "Grundschüler in Dortmund", before: "Stress wegen Gymnasium-Übergang, keine Schulpsychologin", after: "Wohlbefinden-Befragung zeigt Probleme → Schule bekommt Psychologin + Anti-Mobbing-Programm. Ben lernt Programmieren, kocht mit der Klasse, geht gerne hin." },
+    implementation: {
+      first100Days: [
+        "Bund-Länder-Pakt für Schulpsychologie und Sozialarbeit schließen.",
+        "Wohlbefindensmessung und Anti-Mobbing-Standard pilotieren.",
+        "Programmieren und Ernährungsbildung in Modellcurricula starten.",
+      ],
+      legalSteps: [
+        "Staatsvertrag oder Bund-Länder-Abkommen für Mindeststandards in Schulqualität.",
+        "Förderrichtlinien für Personal, Digitalisierung und Schulessen verknüpfen.",
+        "Lehrkräftebildung und Schulgesetzgebung an neue Kernaufgaben anpassen.",
+      ],
+      operators: [
+        "Kultusministerien, Schulämter, Kommunen, Lehrkräftebildung.",
+      ],
+      blockers: [
+        "Föderalismus, Lehrkräftemangel, Curriculumsüberlastung, Finanzierungsstreit.",
+      ],
+    },
   },
   {
     id: "vermoegen",
@@ -219,6 +387,24 @@ export const reforms: Reform[] = [
       { country: "Japan", flag: "🇯🇵", lesson: "CEO-zu-Arbeiter-Verhältnis 10:1 (USA: 300:1). Kulturelle Norm gegen extreme Reichtumszurschaustellung." },
     ],
     story: { name: "Sabine", age: 42, role: "Alleinerziehende Erzieherin in München", before: "€1.450 netto, €980 Miete, €200 Kita-Gebühr. Spart €0/Monat. Deutschlandfonds existiert nicht. Kein Vermögen, keine Rente außer Grundsicherung.", after: "Kita kostenlos (spart €200), ÖPNV gratis (spart €49), Schulessen frei (spart €80). Deutschlandfonds baut €280/Monat Vermögen auf. Erster Kontostand mit Substanz seit 15 Jahren." },
+    implementation: {
+      first100Days: [
+        "Vermögenspaket als Bündelgesetz mit klarer Reihenfolge vorlegen.",
+        "Mittelstands- und Familienheim-Schutz explizit definieren.",
+        "Deutschlandfonds und UBS-Finanzierungslogik gemeinsam kommunizieren.",
+      ],
+      legalSteps: [
+        "Bewertungsgesetz und Vermögensteuer-Reaktivierung modernisieren.",
+        "Erbschaftsteuerrecht für Betriebsvermögen und Schlupflöcher reformieren.",
+        "Abgeltungsteuer abschaffen und Kapitalerträge in den ESt-Tarif integrieren.",
+      ],
+      operators: [
+        "BMF, Bundeszentralamt für Steuern, Länderfinanzbehörden, Fondsverwaltung, Kommunen.",
+      ],
+      blockers: [
+        "Verfassungsfragen bei Bewertung, Elite-Lobby, Angst vor Kapitalflucht und Neid-Framing.",
+      ],
+    },
   },
 ]
 
