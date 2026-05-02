@@ -104,6 +104,23 @@
   .soft-pill {
     box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 8px 20px rgba(0,0,0,0.03);
   }
+
+  .signal-meter {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .signal-meter::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgba(255,255,255,0.55), transparent 32%, transparent 68%, rgba(255,255,255,0.35));
+    pointer-events: none;
+  }
+
+  .data-chip {
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.8);
+  }
 }
 
 ::-webkit-scrollbar { width: 6px; }

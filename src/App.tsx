@@ -207,6 +207,33 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
         { href: '#reformen', label: 'Schutz verstehen' },
         { href: '#vision2030', label: '2030 fuehlen' },
       ]
+  const approvalGap = Math.abs(flagshipMetrics.citizenApproval - flagshipMetrics.politicianApproval)
+  const fairnessScore = Math.min(95, Math.round((flagshipMetrics.citizenApproval + Math.min(100, flagshipMetrics.roi * 12)) / 2))
+  const implementationScore = Math.max(35, Math.min(88, flagshipMetrics.politicianApproval + 8))
+  const topMetrics = topView === 'politik'
+    ? [
+        { label: 'Buerger', value: `${flagshipMetrics.citizenApproval}%`, tone: 'text-purple', sub: 'oeffentliche Zustimmung' },
+        { label: 'Politik', value: `${flagshipMetrics.politicianApproval}%`, tone: 'text-gold', sub: 'parlamentarische Traktion' },
+        { label: 'Netto/Jahr', value: `€${flagshipMetrics.netReturn}`, tone: 'text-green', sub: 'Mrd. fiskalischer Effekt' },
+      ]
+    : [
+        { label: 'Monatlich', value: 'spuerbar', tone: 'text-blue', sub: 'weniger Druck im Alltag' },
+        { label: 'Geschuetzt', value: 'Haus + kleine Erben', tone: 'text-gold', sub: 'nicht die Mitte trifft es' },
+        { label: '2030', value: 'sichtbar', tone: 'text-green', sub: 'Entlastung nicht nur Versprechen' },
+      ]
+  const topSignals = topView === 'politik'
+    ? [
+        { label: 'Approval', value: flagshipMetrics.citizenApproval, color: 'bg-purple' },
+        { label: 'Passability', value: flagshipMetrics.overallPassability, color: 'bg-gold' },
+        { label: 'Fairness', value: fairnessScore, color: 'bg-green' },
+        { label: 'Umsetzung', value: implementationScore, color: 'bg-blue' },
+      ]
+    : [
+        { label: 'Entlastung', value: 84, color: 'bg-green' },
+        { label: 'Einfachheit', value: 78, color: 'bg-blue' },
+        { label: 'Schutz', value: 82, color: 'bg-gold' },
+        { label: 'Zukunft', value: 76, color: 'bg-purple' },
+      ]
 
   return (
     <div className={`min-h-screen ${fontSize === 1 ? 'text-lg' : fontSize === -1 ? 'text-sm' : ''}`}>
@@ -308,32 +335,68 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
               ))}
             </div>
           </div>
-          <div className="grid lg:grid-cols-[1.15fr_0.85fr] gap-4">
+          <div className="grid lg:grid-cols-[1.2fr_0.8fr] gap-4">
             <div className="editorial-promo rounded-[1.75rem] p-6 sm:p-7">
               <p className={`text-xs uppercase tracking-wider font-bold mb-2 ${topView === 'politik' ? 'text-gold' : 'text-blue'}`}>{topViewCards[0].kicker}</p>
               <h4 className="font-display text-3xl sm:text-4xl leading-tight mb-3">{topViewCards[0].title}</h4>
               <p className="text-lg text-ink-soft max-w-xl">{topViewCards[0].body}</p>
-              <div className="grid grid-cols-3 gap-3 mt-6">
-                <div className="bg-bg-card/80 rounded-2xl p-4 border border-white/70">
-                  <p className="text-xs uppercase tracking-wider text-ink-muted font-bold mb-1">Buerger</p>
-                  <p className="font-display text-2xl text-purple">{flagshipMetrics.citizenApproval}%</p>
+              <div className="grid sm:grid-cols-3 gap-3 mt-6">
+                {topMetrics.map((metric) => (
+                  <div key={metric.label} className="bg-bg-card/80 rounded-2xl p-4 border border-white/70">
+                    <p className="text-xs uppercase tracking-wider text-ink-muted font-bold mb-1">{metric.label}</p>
+                    <p className={`font-display text-2xl ${metric.tone}`}>{metric.value}</p>
+                    <p className="text-xs text-ink-muted mt-1">{metric.sub}</p>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-6 bg-bg-card/80 rounded-[1.5rem] border border-white/70 p-5">
+                <div className="flex items-center justify-between gap-3 mb-3">
+                  <div>
+                    <p className="text-xs uppercase tracking-wider text-ink-muted font-bold">Signalbild</p>
+                    <h5 className="font-display text-xl">
+                      {topView === 'politik' ? 'Wie stark traegt dieses Paket?' : 'Warum fuehlt sich das fuer Leute relevant an?'}
+                    </h5>
+                  </div>
+                  {topView === 'politik' && (
+                    <div className="text-right">
+                      <p className="text-xs uppercase tracking-wider text-ink-muted font-bold">Gap</p>
+                      <p className="font-display text-xl text-red">{approvalGap} Punkte</p>
+                    </div>
+                  )}
                 </div>
-                <div className="bg-bg-card/80 rounded-2xl p-4 border border-white/70">
-                  <p className="text-xs uppercase tracking-wider text-ink-muted font-bold mb-1">Politik</p>
-                  <p className="font-display text-2xl text-gold">{flagshipMetrics.politicianApproval}%</p>
-                </div>
-                <div className="bg-bg-card/80 rounded-2xl p-4 border border-white/70">
-                  <p className="text-xs uppercase tracking-wider text-ink-muted font-bold mb-1">Netto/Jahr</p>
-                  <p className="font-display text-2xl text-green">€{flagshipMetrics.netReturn}</p>
+                <div className="grid sm:grid-cols-2 gap-3">
+                  {topSignals.map((signal) => (
+                    <div key={signal.label} className="bg-bg-alt rounded-2xl p-3">
+                      <div className="flex items-center justify-between text-sm mb-2">
+                        <span className="font-bold">{signal.label}</span>
+                        <span className="text-ink-muted">{signal.value}%</span>
+                      </div>
+                      <div className="w-full bg-white rounded-full h-3 signal-meter">
+                        <div className={`h-3 rounded-full ${signal.color}`} style={{ width: `${signal.value}%` }} />
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
             <div className="grid sm:grid-cols-2 lg:grid-cols-1 gap-4">
-              {topViewCards.slice(1).map((card) => (
+              {topViewCards.slice(1).map((card, index) => (
                 <div key={card.title} className="editorial-side rounded-[1.5rem] p-5">
-                  <p className="text-xs uppercase tracking-wider text-ink-muted font-bold mb-2">{card.kicker}</p>
+                  <div className="flex items-center justify-between mb-3">
+                    <p className="text-xs uppercase tracking-wider text-ink-muted font-bold">{card.kicker}</p>
+                    <span className={`text-xs px-2.5 py-1 rounded-full data-chip ${index === 0 ? 'bg-red-light text-red' : 'bg-green-light text-green'}`}>
+                      {index === 0 ? 'Achtung' : 'Hebel'}
+                    </span>
+                  </div>
                   <h4 className="font-display text-2xl leading-tight mb-3">{card.title}</h4>
-                  <p className="text-base text-ink-soft">{card.body}</p>
+                  <div className="space-y-2">
+                    {card.body.split(/(?<=\.)\s+/).filter(Boolean).map((line, lineIndex) => (
+                      <div key={lineIndex} className="flex items-start gap-2">
+                        <span className={`mt-1.5 w-2 h-2 rounded-full shrink-0 ${index === 0 ? 'bg-red' : 'bg-green'}`} />
+                        <p className="text-base text-ink-soft">{line.trim()}</p>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               ))}
             </div>
