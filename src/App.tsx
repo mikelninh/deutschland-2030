@@ -4,6 +4,8 @@ import { timeline, costs, partyReactions, expertQuotes, faqs } from './data/road
 import { voters, satisfactionSummary } from './data/voters'
 import { partyPathTo80 } from './data/path-to-80'
 import { policyScenarios, simulatePolicy, simulatePoliticianPolicy, getPolicyMetrics, personas, politicalBlocs } from './data/personas'
+import { findReformsByProblem, getReformMetrics, shareableSummary } from './data/reform-generator.ts'
+import type { ReformTemplate } from './data/reform-generator.ts'
 import { backcastGoals } from './data/backcasting'
 import { innovations } from './data/innovations'
 import { ChevronDown, ChevronUp, Heart, ArrowRight, CheckCircle, X, Copy, Share2, Menu } from 'lucide-react'
@@ -82,6 +84,9 @@ export default function App() {
   const [showClarity, setShowClarity] = useState(false)
   const [claritySubmitted, setClaritySubmitted] = useState(false)
   const [openFAQ, setOpenFAQ] = useState<number | null>(null)
+  const [generatorQuery, setGeneratorQuery] = useState('')
+  const [generatedReforms, setGeneratedReforms] = useState<ReformTemplate[]>([])
+  const [selectedGenerated, setSelectedGenerated] = useState<string | null>(null)
   const reformCount = reforms.length
   const scenarioCount = policyScenarios.length
   const citizenPersonaCount = personas.length
@@ -118,7 +123,7 @@ export default function App() {
 
   // Scroll depth tracking via Intersection Observer
   useEffect(() => {
-      const sections = ['problem', 'reformen', 'rechnung', 'simulator', 'vision2030', 'parteien', 'fahrplan', 'handeln']
+      const sections = ['problem', 'reformen', 'rechnung', 'simulator', 'idee-generator', 'vision2030', 'parteien', 'fahrplan', 'handeln']
     const observers: IntersectionObserver[] = []
     sections.forEach(id => {
       const el = document.getElementById(id)
@@ -277,8 +282,8 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
         { kicker: '1 Hoffnung', title: '2030 soll sich anders anfuehlen', body: 'Weniger Stress, weniger Antraege, mehr Gesundheit, mehr Freiheit und mehr Sicherheit im Alltag.' },
       ]
   const navLinks = topView === 'politik'
-    ? [['problem','Problem'],['simulator','Pakete'],['vision2030','2030'],['parteien','Parteien'],['fahrplan','Fahrplan'],['handeln','Handeln']]
-    : [['problem','Problem'],['simulator','Pakete'],['vision2030','2030'],['menschen','Menschen'],['wallet','Alltag'],['fahrplan','Fahrplan'],['handeln','Handeln']]
+    ? [['problem','Problem'],['simulator','Pakete'],['idee-generator','Ideen'],['vision2030','2030'],['parteien','Parteien'],['fahrplan','Fahrplan'],['handeln','Handeln']]
+    : [['problem','Problem'],['simulator','Pakete'],['idee-generator','Ideen'],['vision2030','2030'],['menschen','Menschen'],['wallet','Alltag'],['fahrplan','Fahrplan'],['handeln','Handeln']]
 
   return (
     <div className={`min-h-screen ${fontSize === 1 ? 'text-lg' : fontSize === -1 ? 'text-sm' : ''}`}>
@@ -1063,6 +1068,251 @@ Quelle: faireint.de — Evidenzbasierte Reformvorschläge für Deutschland`
                   </div>
                 </details>
               )}
+            </div>
+          )
+        })}
+      </Section>
+
+      {/* ━━━━ IDEE-GENERATOR ━━━━ */}
+      <Section id="idee-generator" bg="bg-bg-alt" label="Idee-Generator">
+        <div className="text-center mb-10">
+          <Tag color="gold">Idee-Generator</Tag>
+          <h2 className="font-display text-3xl sm:text-4xl mt-4 mb-2">Welches Problem willst du lösen?</h2>
+          <p className="text-ink-muted">Gib ein Thema ein — wir zeigen evidenzbasierte Reformen aus der ganzen Welt, simuliert mit echten Zustimmungswerten.</p>
+        </div>
+
+        <Card className="mb-6">
+          <div className="flex flex-col sm:flex-row gap-3">
+            <input
+              type="text"
+              value={generatorQuery}
+              onChange={(e) => setGeneratorQuery(e.target.value)}
+              onKeyDown={(e) => { if (e.key === 'Enter') { const results = findReformsByProblem(generatorQuery); setGeneratedReforms(results); setSelectedGenerated(null); trackAction('generator_search') } }}
+              placeholder="z.B. Wohnungskrise, Pflegenotstand, Klimawandel..."
+              className="flex-1 px-4 py-3 bg-bg-alt rounded-xl border border-border text-sm focus:outline-none focus:border-gold"
+            />
+            <button
+              onClick={() => { const results = findReformsByProblem(generatorQuery); setGeneratedReforms(results); setSelectedGenerated(null); trackAction('generator_search') }}
+              className="px-5 py-3 bg-gold text-white rounded-xl text-sm font-bold cursor-pointer btn-press hover:bg-gold/90 transition-colors"
+            >
+              Ideen finden
+            </button>
+          </div>
+          <div className="flex flex-wrap gap-2 mt-4">
+            {['Wohnungskrise', 'Pflegenotstand', 'Klima & Energie', 'Bildung', 'Digitale Infrastruktur', 'Gesundheit', 'Arbeit & Soziales'].map(chip => (
+              <button
+                key={chip}
+                onClick={() => { setGeneratorQuery(chip); const results = findReformsByProblem(chip); setGeneratedReforms(results); setSelectedGenerated(null); trackAction('generator_chip') }}
+                className="px-3 py-1.5 bg-bg-alt border border-border rounded-xl text-xs font-bold cursor-pointer btn-press hover:bg-gold hover:text-white hover:border-gold transition-colors"
+              >
+                {chip}
+              </button>
+            ))}
+          </div>
+        </Card>
+
+        {generatedReforms.length > 0 && (
+          <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-4 mb-8">
+            {generatedReforms.map((template) => {
+              const metrics = getReformMetrics(template)
+              const active = selectedGenerated === template.id
+              return (
+                <button
+                  key={template.id}
+                  onClick={() => { setSelectedGenerated(active ? null : template.id); trackAction(`generator_select_${template.id}`) }}
+                  className={`text-left rounded-2xl border p-4 cursor-pointer btn-press transition-all ${active ? 'bg-gold text-white border-gold shadow-lg scale-[1.02]' : 'bg-bg-card border-border hover:border-gold/30 hover:shadow-md'}`}
+                >
+                  <div className="flex items-start justify-between gap-3 mb-3">
+                    <div>
+                      <p className={`text-2xl ${active ? 'text-white' : ''}`}>{template.emoji}</p>
+                      <h3 className={`font-display text-base leading-tight mt-1 ${active ? 'text-white' : 'text-ink'}`}>{template.title}</h3>
+                    </div>
+                    <div className={`text-right ${active ? 'text-white' : approvalColorClass(metrics.overallPassability)}`}>
+                      <p className="font-display text-2xl">{metrics.overallPassability}%</p>
+                      <p className={`text-[11px] uppercase tracking-wider ${active ? 'text-white/80' : 'text-ink-muted'}`}>Passability</p>
+                    </div>
+                  </div>
+                  <p className={`text-sm mb-3 ${active ? 'text-white/85' : 'text-ink-muted'}`}>{template.description.slice(0, 120)}...</p>
+                  <div className={`flex items-center gap-2 text-xs mb-3 ${active ? 'text-white/70' : 'text-ink-muted'}`}>
+                    <span>{template.originFlag}</span>
+                    <span>Vorbild: {template.originCountry}</span>
+                  </div>
+                  <div className="space-y-2">
+                    <div>
+                      <div className={`flex justify-between text-xs mb-1 ${active ? 'text-white/85' : 'text-ink-muted'}`}>
+                        <span>Bürger:innen</span><span>{metrics.citizenApproval}%</span>
+                      </div>
+                      <Bar pct={metrics.citizenApproval} color={active ? 'bg-white' : barColorClass(metrics.citizenApproval)} />
+                    </div>
+                    <div>
+                      <div className={`flex justify-between text-xs mb-1 ${active ? 'text-white/85' : 'text-ink-muted'}`}>
+                        <span>Politik</span><span>{metrics.politicianApproval}%</span>
+                      </div>
+                      <Bar pct={metrics.politicianApproval} color={active ? 'bg-white' : barColorClass(metrics.politicianApproval)} />
+                    </div>
+                  </div>
+                  <div className={`mt-3 pt-3 border-t ${active ? 'border-white/20 text-white/85' : 'border-border text-ink-muted'} flex items-end justify-between gap-2`}>
+                    <div>
+                      <p className="text-[11px] uppercase tracking-wider">Netto / Jahr</p>
+                      <p className="font-display text-lg">€{metrics.netReturn} Mrd.</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-[11px] uppercase tracking-wider">10 Jahre</p>
+                      <p className="font-display text-lg">€{metrics.tenYearReturn} Mrd.</p>
+                    </div>
+                  </div>
+                </button>
+              )
+            })}
+          </div>
+        )}
+
+        {generatedReforms.filter(t => t.id === selectedGenerated).map(template => {
+          const metrics = getReformMetrics(template)
+          const citizenReactions = template.reactions.slice(0, 4)
+          const hiddenReactions = Math.max(0, template.reactions.length - citizenReactions.length)
+          return (
+            <div key={template.id} className="panel-enter">
+              <Card className="mb-6 border-gold/20">
+                <div className="flex items-start justify-between gap-4 flex-wrap mb-4">
+                  <div className="max-w-2xl">
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="text-2xl">{template.emoji}</span>
+                      <span className="text-sm text-ink-muted">{template.originFlag} {template.originCountry}</span>
+                    </div>
+                    <h3 className="font-display text-2xl mb-2">{template.title}</h3>
+                    <p className="text-ink-soft">{template.description}</p>
+                    <p className="text-sm text-ink-muted mt-2 italic">&bdquo;{template.originLesson}&ldquo;</p>
+                  </div>
+                  <div className="bg-gold-light rounded-2xl p-4 min-w-52">
+                    <p className="text-xs uppercase tracking-wider text-gold font-bold mb-1">Beste Lesart</p>
+                    <p className="font-display text-2xl text-gold">{metrics.overallPassability}%</p>
+                    <p className="text-sm text-ink-soft">{metrics.label}</p>
+                  </div>
+                </div>
+                <div className="grid sm:grid-cols-2 xl:grid-cols-5 gap-3">
+                  <div className="bg-red-light rounded-xl p-4 text-center"><p className="text-2xl font-display text-red">€{template.annualCost}</p><p className="text-xs text-ink-muted">Mrd. Kosten / Jahr</p></div>
+                  <div className="bg-green-light rounded-xl p-4 text-center"><p className="text-2xl font-display text-green">€{template.annualSaving}</p><p className="text-xs text-ink-muted">Mrd. Brutto-Ersparnis / Jahr</p></div>
+                  <div className="bg-blue-light rounded-xl p-4 text-center"><p className="text-2xl font-display text-blue">€{metrics.netReturn}</p><p className="text-xs text-ink-muted">Mrd. Netto / Jahr</p></div>
+                  <div className="bg-purple-light rounded-xl p-4 text-center"><p className={`text-2xl font-display ${approvalColorClass(metrics.citizenApproval)}`}>{metrics.citizenApproval}%</p><p className="text-xs text-ink-muted">Bürger:innen</p></div>
+                  <div className="bg-gold-light rounded-xl p-4 text-center"><p className={`text-2xl font-display ${approvalColorClass(metrics.politicianApproval)}`}>{metrics.politicianApproval}%</p><p className="text-xs text-ink-muted">Politik</p></div>
+                </div>
+              </Card>
+
+              <div className="grid lg:grid-cols-[1.2fr_0.8fr] gap-4 mb-6">
+                <Card className="!p-5">
+                  <div className="flex items-center justify-between gap-3 mb-4">
+                    <div>
+                      <p className="text-xs uppercase tracking-wider text-ink-muted font-bold">Simulation</p>
+                      <h4 className="font-display text-xl">Wie die wichtigsten Leute reagieren</h4>
+                    </div>
+                    <Tag color="blue">10 Jahre: €{metrics.tenYearReturn} Mrd.</Tag>
+                  </div>
+                  <div className="grid sm:grid-cols-3 gap-3 mb-5">
+                    {[
+                      { label: 'Bürger:innen', value: metrics.citizenApproval, color: 'bg-purple-light' },
+                      { label: 'Politik', value: metrics.politicianApproval, color: 'bg-gold-light' },
+                      { label: 'Passability', value: metrics.overallPassability, color: 'bg-blue-light' },
+                    ].map((item) => (
+                      <div key={item.label} className={`${item.color} rounded-2xl p-4`}>
+                        <div className="flex items-start justify-between gap-3 mb-2">
+                          <p className="text-xs uppercase tracking-wider text-ink-muted font-bold">{item.label}</p>
+                          <p className={`font-display text-2xl ${approvalColorClass(item.value)}`}>{item.value}%</p>
+                        </div>
+                        <Bar pct={item.value} color={barColorClass(item.value)} />
+                      </div>
+                    ))}
+                  </div>
+                  <div className="bg-bg-alt rounded-xl p-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <p className="text-xs uppercase tracking-wider text-ink-muted font-bold">Verdikt</p>
+                      <span className="font-display text-lg text-gold">{metrics.label}</span>
+                    </div>
+                    <p className="text-sm text-ink-soft">Diese Reform hat ein Netto von €{metrics.netReturn} Mrd. pro Jahr bei einem ROI von 1:{metrics.roi}.</p>
+                  </div>
+                </Card>
+                <Card className="!p-5">
+                  <div className="flex items-center justify-between gap-3 mb-4">
+                    <div>
+                      <p className="text-xs uppercase tracking-wider text-ink-muted font-bold">Politische Lager</p>
+                      <h5 className="font-display text-xl">Wo Zustimmung kippt oder trägt</h5>
+                    </div>
+                    <Tag color="gold">{metrics.politicianApproval}% Politik</Tag>
+                  </div>
+                  <div className="space-y-3">
+                    {template.politicianReactions.map(r => {
+                      const bloc = politicalBlocs.find(x => x.id === r.blocId)
+                      if (!bloc) return null
+                      return (
+                        <div key={r.blocId} className="bg-bg-alt rounded-2xl p-4">
+                          <div className="flex items-center justify-between gap-3 text-sm mb-2">
+                            <span className="font-bold">{bloc.label}</span>
+                            <span className={approvalColorClass(r.approval)}>{r.approval}%</span>
+                          </div>
+                          <Bar pct={r.approval} color={barColorClass(r.approval)} />
+                          <p className="text-xs text-ink-muted mt-2">{r.reason}</p>
+                        </div>
+                      )
+                    })}
+                  </div>
+                </Card>
+              </div>
+
+              <div className="mb-3 flex items-center justify-between gap-3">
+                <div>
+                  <p className="text-xs uppercase tracking-wider text-ink-muted font-bold">Bürgerstimmen</p>
+                  <h5 className="font-display text-xl">Wie die wichtigsten Leute reagieren</h5>
+                </div>
+                {hiddenReactions > 0 && <Tag>{hiddenReactions} weitere Stimmen</Tag>}
+              </div>
+              <div className="grid sm:grid-cols-2 gap-3">
+                {citizenReactions.map(r => {
+                  const p = personas.find(x => x.id === r.personaId)
+                  if (!p) return null
+                  return (
+                    <Card key={r.personaId} className="!p-4">
+                      <div className="flex items-center gap-3 mb-2">
+                        <span className="text-2xl">{p.emoji}</span>
+                        <div className="flex-1"><span className="font-bold text-sm">{p.name}, {p.age}</span><span className="text-ink-muted text-xs ml-1">({p.party})</span></div>
+                        <span className={`font-display text-lg ${approvalColorClass(r.approval)}`}>{r.approval}%</span>
+                      </div>
+                      <Bar pct={r.approval} color={barColorClass(r.approval)} />
+                      <p className="text-sm text-ink-muted mt-2 italic">&bdquo;{r.reason}&ldquo;</p>
+                    </Card>
+                  )
+                })}
+              </div>
+              {hiddenReactions > 0 && (
+                <details className="mt-4 rounded-2xl border border-border bg-bg-card p-5">
+                  <summary className="cursor-pointer font-bold text-sm text-ink-soft hover:text-ink transition-colors">Weitere Stimmen anzeigen</summary>
+                  <div className="grid sm:grid-cols-2 gap-3 mt-4">
+                    {template.reactions.slice(citizenReactions.length).map(r => {
+                      const p = personas.find(x => x.id === r.personaId)
+                      if (!p) return null
+                      return (
+                        <Card key={r.personaId} className="!p-4">
+                          <div className="flex items-center gap-3 mb-2">
+                            <span className="text-2xl">{p.emoji}</span>
+                            <div className="flex-1"><span className="font-bold text-sm">{p.name}, {p.age}</span><span className="text-ink-muted text-xs ml-1">({p.party})</span></div>
+                            <span className={`font-display text-lg ${approvalColorClass(r.approval)}`}>{r.approval}%</span>
+                          </div>
+                          <Bar pct={r.approval} color={barColorClass(r.approval)} />
+                          <p className="text-sm text-ink-muted mt-2 italic">&bdquo;{r.reason}&ldquo;</p>
+                        </Card>
+                      )
+                    })}
+                  </div>
+                </details>
+              )}
+
+              <div className="flex flex-wrap justify-center gap-3 mt-8">
+                <button onClick={() => { navigator.clipboard.writeText(shareableSummary(template)); trackAction('generator_share'); showToast('Zusammenfassung kopiert!') }} className="px-5 py-3 bg-gold text-white rounded-xl text-sm font-bold cursor-pointer btn-press hover:bg-gold/90 transition-colors">
+                  Für Politiker kopieren
+                </button>
+                <button onClick={() => { const lines = shareableSummary(template).split('\n'); const short = lines.slice(0, 5).join('\n') + '\n\nMehr: https://mikelninh.github.io/faireint/'; navigator.clipboard.writeText(short); trackAction('generator_citizen_share'); showToast('Citizen-Summary kopiert!') }} className="px-5 py-3 bg-bg-card border border-border rounded-xl text-sm font-bold cursor-pointer btn-press hover:bg-bg transition-colors">
+                  Für Bürger kopieren
+                </button>
+              </div>
             </div>
           )
         })}
